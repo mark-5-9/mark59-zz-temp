@@ -52,6 +52,11 @@ public interface PoliciesDAO
 	SqlWithParms constructUpdatePoliciesUseStateSql(UpdateUseStateAndEpochTime updateUse);
 	SqlWithParms constructUpdatePolicyToUsedSql(Policies nextPolicy);
 
+	List<AsyncMessageaAnalyzerResult> updateMultiplePoliciesUseState(List<AsyncMessageaAnalyzerResult> asyncMessageaAnalyzerResultList, 
+			String toUseability);
+	List<AsyncMessageaAnalyzerResult> updateMultiplePoliciesUseState(List<AsyncMessageaAnalyzerResult> asyncMessageaAnalyzerResultList, 
+			String toUseability, int maxEntriesSqlUpdateStmt);
+
 	int runDatabaseUpdateSql(SqlWithParms sqlWithParms);
 
 	void getLock(JdbcTemplate singleConnectionJdbcTemplate, String lockResouceString, int timeout);
@@ -59,4 +64,6 @@ public interface PoliciesDAO
 
 	void getLock(String lockResouceString, int timeout);
 	void releaseLock(String lockResouceString) throws SQLException;
+
+
 }

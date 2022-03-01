@@ -50,7 +50,8 @@ import static com.mark59.datahunter.performanceTest.dsl.helpers.DslConstants.REU
  * A script to check run thru and check each item action on the DataHunter pages (except the asyn processing - 
  * see the dataHunterFunctionalTest project in the mark59-xtras gitreop).
  * 
- * <p>May also be some useful to get ideas on how to call DataHunter when running a script for another application.
+ * <p>Useful to get ideas on how to call DataHunter when running a script for another application.  However
+ * if possible we suggest to use DataHunter Rest Api calls to invoke dataHunter functionality from a script.
  * 
  * @see SeleniumAbstractJavaSamplerClient
  * @author Philip Webb

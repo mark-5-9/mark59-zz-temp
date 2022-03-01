@@ -86,7 +86,7 @@
 				 "Artifact has not been packaged yet. When used on reactor artifact, copy should be executed after packaging: see MDEP-187.",
 				 check that in your Maven Run Configuration for the project you have "Resolve Workspace Artifacts" unticked -->		
 					
-			<!-- The <?m2e ignore?> tag is just prevents an Error being displayed when using Eclipse, due to a long standing m2e bug.
+			<!-- The <?m2e ignore?> tag just prevents an Error being displayed when using Eclipse, due to a long standing m2e bug.
 				 https://stackoverflow.com/questions/30642630/artifact-has-not-been-packaged-yet/68633437#68633437 -->
 			     			
 			<plugin>

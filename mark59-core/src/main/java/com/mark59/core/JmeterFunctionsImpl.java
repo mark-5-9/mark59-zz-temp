@@ -31,6 +31,7 @@ import org.apache.logging.log4j.LogManager;
 
 import com.mark59.core.interfaces.JmeterFunctions;
 import com.mark59.core.utils.Mark59Constants;
+import com.mark59.core.utils.Mark59Utils;
 import com.mark59.core.utils.Mark59Constants.JMeterFileDatatypes;
 
 
@@ -459,6 +460,12 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	 * @return SampleResult belonging to the supplied label.
 	 */
 	public SampleResult getSampleResultWithLabel(String label) {
+		
+		
+		System.out.println( ">> transactionMap");
+		System.out.println( Mark59Utils.prettyPrintMap(transactionMap)  );
+		System.out.println( "<< transactionMap");
+		
 		return transactionMap.get(label);
 	}
 	

@@ -21,19 +21,28 @@ import java.util.List;
 import com.mark59.datahunter.data.beans.Policies;
 
 /**
+ * Used to provide the response back to the client for the DataHunter Rest API calls:
+ * <p><code>policies</code> : contains the selected policy or policies (may contain debug information for requests 
+ * not requiring policy data to be returned) 
+ * <p><code>countPoliciesBreakdown</code> : is only designed to be populated when the using the countPoliciesBreakdown
+ * operation is invoked 
+ * <p><code>asyncMessageaAnalyzerResult</code> : is only designed to be populated when the using the asyncMessageAnalyzer
+ * operation is invoked  
+ * <p><code>success, rowsAffected, failMsg</code> : are populated in a similar manner to the values seen in the DataHunter
+ * web application, aligning to most DataHunter action result pages with the values labeled 'result', 'rows affected' and
+ * 'details'.  (<code>success</code> is set as 'true' or 'false', rather than using the values 'PASS' or 'FAIL' seen on 
+ * the web pages)    
+ * 
  * @author Philip Webb
  * Written: Australian Summer 2021/22
- * 
- * Used to provide the response back to the client for the DataHunter Rest API call.
- * <p>Note this class (DataHunterRestApiResponsePojo) has a copy in the dataHunter web project 
- * and the mark59-selenium-sample-dsl project (keeps the dataHunter project
- * independent of the rest of the framework, this may change this in the future).   
- *      
  */
 public class DataHunterRestApiResponsePojo {
 
 	private List<Policies> policies;
-	private String succes;
+	private List<CountPoliciesBreakdown> countPoliciesBreakdown;
+	private List<AsyncMessageaAnalyzerResult> asyncMessageaAnalyzerResults;
+	private String success;
+	private Integer rowsAffected;
 	private String failMsg;	
 
 	
@@ -49,13 +58,37 @@ public class DataHunterRestApiResponsePojo {
 	public void setPolicies(List<Policies> policies) {
 		this.policies = policies;
 	}
-
-	public String getSucces() {
-		return succes;
+	
+	public List<CountPoliciesBreakdown> getCountPoliciesBreakdown() {
+		return countPoliciesBreakdown;
 	}
 
-	public void setSucces(String succes) {
-		this.succes = succes;
+	public void setCountPoliciesBreakdown(List<CountPoliciesBreakdown> countPoliciesBreakdown) {
+		this.countPoliciesBreakdown = countPoliciesBreakdown;
+	}
+
+	public List<AsyncMessageaAnalyzerResult> getAsyncMessageaAnalyzerResults() {
+		return asyncMessageaAnalyzerResults;
+	}
+
+	public void setAsyncMessageaAnalyzerResults(List<AsyncMessageaAnalyzerResult> asyncMessageaAnalyzerResults) {
+		this.asyncMessageaAnalyzerResults = asyncMessageaAnalyzerResults;
+	}
+
+	public String getSuccess() {
+		return success;
+	}
+
+	public void setSuccess(String success) {
+		this.success = success;
+	}
+
+	public Integer getRowsAffected() {
+		return rowsAffected;
+	}
+
+	public void setRowsAffected(Integer rowsAffected) {
+		this.rowsAffected = rowsAffected;
 	}
 
 	public String getFailMsg() {
@@ -68,8 +101,11 @@ public class DataHunterRestApiResponsePojo {
 
 	@Override
     public String toString() {
-       return   "[policies" + policies
-        		+ ", succes="+ succes
+       return   "[policies=" + policies
+        		+ ", countPoliciesBreakdown="+ countPoliciesBreakdown
+        		+ ", asyncMessageaAnalyzerResults="+ asyncMessageaAnalyzerResults
+        		+ ", succes="+ success
+        		+ ", rowsAffected="+ rowsAffected
         		+ ", failMsg="+ failMsg
         		+ "]";
 	}
