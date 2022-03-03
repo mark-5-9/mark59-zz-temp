@@ -45,7 +45,7 @@ public class DataHunterRestApiClientSampleUsage {
 		int i=0;
 		List<AsyncMessageaAnalyzerResult>  asyncResults = response.getAsyncMessageaAnalyzerResults();
 		System.out.println( "    asyncMessageAnalyzerPrintResults  (" + asyncResults.size() + ") - asyncLifeCycleTestWithUseabilityUpdate" );		
-		System.out.println( "    ------------------------------- ");		
+		System.out.println( "    -------------------------------- ");		
 		for (AsyncMessageaAnalyzerResult asyncResult : asyncResults) {
 			System.out.println("    " +  ++i + "   " + asyncResult);
 		}
@@ -58,7 +58,7 @@ public class DataHunterRestApiClientSampleUsage {
 			// example of a typical transaction name you could set (and its response time)
 			System.out.println( "    Txn Name :  "  + pairedAsyncTxn.getApplication() + "_" + pairedAsyncTxn.getIdentifier() + "  Respsonse time (Assumed msecs) : "  + pairedAsyncTxn.getDifferencetm()  );				
 		}
- 	    System.out.println( "    --------------------------------------------");	
+		System.out.println( "    -------------------------------- ");	
  	    // clean up     
 		assertEquals(new Integer(5), dhApiClient.deleteMultiplePolicies("TESTAPI_ASYNC_TOUSED", null, null).getRowsAffected()); 	
 	}
@@ -448,7 +448,7 @@ public class DataHunterRestApiClientSampleUsage {
 		DataHunterRestApiResponsePojo response = dhApiClient.deleteMultiplePolicies("TESTAPI_ASYNC_HIGH_VOL", null, null);
 		assertEquals(String.valueOf(true), response.getSuccess() ); 
 
-		massPolicyInsert(dhApiClient, 5000);
+		insertPolicySets(dhApiClient, 5000);
 		
 		response = dhApiClient.asyncMessageAnalyzer(DataHunterConstants.STARTS_WITH,"TESTAPI_ASYNC_HIGH_VOL", null, "UNPAIRED", "USED");
 		
@@ -465,16 +465,15 @@ public class DataHunterRestApiClientSampleUsage {
 	}
 
 
-	private void massPolicyInsert(DataHunterRestApiClient dhApiClient, int numPoliciesSetsToBeCreate) {
+	private void insertPolicySets(DataHunterRestApiClient dhApiClient, int numPoliciesSetsToBeCreate) {
 		System.out.println("massPolicyInsert inserting ...");
 		for (int i = 1; i <= numPoliciesSetsToBeCreate; i++) {
-			dhApiClient.addPolicy( new Policies("testapi", "T99-testonly-" + i, "FIRSTONE", "UNPAIRED", "", null));
-			dhApiClient.addPolicy( new Policies("testapi", "T99-testonly-" + i, "between", "UNPAIRED", "", null));
-			dhApiClient.addPolicy( new Policies("testapi", "T99-testother-" + i,  "other",  "UNUNUSED", "", null));			
-			dhApiClient.addPolicy( new Policies("testapi", "T99-testanohter-" + i, "other",  "UNUNUSED", "", null));
+			dhApiClient.addPolicy( new Policies("testapi-async", "T99-testonly-" + i, "FIRSTONE", "UNPAIRED", "", null));
+			dhApiClient.addPolicy( new Policies("testapi-async", "T99-testonly-" + i, "between",  "UNPAIRED", "", null));
+			dhApiClient.addPolicy( new Policies("testapi-async", "T99-someother-"+ i, "other",    "UNPAIRED", "", null));			
 		} 
 		for (int i = 1; i <= numPoliciesSetsToBeCreate; i++) {
-			dhApiClient.addPolicy( new Policies("testapi", "T99-testonly-" + i, "LASTONE",  "UNPAIRED", "", null));		
+			dhApiClient.addPolicy( new Policies("testapi-async", "T99-testonly-" + i, "LASTONE",  "UNPAIRED", "", null));		
 		} 		
 		System.out.println("... massPolicyInsert done");
 	}

@@ -18,7 +18,6 @@ package com.mark59.datahunter.controller;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,7 +29,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.mark59.datahunter.application.DataHunterConstants;
 import com.mark59.datahunter.application.DataHunterUtils;
@@ -583,10 +581,6 @@ public class DataHunterRestController {
 		return ResponseEntity.ok(repsonse);	
 	}
 	
-
-
-	
-
 	
 	
 	@GetMapping(path = "/asyncMessageAnalyzer")
