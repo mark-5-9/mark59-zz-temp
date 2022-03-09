@@ -97,9 +97,8 @@ public class PoliciesDAOjdbcTemplateImpl implements PoliciesDAO
 		} if (DataHunterConstants.SELECT_RANDOM_ENTRY.equals(policySelect.getSelectOrder())){
 			sql += " ORDER BY RAND() LIMIT 1 ";	
 		}
-		
-		System.out.println("constructSelectPoliciesSql           sql: " + sql);
-		System.out.println("constructSelectPoliciesSql sqlparameters: " + sqlparameters);
+		// System.out.println("constructSelectPoliciesSql           sql: " + sql);
+		// System.out.println("constructSelectPoliciesSql sqlparameters: " + sqlparameters);
 	
 		return new SqlWithParms(sql,sqlparameters);
 	}
@@ -107,9 +106,6 @@ public class PoliciesDAOjdbcTemplateImpl implements PoliciesDAO
 	
 	@Override	
 	public SqlWithParms constructCountPoliciesBreakdownSql(PolicySelectionCriteria policySelect){
-
-		
-		System.out.println("##################### constructCountPoliciesBreakdownSql  policySelect : " + policySelect);
 		
 		SqlWithParms sqlWithParms = lifecycleAndUseabiltySelector(policySelect);
 		MapSqlParameterSource sqlparameters = sqlWithParms.getSqlparameters();
@@ -226,7 +222,13 @@ public class PoliciesDAOjdbcTemplateImpl implements PoliciesDAO
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlWithParms.getSql(), sqlWithParms.getSqlparameters());
 		
 		for (Map<String, Object> row : rows) {
-			AsyncMessageaAnalyzerResult asyncMessageaAnalyzerResult = populateAsyncMessageaAnalyzerResultFromSqlResultRow(row);
+			AsyncMessageaAnalyzerResult asyncMessageaAnalyzerResult = new AsyncMessageaAnalyzerResult();
+			asyncMessageaAnalyzerResult.setApplication((String)row.get("APPLICATION"));
+			asyncMessageaAnalyzerResult.setIdentifier((String)row.get("IDENTIFIER"));
+			asyncMessageaAnalyzerResult.setUseability((String)row.get("USEABILITY"));
+			asyncMessageaAnalyzerResult.setStarttm((Long)row.get("STARTTM"));
+			asyncMessageaAnalyzerResult.setEndtm((Long)row.get("ENDTM"));	
+			asyncMessageaAnalyzerResult.setDifferencetm((Long)row.get("DIFFERENCETM"));			
 			asyncMessageaAnalyzerResultList.add(asyncMessageaAnalyzerResult);
 		}	
 		return asyncMessageaAnalyzerResultList;
@@ -364,8 +366,6 @@ public class PoliciesDAOjdbcTemplateImpl implements PoliciesDAO
 	public List<AsyncMessageaAnalyzerResult> updateMultiplePoliciesUseState(List<AsyncMessageaAnalyzerResult> asyncMessageaAnalyzerResultList, 
 			String toUseability, int maxEntriesSqlUpdateStmt ){
 		
-		System.out.println("**************** maxEntriesSqlUpdateStmt = " + maxEntriesSqlUpdateStmt); 
-		
 		final String sqlBegins = "UPDATE POLICIES SET USEABILITY = ?, UPDATED = CURRENT_TIMESTAMP(6) WHERE ( ";
 		
 		boolean yetToAddFirstIdToSqlStatement = true;
@@ -450,18 +450,7 @@ public class PoliciesDAOjdbcTemplateImpl implements PoliciesDAO
 	}
 	
 
-	private AsyncMessageaAnalyzerResult populateAsyncMessageaAnalyzerResultFromSqlResultRow(Map<String, Object> row) {
-		AsyncMessageaAnalyzerResult asyncMessageaAnalyzerResult = new AsyncMessageaAnalyzerResult();
-		asyncMessageaAnalyzerResult.setApplication((String)row.get("APPLICATION"));
-		asyncMessageaAnalyzerResult.setIdentifier((String)row.get("IDENTIFIER"));
-		asyncMessageaAnalyzerResult.setUseability((String)row.get("USEABILITY"));
-		asyncMessageaAnalyzerResult.setStarttm((Long)row.get("STARTTM"));
-		asyncMessageaAnalyzerResult.setEndtm((Long)row.get("ENDTM"));	
-		asyncMessageaAnalyzerResult.setDifferencetm((Long)row.get("DIFFERENCETM"));			
-		return asyncMessageaAnalyzerResult;
-	}
-
-
+	
 	@Override
 	public void getLock(JdbcTemplate singleConnectionJdbcTemplate, String lockResouceString, int timeout) {
 		

@@ -195,11 +195,14 @@ public class DslPageFunctions  implements Serializable {
 	}
 
 	
-	public Integer deleteAnItem(PolicySelectionCriteria policySelectionCriteria, WebDriver driver, Long expectedCount) {
-		driver.get(dataHunterUrl + DslConstants.DELETE_POLICY_URL_PATH + DslConstants.URL_PARM_APPLICATION + policySelectionCriteria.getApplication());
+	public Integer deleteAnItem(PolicySelectionCriteria policySelection, WebDriver driver, Long expectedCount) {
+		driver.get(dataHunterUrl + DslConstants.DELETE_POLICY_URL_PATH + DslConstants.URL_PARM_APPLICATION + policySelection.getApplication());
 		DeletePolicyPage deletePolicyPage = new DeletePolicyPage(driver); 
 		DeletePolicyActionPage deletePolicyActionPage = new DeletePolicyActionPage(driver); 
-		deletePolicyPage.identifier().type(policySelectionCriteria.getIdentifier());
+		deletePolicyPage.identifier().type(policySelection.getIdentifier());
+		if (StringUtils.isNotBlank(policySelection.getLifecycle())){
+			deletePolicyPage.lifecycle().type(policySelection.getLifecycle());
+		}  
 		deletePolicyPage.submit().submit();
 		
 		waitForSqlResultsTextOnActionPageAndCheckOk(deletePolicyActionPage);

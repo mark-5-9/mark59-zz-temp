@@ -101,8 +101,8 @@
 
 	<build>
 
-		<!-- phase/goals: clean package    (** install not needed as the maven-install-plugin is set to run in the package phase) -->
-
+		<!-- phase/goals: clean package  (install not needed as the maven-install-plugin runs in the package phase) -->
+		
 		<plugins>
 
 			<!-- spring boot maven plugin -->
@@ -121,7 +121,7 @@
 			<!-- maven jar plugin and maven install plugin -->
 			<!-- In conjunction, these two plugins compile the classes into a jar, 
 				and then install the jar into the local repro. The jar is can then be used 
-				to resolve dependencies in projects requiring classes from this war project 
+				to resolve dependencies in projects requiring classes from this (war) project 
 				NOTE: the weird "prepare-package" phase is used in the maven jar plugin 
 				(rather than "compile" or "package") to bypass an annoying eclipse error -->
 

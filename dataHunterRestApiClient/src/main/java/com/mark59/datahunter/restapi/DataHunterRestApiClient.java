@@ -15,14 +15,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mark59.datahunter.application.DataHunterConstants;
 import com.mark59.datahunter.data.beans.Policies;
 import com.mark59.datahunter.data.policies.dao.PoliciesDAO;
 import com.mark59.datahunter.model.DataHunterRestApiResponsePojo;
+import com.mark59.datahunter.restapi.samples.DataHunterRestApiClientSampleUsage;
 
 /**
  *  A DataHunter REST Service Client.
@@ -77,11 +76,11 @@ public class DataHunterRestApiClient {
 				+ "&lifecycle="  + encode(policies.getLifecycle()) 
 				+ "&useability=" + encode(policies.getUseability()) 
 				+ "&otherdata="  + encode(policies.getOtherdata()) 
-				+ "&epochtime="  + String.valueOf(policies.getEpochtime());  ; 
+				+ "&epochtime="  + String.valueOf(policies.getEpochtime());
+		// System.out.println("DHRAC addPolicy url = " + webServiceUrl); 
 		return invokeDataHunterRestApi(webServiceUrl);
 	}
 
-	
 	
 	/**
 	 * Count Items matching the selection criteria 
@@ -114,10 +113,6 @@ public class DataHunterRestApiClient {
 	public DataHunterRestApiResponsePojo countPoliciesBreakdown(String applicationStartsWithOrEquals, String application, String lifecycle, String useability){
 		String webServiceUrl = dataHunterUrl + "/api/countPoliciesBreakdown?applicationStartsWithOrEquals=" + encode(applicationStartsWithOrEquals) + 
 				"&application=" + encode(application) + "&lifecycle=" + encode(lifecycle) + "&useability=" + encode(useability); 
-		
-		
-		System.out.println("DataHunterRestApiClient webServiceUrl : " + webServiceUrl);
-		
 		return invokeDataHunterRestApi(webServiceUrl);
 	}
 	
@@ -151,7 +146,6 @@ public class DataHunterRestApiClient {
 		}
 		return invokeDataHunterRestApi(webServiceUrl);
 	}
-
 	
 	
 	/**
@@ -218,7 +212,17 @@ public class DataHunterRestApiClient {
 		return invokeDataHunterRestApi(webServiceUrl);
 	}
 	
-	
+	/**
+	 * 	Lookup Next Item
+	 * 
+	 *  <br><br>As for {@link #useNextPolicy}, except the Item not updated..
+	 * 
+	 * @param application application 
+	 * @param lifecycle   blank to delete all lifecycle values matching the other criteria 
+	 * @param useability  {@link DataHunterConstants#USEABILITY_LIST}
+	 * @param selectOrder {@link DataHunterConstants#GET_NEXT_POLICY_SELECTOR}
+	 * @return DataHunterRestApiResponsePojo if fetched, next Item will be the only the element in the policies list  
+	 */
 	public DataHunterRestApiResponsePojo lookupNextPolicy(String application, String lifecycle,String useability, String selectOrder ){
 		String webServiceUrl = dataHunterUrl + "/api/lookupNextPolicy?application=" + encode(application)	+ "&lifecycle=" + encode(lifecycle) + 
 				"&useability=" + encode(useability) + "&selectOrder=" + encode(selectOrder);
@@ -226,20 +230,18 @@ public class DataHunterRestApiClient {
 	}
 	
 	
-	
-	
 	/**
 	 * Change the Use State for an Item, or for multiple Items in an Application
-	 *  
+	 * 
 	 * @param application application
-	 * @param identifier leave blank to select all identifier values matching the other criteria (application, useability)
-	 * @param useability {@link DataHunterConstants#USEABILITY_LIST} leave blank to select all useability values matching the other criteria
+	 * @param identifier (optional) blank to select all identifier values matching the other criteria (application, useability)
+	 * @param useability {@link DataHunterConstants#USEABILITY_LIST}(optional) blank to select all useability values matching the other criteria
 	 *  (the parameters above)
-	 * @param toUseability {@link DataHunterConstants#USEABILITY_LIST}. Items matching the selection criteria (the parameters above), will have
+	 * @param toUseability {@link DataHunterConstants#USEABILITY_LIST}. Items matching the selection criteria (the parameters above), will have 
 	 *  useability changed to this value  
-	 * @param toEpochTime current epochtime is set if blank or non-numeric value passed  
+	 * @param toEpochTime (optional, numeric) current epochtime is used if no, blank or non-numeric value passed   
 	 * @return DataHunterRestApiResponsePojo indicates number of rows updated
-	 */
+	 */	
 	public DataHunterRestApiResponsePojo updatePoliciesUseState(String application, String identifier, String useability, 
 			String toUseability, String toEpochTime){
 		String webServiceUrl = dataHunterUrl + "/api/updatePoliciesUseState?application=" + encode(application)	+ "&identifier=" + encode(identifier) + 
@@ -247,15 +249,32 @@ public class DataHunterRestApiClient {
 		return invokeDataHunterRestApi(webServiceUrl);
 	}
 	
-
 	
-	
+	/**
+	 * Asynchronous Message Analyzer
+	 * 
+	 * <p>Provides a timing calculation between a set of Items that match the input criteria.  It is designed to assist with timing 
+	 * asynchronous events during a performance test.  For further details please refer to the Mark59 user guide, and sample 
+	 * usages in DataHunterRestApiClientSampleUsage.
+	 * 
+	 * @see DataHunterRestApiClientSampleUsage#asyncLifeCycleTestWithUseabilityUpdate(DataHunterRestApiClient)
+	 * @see DataHunterRestApiClientSampleUsage#workingWithAsyncMessages(DataHunterRestApiClient)
+	 *    
+	 * @param applicationStartsWithOrEquals  must be "EQUALS" or "STARTS_WITH" (applied to application selection)
+	 * @param application application
+	 * @param identifier identifier leave blank to select all identifier values matching the other criteria (application, useability)
+	 * @param useability {@link DataHunterConstants#USEABILITY_LIST} leave blank to select all useability values matching the other criteria
+	 *  (the parameters above).  Note that the value 'UNPAIRED' was specifically created for use in this function (but you have the option to use other values).  
+	 * @param toUseability {@link DataHunterConstants#USEABILITY_LIST}. 'Matched' Items satisfying the selection criteria (the parameters above), will have
+	 *  useability changed to this value 
+	 * @return  DataHunterRestApiResponsePojo  The getAsyncMessageaAnalyzerResults list in the response provides the results, including the max time difference
+	 *  between each set of matched rows.  
+	 */
 	public DataHunterRestApiResponsePojo asyncMessageAnalyzer(String applicationStartsWithOrEquals, String application, String identifier, 
 			String useability, String toUseability){
-	
 		String webServiceUrl = dataHunterUrl + "/api/asyncMessageAnalyzer?applicationStartsWithOrEquals=" + encode(applicationStartsWithOrEquals) + 
-				"&application=" + encode(application) + "&identifier=" + encode(identifier) + "&useability=" + encode(useability) + "&toUseability=" + encode(toUseability) ;
-	
+				"&application=" + encode(application) + "&identifier=" + encode(identifier) + "&useability=" + encode(useability) + 
+				"&toUseability=" + encode(toUseability);
 		return invokeDataHunterRestApi(webServiceUrl);
 	}	
 	
@@ -268,9 +287,6 @@ public class DataHunterRestApiClient {
 	 * @return DataHunterRestApiResponsePojo
 	 */
 	private DataHunterRestApiResponsePojo invokeDataHunterRestApi(String webServiceUrl)  {
-
-		///////////////////////////////////////////// System.out.println("invokeDataHunterRestApi  webServiceUrl:"  + webServiceUrl  );
-		
 		BufferedReader in = null;
 		DataHunterRestApiResponsePojo responsePojo = new DataHunterRestApiResponsePojo();
 		Integer repsonseCode = null;
@@ -292,7 +308,6 @@ public class DataHunterRestApiClient {
 			if ( responsePojo == null ){
 				throw new RuntimeException("Error : Unexpected null Response returned from the DataHunter Api!");
 			}
-			///////////////////////////////// System.out.println("DataHunterRestApiResponsePojo :"  + responsePojo  );
 			
 		} catch (Exception | AssertionError e) {
 			StringWriter stackTrace = new StringWriter();

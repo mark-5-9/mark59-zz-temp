@@ -30,7 +30,7 @@ public static void main(String[] args) throws InterruptedException{
 	
 /**
  * Note that in this more advanced example access to the com.mark59.seleniumDSL.* packages is assumed (from the mark59-selenium-sample-dsl project).
- * <p>Hint: A quick and dirty way to do this is to copy target jar from the dataHunterPerformanceTestSamples project since it contains sample DSL
+ * <p>Hint: A quick and dirty way to do this is to copy target jar from the dataHunterPerformanceTestSamples project since it contains the sample DSL
  * packages, into the lib/ext directory of your JMeter instance.  
  *   
  * @author Phil Webb

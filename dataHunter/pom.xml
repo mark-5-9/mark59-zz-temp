@@ -86,15 +86,64 @@
 	</dependencies>
 
 	<build>
+
+		<!-- phase/goals: clean package  (install not needed as the maven-install-plugin runs in the package phase) -->
+
 		<plugins>
-			<!-- spring boot maven plugin --> 
-			<!-- phase/goals:  clean package -->
-			<!-- Constructs a war built during the package phase 
-			     (a Maven install can be executed to place classes in the local repo)  -->
+
+			<!-- spring boot maven plugin -->
+			<!-- Constructs a spring boot war during the package phase. (for this 
+				plugin the install phase is not relevant to the build - see Maven jar and 
+				install plugins below) -->
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<finalName>${project.artifactId}</finalName>
+				</configuration>
 			</plugin>
+
+			<!-- maven jar plugin and maven install plugin -->
+			<!-- In conjunction, these two plugins compile the classes into a jar, 
+				and then install the jar into the local repro. The jar is can then be used 
+				to resolve dependencies in projects requiring classes from this (war) project 
+				NOTE: the weird "prepare-package" phase is used in the maven jar plugin 
+				(rather than "compile" or "package") to bypass an annoying eclipse error -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>create-a-jar</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>Add-to-local-repository</id>
+						<phase>package</phase>
+						<configuration>
+							<packaging>jar</packaging>
+							<file>${project.build.directory}\${project.artifactId}.jar</file>
+						</configuration>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+
 		</plugins>
 		<finalName>${project.artifactId}</finalName>
 	</build>

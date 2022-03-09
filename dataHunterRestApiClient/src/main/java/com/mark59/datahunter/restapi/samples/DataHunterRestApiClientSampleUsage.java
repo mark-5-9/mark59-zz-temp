@@ -297,13 +297,7 @@ public class DataHunterRestApiClientSampleUsage {
 	 * @param dhApiClient
 	 */
 	public void policyCountBreakdownsUsingStartWith(DataHunterRestApiClient dhApiClient){
-
-		DataHunterRestApiResponsePojo response = dhApiClient.countPoliciesBreakdown(DataHunterConstants.STARTS_WITH, "", null, null);		
-		List<CountPoliciesBreakdown> countPoliciesBreakdownList = response.getCountPoliciesBreakdown();
-		for (CountPoliciesBreakdown cpb : countPoliciesBreakdownList) {
-			dhApiClient.deleteMultiplePolicies(cpb.getApplication(), cpb.getLifecycle(), cpb.getUseability()); 
-		}
-		assertEquals(0, dhApiClient.countPoliciesBreakdown(DataHunterConstants.STARTS_WITH, "", null, null).getCountPoliciesBreakdown().size()); 
+		clearDatabase(dhApiClient); 
 
 		create6testPolices(dhApiClient);
 		assertEquals(5, dhApiClient.countPoliciesBreakdown(DataHunterConstants.STARTS_WITH, "", null, null).getCountPoliciesBreakdown().size()); 
@@ -313,7 +307,7 @@ public class DataHunterRestApiClientSampleUsage {
 		dhApiClient.addPolicy(new Policies("testaC%pi:&? @=+","ex3", "lc with$char-s", "USED", "", null)); 
 		dhApiClient.addPolicy(new Policies("testaC%pi:&? @=+","ex4", "lc with$char-s", "USED", "", null));
 		
-		response = dhApiClient.countPoliciesBreakdown(DataHunterConstants.STARTS_WITH, "", null, null);		
+		DataHunterRestApiResponsePojo response = dhApiClient.countPoliciesBreakdown(DataHunterConstants.STARTS_WITH, "", null, null);		
 		assertEquals(8, response.getCountPoliciesBreakdown().size()); 
 		assertEquals("[application=otherapp, startsWith=null, identifier=null, lifecycle=, useability=UNUSED, selectOrder=null], rowCount=1]", 					 response.getCountPoliciesBreakdown().get(0).toString());
 		assertEquals("[application=test api, startsWith=null, identifier=null, lifecycle=, useability=UNUSED, selectOrder=null], rowCount=1]", 					 response.getCountPoliciesBreakdown().get(1).toString());
@@ -351,9 +345,8 @@ public class DataHunterRestApiClientSampleUsage {
 		assertEquals(new Integer(2), dhApiClient.deleteMultiplePolicies("testaC%pi:&? @=+", null, null).getRowsAffected()); 
 		assertEquals(new Integer(5), dhApiClient.deleteMultiplePolicies("testapi", null, null).getRowsAffected()); 
 		assertEquals(0, dhApiClient.countPoliciesBreakdown(DataHunterConstants.STARTS_WITH, "", null, null).getCountPoliciesBreakdown().size()); 
-	}	
-	
-	
+	}
+
 
 	public void workingWithUseStateChanges(DataHunterRestApiClient dhApiClient){
 		create6testPolices(dhApiClient);
@@ -384,15 +377,13 @@ public class DataHunterRestApiClientSampleUsage {
 		assertEquals(String.valueOf(false), response.getSuccess()); 
 		assertEquals(new Integer(0), response.getRowsAffected()); 	
 		assertEquals("No rows matching the selection.  Possibly we have ran out of data for application:[testapi]", response.getFailMsg()); 	
-		 
-		
+			
 		response = dhApiClient.useNextPolicy("testapi", null, "REUSABLE", DataHunterConstants.SELECT_MOST_RECENTLY_ADDED);
 		assertEquals(String.valueOf(true), response.getSuccess()); 
 		assertEquals(new Integer(0), response.getRowsAffected());
 		assertsOnPolicy(new Policies("testapi","im3", "duplicatedid", "REUSABLE", "duplicated id", null), response.getPolicies().get(0));		
 		assertEquals("Policy im3 NOT updated as it is marked as REUSABLE", response.getFailMsg());		
-		
-		
+			
 		create6testPolices(dhApiClient);
 		response = dhApiClient.updatePoliciesUseState("testapi", null, "", "UNUSED", null);
 		assertEquals(new Integer(5), response.getRowsAffected());
@@ -417,7 +408,6 @@ public class DataHunterRestApiClientSampleUsage {
 		response = dhApiClient.useNextPolicy("testapi", null, "UNUSED", DataHunterConstants.SELECT_OLDEST_ENTRY);
 		assertEquals("No rows matching the selection.  Possibly we have ran out of data for application:[testapi]", response.getFailMsg()); 			
 		
-		
 		response = dhApiClient.updatePoliciesUseState("testapi", "im3", "USED", "UNUSED", null);
 		assertEquals(new Integer(2), response.getRowsAffected());
 		response = dhApiClient.useNextPolicy("testapi", null, "UNUSED", DataHunterConstants.SELECT_OLDEST_ENTRY);		
@@ -427,7 +417,6 @@ public class DataHunterRestApiClientSampleUsage {
 		response = dhApiClient.useNextPolicy("testapi", null, "UNUSED", DataHunterConstants.SELECT_OLDEST_ENTRY);
 		assertEquals("No rows matching the selection.  Possibly we have ran out of data for application:[testapi]", response.getFailMsg()); 		
 	
-		
 		assertEquals(new Integer(2), dhApiClient.updatePoliciesUseState("testapi", "im3", "USED", "UNUSED", null).getRowsAffected()); 
 		assertEquals(new Integer(1), dhApiClient.updatePoliciesUseState("testapi", "im4", "USED", "UNUSED", null).getRowsAffected()); 
 		response = dhApiClient.useNextPolicy("testapi", "nonblanklc", "UNUSED", DataHunterConstants.SELECT_OLDEST_ENTRY);		
@@ -436,46 +425,75 @@ public class DataHunterRestApiClientSampleUsage {
 		assertsOnPolicy(new Policies("testapi","im4", "nonblanklc", "UNUSED", "", null), response.getPolicies().get(0));	
 		response = dhApiClient.useNextPolicy("testapi", "nonblanklc", "UNUSED", DataHunterConstants.SELECT_OLDEST_ENTRY);
 		assertEquals("No rows matching the selection.  Possibly we have ran out of data for application:[testapi]", response.getFailMsg()); 		
-		
-		 System.out.println( "######## next : " + response);
-		
-		// assertEquals(new Integer(5), dhApiClient.updatePoliciesUseState("testapi", null, "", "UNPAIRED", null).getRowsAffected());
 	}	
 	
+	/**
+	 * Note: this method clears the DataHunter database of all existing data
+	 * @param dhApiClient
+	 */
+	public void workingWithAsyncMessages(DataHunterRestApiClient dhApiClient) {
+		clearDatabase(dhApiClient);
+		insertPolicySets(dhApiClient, "testapi-async", "t01-", 5); 
+		DataHunterRestApiResponsePojo response = dhApiClient.printSelectedPolicies("testapi-async", null, "UNPAIRED");
+		assertEquals(new Integer(20), response.getRowsAffected());
+		assertEquals(20, response.getPolicies().size());
+				
+		dhApiClient.deleteMultiplePolicies("norowsfound", null, null);
+		//response = dhApiClient.asyncMessageAnalyzer(DataHunterConstants.STARTS_WITH,"TESTAPI_ASYNC_HIGH_VOL", null, "UNPAIRED", "USED");
+		response = dhApiClient.asyncMessageAnalyzer(DataHunterConstants.EQUALS,"norowsfound", null, null, null);
+		assertEquals(0, response.getAsyncMessageaAnalyzerResults().size());		
+		assertEquals(new Integer(0), response.getRowsAffected());		
+
+		response = dhApiClient.asyncMessageAnalyzer(DataHunterConstants.EQUALS,"testapi-async", null, null, null);		
+		assertEquals(5, response.getAsyncMessageaAnalyzerResults().size());	
+		assertEquals(new Integer(5), response.getRowsAffected());	
 	
-	public void workingWithAsyncMessagesX(DataHunterRestApiClient dhApiClient) {
-		
-		DataHunterRestApiResponsePojo response = dhApiClient.deleteMultiplePolicies("TESTAPI_ASYNC_HIGH_VOL", null, null);
-		assertEquals(String.valueOf(true), response.getSuccess() ); 
+		insertPolicySets(dhApiClient, "testapi-like", "t02-", 1);
+		assertEquals(new Integer(8), dhApiClient.countPoliciesBreakdown(DataHunterConstants.STARTS_WITH, "testapi-", "", "UNPAIRED").getRowsAffected());
+		response = dhApiClient.asyncMessageAnalyzer(DataHunterConstants.STARTS_WITH ,"testapi-", null, null, null);			
+		assertEquals(6, response.getAsyncMessageaAnalyzerResults().size());				
+		assertTrue(response.getAsyncMessageaAnalyzerResults().get(0).toString().startsWith("[application=testapi-like, startsWith=null, identifier=t02-testonly-1, lifecycle=null, useability=UNPAIRED"));
+		assertTrue(response.getAsyncMessageaAnalyzerResults().get(1).toString().startsWith("[application=testapi-async, startsWith=null, identifier=t01-testonly-5, lifecycle=null, useability=UNPAIRED"));
+		assertTrue(response.getAsyncMessageaAnalyzerResults().get(2).toString().startsWith("[application=testapi-async, startsWith=null, identifier=t01-testonly-4, lifecycle=null, useability=UNPAIRED"));
+		assertTrue(response.getAsyncMessageaAnalyzerResults().get(3).toString().startsWith("[application=testapi-async, startsWith=null, identifier=t01-testonly-3, lifecycle=null, useability=UNPAIRED"));
+		assertTrue(response.getAsyncMessageaAnalyzerResults().get(4).toString().startsWith("[application=testapi-async, startsWith=null, identifier=t01-testonly-2, lifecycle=null, useability=UNPAIRED"));
+		assertTrue(response.getAsyncMessageaAnalyzerResults().get(5).toString().startsWith("[application=testapi-async, startsWith=null, identifier=t01-testonly-1, lifecycle=null, useability=UNPAIRED"));
 
-		insertPolicySets(dhApiClient, 5000);
-		
-		response = dhApiClient.asyncMessageAnalyzer(DataHunterConstants.STARTS_WITH,"TESTAPI_ASYNC_HIGH_VOL", null, "UNPAIRED", "USED");
-		
-		System.out.println(">> $$$ " );
-		
-		int i=0;
-		List<AsyncMessageaAnalyzerResult>  res = response.getAsyncMessageaAnalyzerResults();
-		for (AsyncMessageaAnalyzerResult asyncMessageaAnalyzerResult : res) {
-			System.out.println("       " +  ++i + "   " + asyncMessageaAnalyzerResult  );
-		}
-		
-		System.out.println("<< $$$ " );		
+		response = dhApiClient.asyncMessageAnalyzer(DataHunterConstants.EQUALS ,"testapi-async", "t01-testonly-4", null, "USED");			
+		assertEquals(1, response.getAsyncMessageaAnalyzerResults().size());				
+		assertTrue(response.getAsyncMessageaAnalyzerResults().get(0).toString().startsWith("[application=testapi-async, startsWith=null, identifier=t01-testonly-4, lifecycle=null, useability=USED"));
+		assertEquals(3, dhApiClient.printSelectedPolicies("testapi-async", null, "USED").getPolicies().size());
+		response = dhApiClient.asyncMessageAnalyzer(DataHunterConstants.STARTS_WITH ,"testapi-async", "t01-testonly-3", null, "USED");			
+		assertEquals(1, response.getAsyncMessageaAnalyzerResults().size());				
+		assertTrue(response.getAsyncMessageaAnalyzerResults().get(0).toString().startsWith("[application=testapi-async, startsWith=null, identifier=t01-testonly-3, lifecycle=null, useability=USED"));
+		assertEquals(6, dhApiClient.printSelectedPolicies("testapi-async", null, "USED").getPolicies().size());
 
+		response = dhApiClient.asyncMessageAnalyzer(DataHunterConstants.EQUALS ,"testapi-async", "t01-someother-5", null, "USED");			
+		assertEquals(0, response.getAsyncMessageaAnalyzerResults().size());				
 	}
 
 
-	private void insertPolicySets(DataHunterRestApiClient dhApiClient, int numPoliciesSetsToBeCreate) {
-		System.out.println("massPolicyInsert inserting ...");
+	private void clearDatabase(DataHunterRestApiClient dhApiClient) {
+		DataHunterRestApiResponsePojo response = dhApiClient.countPoliciesBreakdown(DataHunterConstants.STARTS_WITH, "", null, null);		
+		List<CountPoliciesBreakdown> countPoliciesBreakdownList = response.getCountPoliciesBreakdown();
+		for (CountPoliciesBreakdown cpb : countPoliciesBreakdownList) {
+			dhApiClient.deleteMultiplePolicies(cpb.getApplication(), cpb.getLifecycle(), cpb.getUseability()); 
+		}
+		assertEquals(0, dhApiClient.countPoliciesBreakdown(DataHunterConstants.STARTS_WITH, "", null, null).getCountPoliciesBreakdown().size());
+	}	
+	
+	
+	private void insertPolicySets(DataHunterRestApiClient dhApiClient, String application, String idPrefex, int numPoliciesSetsToBeCreate) {
+		dhApiClient.deleteMultiplePolicies(application, null, null);
 		for (int i = 1; i <= numPoliciesSetsToBeCreate; i++) {
-			dhApiClient.addPolicy( new Policies("testapi-async", "T99-testonly-" + i, "FIRSTONE", "UNPAIRED", "", null));
-			dhApiClient.addPolicy( new Policies("testapi-async", "T99-testonly-" + i, "between",  "UNPAIRED", "", null));
-			dhApiClient.addPolicy( new Policies("testapi-async", "T99-someother-"+ i, "other",    "UNPAIRED", "", null));			
+			dhApiClient.addPolicy( new Policies(application, idPrefex+"testonly-" + i, "FIRSTONE", "UNPAIRED", "", null));
+			dhApiClient.addPolicy( new Policies(application, idPrefex+"testonly-" + i, "between",  "UNPAIRED", "", null));
+			dhApiClient.addPolicy( new Policies(application, idPrefex+"someother-"+ i, "other",    "UNPAIRED", "", null));			
 		} 
-		for (int i = 1; i <= numPoliciesSetsToBeCreate; i++) {
-			dhApiClient.addPolicy( new Policies("testapi-async", "T99-testonly-" + i, "LASTONE",  "UNPAIRED", "", null));		
+		for (int i = 1; i <= numPoliciesSetsToBeCreate; i++) { 
+			try {Thread.sleep(2);} catch (Exception e){}; // ensure a time gap
+			dhApiClient.addPolicy( new Policies(application, idPrefex+"testonly-" + i, "LASTONE",  "UNPAIRED", "", null));		
 		} 		
-		System.out.println("... massPolicyInsert done");
 	}
 	
 	
@@ -508,7 +526,6 @@ public class DataHunterRestApiClientSampleUsage {
 
 	
 	public static void main(String[] args) {
-		
 		DataHunterRestApiClient dhApiClient = new DataHunterRestApiClient("http://localhost:8081/dataHunter"  );
 		DataHunterRestApiClientSampleUsage sample = new DataHunterRestApiClientSampleUsage();
 		sample.basicPolicyAddPrintDeleteChecks(dhApiClient);
@@ -516,8 +533,7 @@ public class DataHunterRestApiClientSampleUsage {
 		sample.policyCountsAndBreakdowns(dhApiClient);
 		sample.policyCountBreakdownsUsingStartWith(dhApiClient);  // this method clears the database !!
 		sample.workingWithUseStateChanges(dhApiClient);
-//		sample.workingWithAsyncMessagesX(dhApiClient);
-
+		sample.workingWithAsyncMessages(dhApiClient);
 		sample.asyncLifeCycleTestWithUseabilityUpdate(dhApiClient);	
 	}
 

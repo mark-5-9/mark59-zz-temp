@@ -62,7 +62,7 @@ import com.mark59.seleniumDSL.pageElements.HtmlTableRow;
 
 
 /**
- * This selenium test uses a style of DSL which we suggest would be suitable for most performance tests.<br><br>
+ * This selenium script uses a style of DSL which we suggest would be usable for most performance tests.<br><br>
  * For simple html pages a DSL not having element "wait until"s may suffice.
  * 
  * <p>Note the use of a <b>PAGE_LOAD_STRATEGY</b> of <b>NONE</b>.  This means you must control all page load timing in the script, usually
@@ -71,9 +71,12 @@ import com.mark59.seleniumDSL.pageElements.HtmlTableRow;
  * 
  * <p>**Note 1 and 2: the  waitUntilClickable(..) or thenSleep() methods are not necessary here, the simplicity of the pages don't require it.
  * Also, for Note 1, the <code>checkSqlOk</code> already has a wait built into it (<code>getText</code> for the SQL result, so that would give
- * you the correct timing). Just included to demonstrate what would be required in more difficult situations, such as on pages where you need
+ * you the correct timing). Included to demonstrate what would be required in more difficult situations, such as on pages where you need
  * to wait for async processes to execute.
  * <br>
+ * 
+ * <p>Also note, when you require DataHunter functionality in a script, we suggest to use DataHunter Rest Api calls rather than using selenium
+ * as done in this sample.
  * 
  * @see SeleniumAbstractJavaSamplerClient
  * 

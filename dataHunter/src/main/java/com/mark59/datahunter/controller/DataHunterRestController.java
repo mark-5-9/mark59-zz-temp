@@ -16,7 +16,6 @@
 
 package com.mark59.datahunter.controller;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +24,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-//import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,6 +39,7 @@ import com.mark59.datahunter.model.CountPoliciesBreakdown;
 import com.mark59.datahunter.model.DataHunterRestApiResponsePojo;
 import com.mark59.datahunter.model.PolicySelectionCriteria;
 import com.mark59.datahunter.model.UpdateUseStateAndEpochTime;
+
 
 /**
  *  The DataHunter REST Service Controller.
@@ -62,7 +61,6 @@ import com.mark59.datahunter.model.UpdateUseStateAndEpochTime;
  * @author Philip Webb
  * Written: Australian Summer 2021/22  
  */
-
 @RestController
 @RequestMapping("/api")
 public class DataHunterRestController {
@@ -86,10 +84,7 @@ public class DataHunterRestController {
 	@GetMapping(path = "/addPolicy")
 	public ResponseEntity<Object> addPolicy(@RequestParam String application, @RequestParam String identifier, @RequestParam String lifecycle, 
 			@RequestParam String useability, @RequestParam(required=false) String otherdata, @RequestParam(required=false) String epochtime){
-	
-		////////////////////////////////////// System.out.println("DataHunterRestController addPolicy !!") ;
-		
-		
+
 		Policies policies = new Policies();
 		policies.setApplication(application);
 		policies.setIdentifier(identifier);
@@ -102,7 +97,6 @@ public class DataHunterRestController {
 		} else {
 			policies.setEpochtime(Long.parseLong(epochtime)  );
 		}
-		// System.out.println("DataHunterRestController addPolicy, passed values: " + policies ) ;
 		
 		SqlWithParms sqlWithParms = policiesDAO.constructInsertDataSql(policies);
 		int rowsAffected;
@@ -119,7 +113,6 @@ public class DataHunterRestController {
 			return ResponseEntity.ok(repsonse);	
 		}	
 		repsonse.setRowsAffected(rowsAffected);
-
 		// System.out.println("RestController getSqlparameters: " + DataHunterUtils.prettyPrintMap(sqlWithParms.getSqlparameters().getValues()));
 		// System.out.println("RestController getSql : " + sqlWithParms.getSql());
 
@@ -132,9 +125,6 @@ public class DataHunterRestController {
 		}
 		return ResponseEntity.ok(repsonse);	
 	}
-
-	
-	
 
 	
 	/**
@@ -158,9 +148,6 @@ public class DataHunterRestController {
 		policySelectionCriteria.setSelectOrder(DataHunterConstants.SELECT_UNORDERED);
 		SqlWithParms sqlWithParms = policiesDAO.constructSelectPoliciesSql(policySelectionCriteria);
 		int rowsAffected = policiesDAO.runCountSql(sqlWithParms);
-
-		System.out.println("DataHunterRestController getSqlparameters:" + DataHunterUtils.prettyPrintMap(sqlWithParms.getSqlparameters().getValues()));
-		System.out.println("DataHunterRestController getSql          :" + sqlWithParms.getSql());
 		
 		DataHunterRestApiResponsePojo repsonse = new DataHunterRestApiResponsePojo();
 		repsonse.setPolicies(Collections.singletonList(new Policies(application,null,lifecycle, useability, null, null)));
@@ -206,17 +193,10 @@ public class DataHunterRestController {
 		policySelectionCriteria.setLifecycle(lifecycle);
 		policySelectionCriteria.setUseability(useability);
 		
-		
-		System.out.println("countPoliciesBreakdown policySelectionCriteria:" + policySelectionCriteria);
-		
 		SqlWithParms sqlWithParms = policiesDAO.constructCountPoliciesBreakdownSql(policySelectionCriteria);
 		List<CountPoliciesBreakdown> countPoliciesBreakdownList = policiesDAO.runCountPoliciesBreakdownSql(sqlWithParms);
 		int rowsAffected = countPoliciesBreakdownList.size();
 
-		System.out.println("countPoliciesBreakdown getSqlparameters:" + DataHunterUtils.prettyPrintMap(sqlWithParms.getSqlparameters().getValues()));
-		System.out.println("countPoliciesBreakdown getSql          :" + sqlWithParms.getSql());
-		System.out.println("countPoliciesBreakdown countPoliciesBreakdownList.size()  :" + countPoliciesBreakdownList.size());
-		
 		repsonse.setCountPoliciesBreakdown(countPoliciesBreakdownList);
 		repsonse.setRowsAffected(rowsAffected);
 		repsonse.setSuccess(String.valueOf(true));			
@@ -246,16 +226,10 @@ public class DataHunterRestController {
 		policySelectionCriteria.setApplication(application);
 		policySelectionCriteria.setIdentifier(identifier);
 		policySelectionCriteria.setLifecycle(lifecycle);
-		
 		policySelectionCriteria.setSelectClause(" application, identifier, lifecycle, useability,otherdata, created, updated, epochtime ");
-		System.out.println("DataHunterRestController policySelectionCriteria:" + policySelectionCriteria);
 
 		SqlWithParms sqlWithParms = policiesDAO.constructSelectPolicySql(policySelectionCriteria);
 		List<Policies> policiesList = policiesDAO.runSelectPolicieSql(sqlWithParms);
-
-		System.out.println("DataHunterRestController getSqlparameters:" + DataHunterUtils.prettyPrintMap(sqlWithParms.getSqlparameters().getValues()));
-		System.out.println("DataHunterRestController getSql          :" + sqlWithParms.getSql());
-		System.out.println("DataHunterRestController policiesList    :" + policiesList);
 		
 		DataHunterRestApiResponsePojo repsonse = new DataHunterRestApiResponsePojo();
 		repsonse.setPolicies(policiesList);
@@ -273,7 +247,6 @@ public class DataHunterRestController {
 		}
 		return ResponseEntity.ok(repsonse);	
 	}
-	
 	
 	
 	/**
@@ -297,10 +270,6 @@ public class DataHunterRestController {
 		SqlWithParms sqlWithParms = policiesDAO.constructSelectPoliciesSql(policySelectionCriteria);
 		
 		List<Policies> policiesList = policiesDAO.runSelectPolicieSql(sqlWithParms);
-
-		System.out.println("DataHunterRestController getSqlparameters:" + DataHunterUtils.prettyPrintMap(sqlWithParms.getSqlparameters().getValues()));
-		System.out.println("DataHunterRestController getSql          :" + sqlWithParms.getSql());
-		System.out.println("DataHunterRestController policiesList    :" + policiesList);
 		
 		DataHunterRestApiResponsePojo repsonse = new DataHunterRestApiResponsePojo();
 		repsonse.setPolicies(policiesList);
@@ -330,9 +299,6 @@ public class DataHunterRestController {
 		policySelectionCriteria.setLifecycle(lifecycle);		
 		
 		SqlWithParms sqlWithParms = policiesDAO.constructDeletePoliciesSql(policySelectionCriteria);
-
-		System.out.println("DataHunterRestController getSqlparameters:" + DataHunterUtils.prettyPrintMap(sqlWithParms.getSqlparameters().getValues()));
-		System.out.println("DataHunterRestController getSql          :" + sqlWithParms.getSql());
 		
 		DataHunterRestApiResponsePojo repsonse = new DataHunterRestApiResponsePojo();
 		repsonse.setPolicies(Collections.singletonList(new Policies(application,identifier,lifecycle, null, null, null)));
@@ -382,9 +348,6 @@ public class DataHunterRestController {
 	
 		SqlWithParms sqlWithParms = policiesDAO.constructDeleteMultiplePoliciesSql(policySelectionCriteria);
 		int rowsAffected = policiesDAO.runDatabaseUpdateSql(sqlWithParms);
-
-		System.out.println("DataHunterRestController getSqlparameters:" + DataHunterUtils.prettyPrintMap(sqlWithParms.getSqlparameters().getValues()));
-		System.out.println("DataHunterRestController getSql          :" + sqlWithParms.getSql());
 		
 		DataHunterRestApiResponsePojo repsonse = new DataHunterRestApiResponsePojo();
 		repsonse.setPolicies(Collections.singletonList(new Policies(application,null,lifecycle, useability, null, null)));
@@ -398,8 +361,6 @@ public class DataHunterRestController {
 		}
 		return ResponseEntity.ok(repsonse);	
 	}
-	
-	
 	
 
 	/**
@@ -420,10 +381,11 @@ public class DataHunterRestController {
 		return nextPolicy(DataHunterConstants.USE, application, lifecycle, useability, selectOrder );
 	}
 	
+	
 	/**
 	 * 	Lookup Next Item
 	 * 
-	 *  <br>As for {@link #useNextPolicy}, except the Item not updated..
+	 *  <br><br>As for {@link #useNextPolicy}, except the Item not updated..
 	 * 
 	 * @param application application 
 	 * @param lifecycle   blank to delete all lifecycle values matching the other criteria 
@@ -523,7 +485,6 @@ public class DataHunterRestController {
 	}
 
 
-
 	/**
 	 * Change the Use State for an Item, or for multiple Items in an Application
 	 * 
@@ -553,9 +514,6 @@ public class DataHunterRestController {
 		}
 		SqlWithParms sqlWithParms = policiesDAO.constructUpdatePoliciesUseStateSql(updateUseStateAndEpochTime);
 
-		System.out.println("DataHunterRestController getSqlparameters:" + DataHunterUtils.prettyPrintMap(sqlWithParms.getSqlparameters().getValues()));
-		System.out.println("DataHunterRestController getSql          :" + sqlWithParms.getSql());
-
 		DataHunterRestApiResponsePojo repsonse = new DataHunterRestApiResponsePojo();
 		int rowsAffected;
 		try {
@@ -582,7 +540,23 @@ public class DataHunterRestController {
 	}
 	
 	
-	
+	/**
+	 * Asynchronous Message Analyzer
+	 * 
+	 * <p>Provides a timing calculation between a set of Items that match the input criteria.  It is designed to assist with timing 
+	 * asynchronous events during a performance test.  For further details please refer to the Mark59 user guide, and sample 
+	 * usages from <code>DataHunterRestApiClientSampleUsage</code> in the dataHunterRestApiClient project.
+	 * 
+	 * @param applicationStartsWithOrEquals  must be "EQUALS" or "STARTS_WITH" (applied to application selection)
+	 * @param application application
+	 * @param identifier identifier leave blank to select all identifier values matching the other criteria (application, useability)
+	 * @param useability {@link DataHunterConstants#USEABILITY_LIST} leave blank to select all useability values matching the other criteria
+	 *  (the parameters above).  Note that the value 'UNPAIRED' was specifically created for use in this function (but you have the option to use other values).  
+	 * @param toUseability {@link DataHunterConstants#USEABILITY_LIST}. 'Matched' Items satisfying the selection criteria (the parameters above), will have
+	 *  useability changed to this value 
+	 * @return  ResponseEntity (ok)  The getAsyncMessageaAnalyzerResults list in the response provides the results, including the max time difference
+	 *  between each set of matched rows.  
+	 */
 	@GetMapping(path = "/asyncMessageAnalyzer")
 	public ResponseEntity<Object> asyncMessageAnalyzer(@RequestParam String applicationStartsWithOrEquals, @RequestParam String application, 
 			@RequestParam(required=false) String identifier, @RequestParam(required=false) String useability, @RequestParam(required=false) String toUseability){
@@ -605,13 +579,11 @@ public class DataHunterRestController {
 		asyncMessageaAnalyzerRequest.setIdentifier(identifier);
 		asyncMessageaAnalyzerRequest.setUseability(useability);
 		asyncMessageaAnalyzerRequest.setToUseability(toUseability);
-		
 
 		SqlWithParms analyzerSqlWithParms = policiesDAO.constructAsyncMessageaAnalyzerSql(asyncMessageaAnalyzerRequest);
 		List<AsyncMessageaAnalyzerResult> asyncMessageaAnalyzerResultList = new ArrayList<>();
-
-		System.out.println("DataHunterRestController getSqlparameters:" + DataHunterUtils.prettyPrintMap(analyzerSqlWithParms.getSqlparameters().getValues()));
-		System.out.println("DataHunterRestController getSql          :" + analyzerSqlWithParms.getSql());
+		//System.out.println("DHRC getSqlparameters:" + DataHunterUtils.prettyPrintMap(analyzerSqlWithParms.getSqlparameters().getValues()));
+		//System.out.println("DHRC getSql          :" + analyzerSqlWithParms.getSql());
 
 		try {
 			asyncMessageaAnalyzerResultList = policiesDAO.runAsyncMessageaAnalyzerSql(analyzerSqlWithParms);
@@ -622,6 +594,7 @@ public class DataHunterRestController {
 			return ResponseEntity.ok(repsonse);		
 		}	
 		int rowsAffected = asyncMessageaAnalyzerResultList.size();
+		repsonse.setAsyncMessageaAnalyzerResults(asyncMessageaAnalyzerResultList);
 		
 		repsonse.setPolicies(Collections.singletonList(new Policies(application,identifier,null, useability, null, null)));
 		repsonse.setSuccess(String.valueOf(true));			
@@ -631,39 +604,8 @@ public class DataHunterRestController {
 			repsonse.setFailMsg("sql execution OK, but no rows matched the selection criteria.  Nothing was updated on the database");			
 			return ResponseEntity.ok(repsonse);	
 		}	
-
-		
-		
-		long startepoch = Instant.now().toEpochMilli() ;
-		System.out.println("## AsyncMessageaAnalyzerController start update at " +  startepoch) ;
-		
-		
-		
 		
 		if ( ! DataHunterUtils.isEmpty(toUseability)){
-			
-//			UpdateUseStateAndEpochTime updateUse = new UpdateUseStateAndEpochTime();
-//			updateUse.setUseability(asyncMessageaAnalyzerRequest.getUseability() );
-//			updateUse.setToUseability(asyncMessageaAnalyzerRequest.getToUseability());
-//			
-//			for (AsyncMessageaAnalyzerResult asyncMessageaAnalyzerResult : asyncMessageaAnalyzerResultList) {
-//				updateUse.setApplication(asyncMessageaAnalyzerResult.getApplication());
-//				updateUse.setIdentifier(asyncMessageaAnalyzerResult.getIdentifier());
-//				// lifecycle updated for all rows of the given id and so left blank (lifecycle is the part of the key that changes for each async event) 
-//				updateUse.setLifecycle(""); 
-//				SqlWithParms sqlWithParms = policiesDAO.constructUpdatePoliciesUseStateSql(updateUse);
-//				try {
-//					policiesDAO.runDatabaseUpdateSql(sqlWithParms);
-//				} catch (Exception e) {
-//					repsonse.setSuccess(String.valueOf(false));			
-//					repsonse.setFailMsg("sql exception caught: " + e.getMessage() + "[" + asyncMessageaAnalyzerRequest + "]"  );
-//					repsonse.setRowsAffected(rowsAffected);					
-//					return  ResponseEntity.ok(repsonse);		
-//				}
-//				asyncMessageaAnalyzerResult.setUseability(asyncMessageaAnalyzerRequest.getToUseability());
-//			}
-			
-			
 			try {
 				asyncMessageaAnalyzerResultList = policiesDAO.updateMultiplePoliciesUseState(asyncMessageaAnalyzerResultList, toUseability);
 			} catch (Exception e) {
@@ -672,27 +614,16 @@ public class DataHunterRestController {
 				repsonse.setRowsAffected(rowsAffected);					
 				return  ResponseEntity.ok(repsonse);		
 			}
-
 		}
-
-		long endepoch = Instant.now().toEpochMilli() ;
-		System.out.println("## AsyncMessageaAnalyzerController ends  update at " +  endepoch) ;
-		long timetaken = endepoch - startepoch;
-		System.out.println("## AsyncMessageaAnalyzerController " + asyncMessageaAnalyzerResultList.size() + " sets matched and updated, taking " + timetaken + " ms");  	
 		
-		repsonse.setAsyncMessageaAnalyzerResults(asyncMessageaAnalyzerResultList);
+		repsonse.setAsyncMessageaAnalyzerResults(asyncMessageaAnalyzerResultList);  
 		repsonse.setSuccess(String.valueOf(true));			
 		repsonse.setFailMsg("");
 		return ResponseEntity.ok(repsonse);	
 	}
 	
-	
-	
-	
-
 
 	private DataHunterRestApiResponsePojo updateNextPolicy(DataHunterRestApiResponsePojo response, Policies nextPolicy) {
-		
 		try {
 			SqlWithParms updateSqlWithParms = policiesDAO.constructUpdatePolicyToUsedSql(nextPolicy);
 			int rowsUpdated = policiesDAO.runDatabaseUpdateSql(updateSqlWithParms);
@@ -702,25 +633,13 @@ public class DataHunterRestController {
 				response.setFailMsg("");
 			} else {
 				response.setSuccess(String.valueOf(false));
-				response.setFailMsg("1 row should of been updated, but sql reurn count for update indicates "+ 
-						rowsUpdated + " rows affected");
+				response.setFailMsg("1 row should of been updated, but sql reurn count for update indicates "+ rowsUpdated + " rows affected");
 			}
-
 		} catch (Exception e) {
 			response.setSuccess(String.valueOf(false));			
 			response.setFailMsg("sql exception caught: " + e.getMessage() + "[" + response.getPolicies() + "]"  );
 		}
 		return response;	
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }

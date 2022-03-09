@@ -142,6 +142,11 @@ public class DataHunterBasicRegressionScript  extends SeleniumAbstractJavaSample
 		
 		dslPageFunctions.deleteMultipleItems(wholeApp, driver, 3L);
 		
+		Policy idPolicyNoLifecycle = new Policy(application, "idPolicyNoLifecycle","", UNUSED, someOtherdata+"id1");SafeSleep.sleep(100);
+		dslPageFunctions.addAnItem(idPolicyNoLifecycle, driver);
+		PolicySelectionCriteria noLifecycle = new PolicySelectionCriteria(application, "idPolicyNoLifecycle", "");
+		dslPageFunctions.deleteAnItem(noLifecycle, driver, 1L);		
+		
 		LOG.info("DataHunterBasicRegressionScript ending");	
 	}
 	
