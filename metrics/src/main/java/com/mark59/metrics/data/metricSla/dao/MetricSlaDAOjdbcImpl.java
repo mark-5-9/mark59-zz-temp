@@ -261,6 +261,29 @@ public class MetricSlaDAOjdbcImpl implements MetricSlaDAO {
 		return  applications;
 	}
 
+	
+	@Override	
+	public List<MetricSla> getDisabledMetricSlas(String application, String metricTxnType, String valueDerivation){
+		String sql = "select * from METRICSLA"
+				+ " where APPLICATION = :application "
+				+ "  and METRIC_TXN_TYPE = :metricTxnType "
+				+ "  and VALUE_DERIVATION = :valueDerivation "
+				+ "  and IS_ACTIVE <> 'Y' " 
+				+ "  order by METRIC_NAME ";
+
+		MapSqlParameterSource sqlparameters = new MapSqlParameterSource()
+				.addValue("application", application)
+				.addValue("metricTxnType", metricTxnType)
+				.addValue("valueDerivation", valueDerivation);		
+		
+		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+		List<MetricSla> disabledMetricSlas = jdbcTemplate.query(sql, sqlparameters, new MetricSlaRowMapper());	
+		return disabledMetricSlas;
+	}
+	
+	
+	
+	
 	/*
 	 *   To prevent null exceptions during SLA processing
 	 */

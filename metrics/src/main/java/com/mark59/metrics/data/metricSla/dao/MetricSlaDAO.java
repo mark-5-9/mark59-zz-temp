@@ -25,15 +25,28 @@ import com.mark59.metrics.data.beans.MetricSla;
  * Written: Australian Winter 2019  
  */
 public interface MetricSlaDAO {
-	 void insertData(MetricSla metricSla);
-	 List<MetricSla> getMetricSlaList();
-	 List<MetricSla> getMetricSlaList(String application);
-	 List<MetricSla> getMetricSlaList(String application, String metricTxnType);
-	 List<MetricSla> getMetricSlaList(String application, String metricName, String metricTxnType);
-	 void updateData(MetricSla metricSla);
-	 void deleteAllSlasForApplication(String application);
-	 void deleteData(String application, String metricName, String metricTxnType);
-	 void deleteData(String application, String metricName, String metricTxnType, String valueDerivation);
-	 MetricSla getMetricSla(String application, String metricName, String metricTxnType, String valueDerivation);
-	 List<String> findApplications();
+	
+	void insertData(MetricSla metricSla);
+
+	List<MetricSla> getMetricSlaList();
+
+	List<MetricSla> getMetricSlaList(String application);
+
+	List<MetricSla> getMetricSlaList(String application, String metricTxnType);
+
+	List<MetricSla> getMetricSlaList(String application, String metricName, String metricTxnType);
+
+	void updateData(MetricSla metricSla);
+
+	void deleteAllSlasForApplication(String application);
+
+	void deleteData(String application, String metricName, String metricTxnType);
+
+	void deleteData(String application, String metricName, String metricTxnType, String valueDerivation);
+
+	MetricSla getMetricSla(String application, String metricName, String metricTxnType, String valueDerivation);
+
+	List<String> findApplications();
+
+	List<MetricSla> getDisabledMetricSlas(String application, String metricTxnType, String graphValueDerivation);
 }

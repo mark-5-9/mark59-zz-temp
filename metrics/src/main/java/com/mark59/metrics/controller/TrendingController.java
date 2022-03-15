@@ -37,6 +37,7 @@ import com.mark59.metrics.application.UtilsMetrics;
 import com.mark59.metrics.data.application.dao.ApplicationDAO;
 import com.mark59.metrics.data.beans.BarRange;
 import com.mark59.metrics.data.beans.GraphMapping;
+import com.mark59.metrics.data.beans.MetricSla;
 import com.mark59.metrics.data.beans.Run;
 import com.mark59.metrics.data.beans.Transaction;
 import com.mark59.metrics.data.graphMapping.dao.GraphMappingDAO;
@@ -256,10 +257,12 @@ public class TrendingController {
 			if ( Mark59Constants.DatabaseTxnTypes.TRANSACTION.name().equals( graphMapping.getTxnType() )){
 				populateFailedTransactionalSlaLists(trendingForm.getApplication(), latestRunTime, listOfTransactionsToGraph, model);
 				populateIgnoredTransactionsList(trendingForm.getApplication(), model);	
+				populateDisabledSlasList(trendingForm.getApplication(), model);	
 				long cdpTxnsCount = transactionDAO.countRunsWithCdpTransactions(trendingForm.getApplication());
 				model.addAttribute("cdpTxnsCount", String.valueOf(cdpTxnsCount));
 			} else {
 				populateFailedMetricSlaLists(trendingForm.getApplication(), latestRunTime, model, graphMapping);
+				populateDisabledMetricSlasList(trendingForm.getApplication(), model, graphMapping);	
 				model.addAttribute("cdpTxnsCount", "0");
 			}
 		
@@ -459,8 +462,14 @@ public class TrendingController {
 	
 	
 	private void populateIgnoredTransactionsList(String application, Model model){
-		List<String> cdpTaggedIgnoredTransactions = slaDAO.getListOfIgnoredTransactionsCdpTags(application);
+		List<String> cdpTaggedIgnoredTransactions = slaDAO.getListOfIgnoredTransactionsAddingCdpTags(application);
 		model.addAttribute("ignoredTransactionsId", UtilsMetrics.stringListToCommaDelimString(cdpTaggedIgnoredTransactions) );		
+	}
+	
+
+	private void populateDisabledSlasList(String application, Model model){
+		List<String> cdpTaggedDisabledSlas = slaDAO.getListOfDisabledSlasAddingCdpTags(application);
+		model.addAttribute("disabledSlasId", UtilsMetrics.stringListToCommaDelimString(cdpTaggedDisabledSlas) );		
 	}
 	
 	
@@ -506,6 +515,18 @@ public class TrendingController {
 	}
 
 
+	private void populateDisabledMetricSlasList(String application, Model model, GraphMapping graphMapping){
+		List<String> disabledMetricSlaNames= new ArrayList<>();
+		String metricTxnType = graphMapping.getTxnType();
+		String graphValueDerivation = graphMapping.getValueDerivation();
+		List<MetricSla> disabledMetricSlas = metricSlaDAO.getDisabledMetricSlas(application, metricTxnType, graphValueDerivation);
+		for (MetricSla metricSla : disabledMetricSlas) {
+			disabledMetricSlaNames.add(metricSla.getMetricName());
+		}
+		model.addAttribute("disabledSlasId", UtilsMetrics.stringListToCommaDelimString(disabledMetricSlaNames));
+	}
+	
+	
 	private List<String> populateApplicationDropdown(String appListSelector ) {
 		return runDAO.findApplications(appListSelector);
 	}		

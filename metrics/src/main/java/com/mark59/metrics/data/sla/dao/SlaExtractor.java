@@ -58,6 +58,7 @@ public class SlaExtractor implements ResultSetExtractor<Sla> {
 		sla.setXtraInt(resultSet.getLong(14));
 		sla.setSlaRefUrl(resultSet.getString(15));
 		sla.setComment(resultSet.getString(16));
+		sla.setIsActive(resultSet.getString(17));
 		return sla;
 	}
 }

@@ -40,6 +40,7 @@ public class BulkApplicationPassCountsForm {
 		BigDecimal	xtraNum;
 		Long		xtraInt;		
 		String		slaRefUrl;
+		String		isActive;	
 		String		slaOriginalTxnId;
 		String      applyRefUrlOption;
 				
@@ -141,6 +142,12 @@ public class BulkApplicationPassCountsForm {
 		public void setSlaRefUrl(String slaRefUrl) {
 			this.slaRefUrl = slaRefUrl;
 		}
+		public String getIsActive() {
+			return isActive;
+		}
+		public void setIsActive(String isActive) {
+			this.isActive = isActive;
+		}
 		public String getSlaOriginalTxnId() {
 			return slaOriginalTxnId;
 		}
@@ -172,6 +179,7 @@ public class BulkApplicationPassCountsForm {
 					+ ", xtraNum="+xtraNum		
 					+ ", xtraInt="+xtraInt		
 					+ ", slaRefUrl="+slaRefUrl		
+					+ ", isActive="+isActive		
 					+ ", slaOriginalTxnId="+slaOriginalTxnId		
 					+ ", applyRefUrlOption="+applyRefUrlOption		
 					;

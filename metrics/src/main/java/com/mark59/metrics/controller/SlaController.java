@@ -221,12 +221,14 @@ public class SlaController {
 		bulkApplicationPassCountsForm.setSlaRefUrl(referenceOfLastBaselineRun(reqApp));
 		
 		List<String> applicationList = populateApplicationsWithBaselinesDropdown();
-		List<String> isTxnIgnoredYesNo = populateIsTxnIgnoredYesNoDropdown();	
+		List<String> isTxnIgnoredYesNo = populateIsTxnIgnoredYesNoDropdown();
+		List<String> isActiveYesNo   = populateIsActiveYesNoDropdown();		
 		List<String> applyRefUrlOptions = populateApplyRefUrlDropdown();	
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("applications",applicationList);		
-		map.put("isTxnIgnoredYesNo", isTxnIgnoredYesNo);	
+		map.put("isTxnIgnoredYesNo", isTxnIgnoredYesNo);
+		map.put("isActiveYesNo",isActiveYesNo);			
 		map.put("applyRefUrlOptions",applyRefUrlOptions);		
 		return new ModelAndView("bulkApplicationPassCounts", "map", map);  			
 	}
@@ -284,9 +286,11 @@ public class SlaController {
 		List<String> applicationList   = populateSlaApplicationDropdown();		
 		List<String> IsCdpTxnYesNo     = populateIsCdpTxnYesNoDropdown();	
 		List<String> isTxnIgnoredYesNo = populateIsTxnIgnoredYesNoDropdown();	
+		List<String> isActiveYesNo   = populateIsActiveYesNoDropdown();			
 		map.put("applications",applicationList);		
 		map.put("isTxnIgnoredYesNo", isTxnIgnoredYesNo);	
-		map.put("IsCdpTxnYesNo",IsCdpTxnYesNo);				
+		map.put("IsCdpTxnYesNo",IsCdpTxnYesNo);	
+		map.put("isActiveYesNo",isActiveYesNo);			
 		return map;
 	}	
 	
@@ -313,4 +317,12 @@ public class SlaController {
 		return isCdpTxnYesNo;
 	}
 		
+
+	private List<String> populateIsActiveYesNoDropdown( ) {
+		List<String> isActiveYesNo = new ArrayList<>();
+		isActiveYesNo.add("Y");
+		isActiveYesNo.add("N");
+		return isActiveYesNo;
+	}		
+
 }

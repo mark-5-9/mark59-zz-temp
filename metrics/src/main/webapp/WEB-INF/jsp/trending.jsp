@@ -329,6 +329,13 @@
          </tr> 	
 
 	     <tr> 
+           <td width="15%">Transactions which have had their SLAs set to disabled in the SLA Transaction table</td> 
+           <td width="85%"> 
+           	<textarea id='disabledSlasId' style="width:100%;height:50px" >${disabledSlasId}</textarea> 
+           </td> 	
+         </tr> 	
+
+	     <tr> 
            <td width="15%">Fails SLA Metrics for the Graphed Metric Measure (Metric Type + Field Derivation)</td> 
            <td width="85%"> 
            	<textarea id='trxnIdsWithFailedSlaForThisMetricMeasure' style="width:100%;height:50px" >${trxnIdsWithFailedSlaForThisMetricMeasure}</textarea> 

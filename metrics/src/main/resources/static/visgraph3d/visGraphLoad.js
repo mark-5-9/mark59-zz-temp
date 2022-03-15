@@ -467,6 +467,8 @@ function drawSummaryTable(data, sortby){
 	
 	drawIgnoredTransactionsTable(data,sortby);
 	
+	drawDisabledSlasTable(data,sortby);
+	
 	document.getElementById("comparetab").innerHTML = comparetabContent;
 	
 }
@@ -521,7 +523,7 @@ function drawMissingTransactionsTable(data,sortby,runDatesToGraphArray){
 
 function drawIgnoredTransactionsTable(data,sortby){
 	
-	var ignoredTransactionsIdText   = document.getElementById("ignoredTransactionsId").value;
+	var ignoredTransactionsIdText = document.getElementById("ignoredTransactionsId").value;
 	var ignoredTransactionsArray = ignoredTransactionsIdText.split(',');  
 
 	if (ignoredTransactionsArray[0].length > 0){ 
@@ -544,6 +546,48 @@ function drawIgnoredTransactionsTable(data,sortby){
 	}
 	return comparetabContent;
 }
+
+
+
+function drawDisabledSlasTable(data,sortby){
+	
+	var disabledSlasIdText = document.getElementById("disabledSlasId").value;
+	var disabledSlasArray = disabledSlasIdText.split(',');  
+
+	if (disabledSlasArray[0].length > 0){ 
+	
+		var txnType = document.getElementById("txnTypedId").value; 
+		var host =  window.location.host; 
+		
+		
+		if ( txnType != "TRANSACTION" ){  // assume we are displaying a metrics graph
+			slaUrl="http://" + host + "/metrics/metricSlaList?reqApp=" + document.getElementById("application").value 		
+			slaUrlLink = "<a id=slaUrlLink href=" + slaUrl + " target='_blank'>Metric Sla Transaction Database Link</a>";
+		} else {
+			slaUrl="http://" + host + "/metrics/viewSlaList?reqApp=" + document.getElementById("application").value 		
+			slaUrlLink = "<a id=slaUrlLink href=" + slaUrl + " target='_blank'>SLA Transaction Database Link</a>";
+		}
+			
+		comparetabContent += "<br><br><br><br>";	
+		comparetabContent += "<table id=comparetabId border='1' bordercolor='grey' ><tr>";
+		
+		
+		if ( txnType != "TRANSACTION" ){  // assume we are displaying a metrics graph
+			comparetabContent += "<th> Disabled Metrics SLAs List for this Graph <br> &nbsp;&nbsp;&nbsp;see: " + slaUrlLink;	
+		} else {
+			comparetabContent += "<th> Disabled Transaction SLAs List <br> &nbsp;&nbsp;&nbsp;see: " + slaUrlLink;
+		}
+		comparetabContent += "</th><tr>";		
+
+		for (var i = 0; i < disabledSlasArray.length; i ++) {
+	 		comparetabContent += "<tr><td>" + disabledSlasArray[i] + "</td></tr>";
+	 	}	
+		comparetabContent += "</table>";
+		comparetabContent += "<br>"; 		
+	}
+	return comparetabContent;
+}
+
 
 
 

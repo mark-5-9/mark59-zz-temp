@@ -59,7 +59,7 @@ public class SlaChecker {
 		SlaTransactionResult slaTransactionResult = new SlaTransactionResult();
 		slaTransactionResult.setTxnId(transaction.getTxnId()); // only for debug
 
-		if (transactionSla != null) {
+		if (transactionSla != null && "Y".equals(transactionSla.getIsActive())){
 			slaTransactionResult.setFoundSLAforTxnId(true);
 
 			slaTransactionResult.setTxn90thResponse(transaction.getTxn90th());
@@ -94,7 +94,7 @@ public class SlaChecker {
 					checkPassCount(transaction.getTxnPass(),transactionSla.getSlaPassCount(), transactionSla.getSlaPassCountVariancePercent()));
 
 		} else {
-//    		System.out.println( "  SlaChecker: Warning  - no SLA exists for reported transaction " +  " " + transaction.getTxnId() );
+//    		System.out.println( "  SlaChecker: Warning  - no active SLA exists for reported transaction " +  " " + transaction.getTxnId() );
 			slaTransactionResult.setFoundSLAforTxnId(false);
 			slaTransactionResult.setPassed90thResponse(true);
 			slaTransactionResult.setPassed95thResponse(true);
