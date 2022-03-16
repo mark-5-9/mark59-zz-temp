@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 public class BulkApplicationPassCountsForm {
 
 		String		application;
+		String		isIncludeCdpTxns;
 		String		isTxnIgnored;
 		BigDecimal	sla90thResponse;
 		boolean		sla90thFromBaseline;
@@ -50,6 +51,12 @@ public class BulkApplicationPassCountsForm {
 		}
 		public void setApplication(String application) {
 			this.application = application;
+		}
+		public String getIsIncludeCdpTxns() {
+			return isIncludeCdpTxns;
+		}
+		public void setIsIncludeCdpTxns(String isIncludeCdpTxns) {
+			this.isIncludeCdpTxns = isIncludeCdpTxns;
 		}
 		public String getIsTxnIgnored() {
 			return isTxnIgnored;
@@ -163,8 +170,9 @@ public class BulkApplicationPassCountsForm {
 	
 		@Override
 		public String toString() {
-			String prettyPrint = "application="+application
+			return "application="+application
 					+ ", isTxnIgnored="+isTxnIgnored		
+					+ ", isIncludeCdpTxns="+isIncludeCdpTxns
 					+ ", sla90thResponse="+sla90thResponse		
 					+ ", sla90thFromBaseline="+sla90thFromBaseline		
 					+ ", sla95thResponse="+sla95thResponse		
@@ -181,9 +189,7 @@ public class BulkApplicationPassCountsForm {
 					+ ", slaRefUrl="+slaRefUrl		
 					+ ", isActive="+isActive		
 					+ ", slaOriginalTxnId="+slaOriginalTxnId		
-					+ ", applyRefUrlOption="+applyRefUrlOption		
-					;
-			return prettyPrint;
+					+ ", applyRefUrlOption="+applyRefUrlOption;
 		}
 		
 }

@@ -68,12 +68,16 @@ public class SlaDAOjdbcImpl implements SlaDAO {
 	public int bulkInsertOrUpdateApplication(BulkApplicationPassCountsForm bulkApplication) { 
 		String application = bulkApplication.getApplication();
 		
-		String sql =  "SELECT DISTINCT TXN_ID, IS_CDP_TXN, TXN_90TH, TXN_95TH, TXN_99TH, TXN_PASS, RUN_TIME"
+		String sql = "SELECT DISTINCT TXN_ID, IS_CDP_TXN, TXN_90TH, TXN_95TH, TXN_99TH, TXN_PASS, RUN_TIME"
 				+ " FROM TRANSACTION TX WHERE"
-				+ " TX.APPLICATION =  :application AND"
+				+ " TX.APPLICATION = :application AND"
 				+ " TX.TXN_TYPE =  :txnType AND"
 				+ " TX.RUN_TIME = ( select max(RUN_TIME) from RUNS where RUNS.APPLICATION = :application AND RUNS.BASELINE_RUN = 'Y' )";
-
+		
+		if ("N".equals(bulkApplication.getIsIncludeCdpTxns())){
+			sql = sql + " AND TX.IS_CDP_TXN = 'N' "; 
+		}	
+			
 		MapSqlParameterSource sqlparameters = new MapSqlParameterSource()
 				.addValue("application", application)
 				.addValue("txnType", Mark59Constants.DatabaseTxnTypes.TRANSACTION.name());

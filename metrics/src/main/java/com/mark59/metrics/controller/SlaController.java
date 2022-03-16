@@ -221,12 +221,14 @@ public class SlaController {
 		bulkApplicationPassCountsForm.setSlaRefUrl(referenceOfLastBaselineRun(reqApp));
 		
 		List<String> applicationList = populateApplicationsWithBaselinesDropdown();
+		List<String> isIncludeCdpTxnsYesNo = populateIsIncludeCdpTxnsYesNoDropdown();
 		List<String> isTxnIgnoredYesNo = populateIsTxnIgnoredYesNoDropdown();
 		List<String> isActiveYesNo   = populateIsActiveYesNoDropdown();		
 		List<String> applyRefUrlOptions = populateApplyRefUrlDropdown();	
 		
 		Map<String, Object> map = new HashMap<>();
-		map.put("applications",applicationList);		
+		map.put("applications",applicationList);
+		map.put("isIncludeCdpTxnsYesNo", isIncludeCdpTxnsYesNo);
 		map.put("isTxnIgnoredYesNo", isTxnIgnoredYesNo);
 		map.put("isActiveYesNo",isActiveYesNo);			
 		map.put("applyRefUrlOptions",applyRefUrlOptions);		
@@ -301,6 +303,14 @@ public class SlaController {
 		return applicationList;
 	}		
 	
+	
+	private List<String> populateIsIncludeCdpTxnsYesNoDropdown( ) {
+		List<String> isIncludeCdpTxnsYesNo = new ArrayList<>();
+		isIncludeCdpTxnsYesNo.add("N");
+		isIncludeCdpTxnsYesNo.add("Y");
+		return isIncludeCdpTxnsYesNo;
+	}	
+
 	
 	private List<String> populateIsTxnIgnoredYesNoDropdown( ) {
 		List<String> isTxnIgnoredYesNo = new ArrayList<>();

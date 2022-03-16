@@ -280,9 +280,7 @@ public class MetricSlaDAOjdbcImpl implements MetricSlaDAO {
 		List<MetricSla> disabledMetricSlas = jdbcTemplate.query(sql, sqlparameters, new MetricSlaRowMapper());	
 		return disabledMetricSlas;
 	}
-	
-	
-	
+		
 	
 	/*
 	 *   To prevent null exceptions during SLA processing
