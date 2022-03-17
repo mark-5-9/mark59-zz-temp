@@ -16,13 +16,13 @@
 
 package com.mark59.datahunter.controller;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,9 +36,6 @@ import com.mark59.datahunter.application.SqlWithParms;
 import com.mark59.datahunter.data.policies.dao.PoliciesDAO;
 import com.mark59.datahunter.model.AsyncMessageaAnalyzerRequest;
 import com.mark59.datahunter.model.AsyncMessageaAnalyzerResult;
-import com.mark59.datahunter.model.UpdateUseStateAndEpochTime;
-
-import java.time.Instant;
 
 /**
  * @author Philip Webb
