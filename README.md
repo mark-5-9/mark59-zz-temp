@@ -7,6 +7,16 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
 
 ## Releases 
 
+<p>Release 4.2<br>
+  <ul>
+    <li>New DataHunter REST Api project (minor datahuner DB changes)</li>
+    <li>Add Disabled flag for Transactional SLA (new column on metrics DB SLA table)</li>
+    <li>Option to ignore CDP transactions on SLA Bulk Update</li>		
+    <li>Selenium to 4.1.2, SpringBoot to 2.6.4, H2 to 2.1.210</li>	  
+    <li>Code cleanup (improve readability in IntelliJ)</li>	
+  </ul>  
+
+
 <p>Release 4.1<br>
   <ul>
     <li>Fix for log4j exposure (JMeter to 5.4.3)</li>
