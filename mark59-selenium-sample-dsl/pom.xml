@@ -52,9 +52,16 @@
 	<build>
 		<plugins>
 		
+			<!-- override default maven-compiler-plugin version (added due to corporate log4j security scans) -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.10.1</version>
+			</plugin>
+		
 			<!-- local build goals: clean package -->	
-			<!-- this plugin is for JMeter JSR223 'Groovy' scripting purposes :  mark59-selenium-sample-dsl-{version}-for-JSR223 jar 
-			     (created in the target folder) can be placed in a JMeter lib/ext directory to obtain the necessary Mark59 classes -->			
+			<!-- this plugin is for JMeter JSR223 'Groovy' scripting purposes :  creates mark59-selenium-sample-dsl-{version}-for-JSR223 jar 
+			     (in the project target folder) can be placed in a JMeter lib/ext directory to obtain the necessary Mark59 classes -->			
 			<plugin>
 			    <groupId>org.apache.maven.plugins</groupId>
 			    <artifactId>maven-assembly-plugin</artifactId>

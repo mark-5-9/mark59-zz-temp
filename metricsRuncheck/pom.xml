@@ -75,14 +75,22 @@
 	</dependencies>
 
 
-	<!-- spring boot maven plugin -->
-	<!-- phase/goals: clean package -->
-	<!-- As the project uses Spring Boot, we use the Spring Boot plugin to package 
-		as an executable jar.  Note the dependency on the metrics project, so ensure 
-		it's up to date before executing this build -->
 		
 	<build>
 		<plugins>
+		
+			<!-- override default maven-compiler-plugin version (added for corporate log4j security scans) -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.10.1</version><!--$NO-MVN-MAN-VER$-->
+			</plugin>
+		
+			<!-- spring boot maven plugin -->
+			<!-- phase/goals: clean package -->
+			<!-- As the project uses Spring Boot, we use the Spring Boot plugin to package as an executable jar.  
+				 Note the dependency on the metrics project, so ensure it's up to date before executing this build -->
+				
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

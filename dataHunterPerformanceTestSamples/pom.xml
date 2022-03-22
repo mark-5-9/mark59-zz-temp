@@ -57,6 +57,13 @@
 	<build>
 		<plugins>
 
+			<!-- override default maven-compiler-plugin version (may be needed for corporate security scans such as log4j vulnerabilities) -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.10.1</version>
+			</plugin>
+
 		<!-- Maven Jar Plugin and Dependency Plugin
 		     phase/goals: clean package  
 		     The two plugins work in conjunction to produce an output Jar and a directory of its dependencies. 
@@ -71,7 +78,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>3.2.2</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -102,7 +109,9 @@
 						</goals>
 						<configuration>
 							<outputDirectory>${project.build.directory}/${project.artifactId}-dependencies</outputDirectory>
-							<excludeGroupIds>org.apache.jmeter</excludeGroupIds>
+							<!-- <excludeGroupIds>org.apache.jmeter</excludeGroupIds> -->
+							<!-- using this entry instead of the line above will also exclude all log4j jars being copied  -->
+							<excludeGroupIds>org.apache.jmeter,log4j,org.apache.logging.log4j</excludeGroupIds>							
 						</configuration>
 					</execution>
 				</executions>				

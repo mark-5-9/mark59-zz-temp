@@ -13,6 +13,8 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
     <li>Add Disabled flag for Transactional SLA (new column on metrics DB SLA table)</li>
     <li>Option to ignore CDP transactions on SLA Bulk Update</li>		
     <li>Selenium to 4.1.2, SpringBoot to 2.6.4, H2 to 2.1.210</li>	  
+    <li>Maven Plugins updated, compiler plugin expliticly declared (align with spring boot versioning / 
+		 satisfy log4j vulerability scans)</li>	  
     <li>Code cleanup (improve readability in IntelliJ)</li>	
   </ul>  
 

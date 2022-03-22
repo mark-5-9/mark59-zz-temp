@@ -91,10 +91,16 @@
 
 		<plugins>
 
+			<!-- override spring boot managed version maven-compiler-plugin.version (3.8.1), added due to corporate log4j security scans -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.10.1</version><!--$NO-MVN-MAN-VER$-->
+			</plugin>
+
 			<!-- spring boot maven plugin -->
-			<!-- Constructs a spring boot war during the package phase. (for this 
-				plugin the install phase is not relevant to the build - see Maven jar and 
-				install plugins below) -->
+			<!-- Constructs a spring boot war during the package phase. (for this plugin the install phase is not 
+				 relevant see Maven jar and install plugins below) -->
 
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -143,9 +149,9 @@
 				</executions>
 			</plugin>
 
-
 		</plugins>
 		<finalName>${project.artifactId}</finalName>
+
 	</build>
 
 </project>
