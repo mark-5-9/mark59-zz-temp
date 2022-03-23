@@ -362,10 +362,8 @@ public class TestTransactionsDAOjdbcTemplateImpl implements TestTransactionsDAO
 			// for h2 v2.1.210: 'h2mem' and 'h2tcpclient'/'h2tcpserver' return Double, 'h2' returns BigDecimal) 			
 				
 			if (row.get("txnStdDeviation") instanceof Double) {	
-				System.out.println("*******  for profile " + currentDatabaseProfile + ", txnStdDeviation is a Double" );
 				transaction.setTxnStdDeviation(BigDecimal.valueOf((Double) row.get("txnStdDeviation")));
 			} else {
-				System.out.println("*******  for profile " + currentDatabaseProfile + ", txnStdDeviation is a BigDecimal (most likely)" );
 				transaction.setTxnStdDeviation((BigDecimal)row.get("txnStdDeviation"));				
 			}
 
