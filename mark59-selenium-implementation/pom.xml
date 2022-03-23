@@ -27,7 +27,6 @@
 			<version>4.2</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.apache.jmeter/ApacheJMeter_java -->
 		<dependency>
 			<groupId>org.apache.jmeter</groupId>
 			<artifactId>ApacheJMeter_java</artifactId>
@@ -35,7 +34,6 @@
 			<scope>provided</scope>
 		</dependency>
 		
-		<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
 		<dependency>
 		    <groupId>org.seleniumhq.selenium</groupId>
 		    <artifactId>selenium-java</artifactId>
@@ -108,7 +106,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>3.3.2</version>
-<!-- 			<configuration><doclint>none</doclint></configuration> -->
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>

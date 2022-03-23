@@ -37,14 +37,12 @@
 		    <version>4.1.2</version>
 		</dependency>
       
-		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
 		<dependency>
 		    <groupId>org.apache.poi</groupId>
 		    <artifactId>poi-ooxml</artifactId>
 		    <version>4.1.2</version>
 		</dependency>
 	
-		<!-- https://mvnrepository.com/artifact/com.jcraft/jsch -->
 		<dependency>
 			<groupId>com.jcraft</groupId>
 			<artifactId>jsch</artifactId>
@@ -52,6 +50,7 @@
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-all -->
+		<!-- (note alignment to this artifact in JMeter)-->
 		<dependency>
 		    <groupId>org.codehaus.groovy</groupId>
 		    <artifactId>groovy-all</artifactId>
@@ -135,7 +134,7 @@
 	
 	<build>
 
-		<!-- phase/goals: clean package    (** install not needed as the maven-install-plugin is set to run in the package phase) -->
+		<!-- phase/goals: clean package    (install not needed as the maven-install-plugin is set to run in the package phase) -->
 
 		<plugins>
 		
@@ -147,9 +146,7 @@
 			</plugin>
 
 			<!-- spring boot maven plugin -->
-			<!-- Constructs a spring boot war during the package phase. (for this 
-				plugin the install phase is not relevant to the build - see Maven jar and 
-				install plugins below) -->
+			<!-- Constructs the mark59-server-metrics-web Spring Boot War during the package phase. -->
 
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -159,12 +156,11 @@
 				</configuration>
 			</plugin>
 
-			<!-- maven jar plugin and maven install plugin -->
-			<!-- In conjunction, these two plugins compile the classes into a jar, 
-				and then install the jar into the local repro. The jar is can then be used 
-				to resolve dependencies in projects requiring classes from this war project 
-				NOTE: the weird "prepare-package" phase is used in the maven jar plugin 
-				(rather than "compile" or "package") to bypass an annoying eclipse error -->
+			<!-- maven jar plugin and install plugins -->
+			<!-- In conjunction, these two plugins compile the classes into a jar file, and then 'install' the jar
+			     into the local repository. The jar can then be referenced (via a pom entry) to resolve dependencies
+			     in projects requiring classes from this project.  Note the 'prepare-package' phase is used in the 
+			     maven jar plugin (rather than 'compile' or 'package') to bypass an annoying eclipse error -->
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -202,6 +198,5 @@
 		</plugins>
 		<finalName>${project.artifactId}</finalName>
 	</build>
-
 
 </project>

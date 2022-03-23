@@ -36,7 +36,7 @@
 	<build>
 		<plugins>
 		
-			<!-- override default maven-compiler-plugin version (added for corporate log4j security scans) -->
+			<!-- override default maven-compiler-plugin version -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -44,7 +44,7 @@
 			</plugin>
 
 			<!-- Maven Assembly Plugin -->
-			<!-- phase/goals: clean package -->
+			<!-- goals: clean package -->
 			<!-- Wraps all the project classes and their dependencies into a single Jar  -->
 
 			<plugin>

@@ -79,7 +79,9 @@
 				</executions>
 			</plugin>	
 			
-			<!--local build goals: clean package install -->	
+			<!--local build goals: clean package install
+			    adds source into local repository when installed -->
+			    	
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -90,7 +92,6 @@
 						<goals><goal>jar</goal></goals>
 					</execution>
 				</executions>
-
 			</plugin>
 		</plugins>
 	</build>
