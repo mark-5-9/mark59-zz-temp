@@ -195,7 +195,7 @@ INSERT INTO `METRICSLA` VALUES ('DataHunterDistributed','localhost','CPU_UTIL','
 INSERT INTO `METRICSLA` VALUES ('DataHunterDistributed','localhost','CPU_UTIL','PercentOver90',0.000,10.000,'Y','');
 
 
-INSERT INTO `SLA` VALUES ('DH_lifecycle_0001_loadInitialPage','N','DataHunter','Y',-1.000,-1.000,-1.000,-1,-1.000,-1,-1.000,0.000,0.000,0,'from v4.0','do not display');
+INSERT INTO `SLA` VALUES ('DH_lifecycle_0001_loadInitialPage','N','DataHunter','Y',-1.000,-1.000,-1.000,-1,-1.000,-1,-1.000,0.000,0.000,0,'from v4.0','do not display','Y');
 INSERT INTO `SLA` VALUES ('DH_lifecycle_0099_gotoDeleteMultiplePoliciesUrl','N','DataHunter','Y',-1.000,-1.000,-1.000,-1,-1.000,-1,-1.000,0.000,0.000,0,'<a href=\'http://localhost:8083/metrics/sampleReport/DataHunter_Result%20_370.html\'>Run 370</a>','do not display','Y');
 INSERT INTO `SLA` VALUES ('DH_lifecycle_0100_deleteMultiplePolicies','N','DataHunter','N',0.400,-1.000,-1.000,30,20.000,-1,2.000,0.000,0,0.000,'<a href=\'http://localhost:8083/metrics/sampleReport/DataHunter_Result%20_370.html\'>Run 370</a>','','Y');
 INSERT INTO `SLA` VALUES ('DH_lifecycle_0200_addPolicy','N','DataHunter','N',0.400,-1.000,-1.000,46,20.000,-1,2.000,0.200,0,0.000,'<a href=\'http://localhost:8083/metrics/sampleReport/DataHunter_Result%20_370.html\'>Run 370</a>','','Y');

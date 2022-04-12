@@ -23,7 +23,7 @@
 		<module>mark59-selenium-implementation</module>
 		<module>mark59-selenium-sample-dsl</module>
 		<module>dataHunter</module>		
-		<module>dataHunterRestApiClient</module>
+		<module>mark59-datahunter-api</module>
 		<module>dataHunterPerformanceTestSamples</module>
 		<module>mark59-server-metrics-web</module>		
 		<module>mark59-server-metrics</module>		

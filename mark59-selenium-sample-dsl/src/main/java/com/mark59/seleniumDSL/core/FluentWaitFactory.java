@@ -17,8 +17,9 @@
 package com.mark59.seleniumDSL.core;
 
 import java.time.Duration;
-
-import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.ElementClickInterceptedException;
+import org.openqa.selenium.ElementNotInteractableException;
+import org.openqa.selenium.InvalidElementStateException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
@@ -49,7 +50,9 @@ public class FluentWaitFactory {
 	 * <ul>
 	 * <li>StaleElementReferenceException</li>
 	 * <li>NoSuchElementException</li>
-	 * <li>ElementNotVisibleException</li>
+	 * <li>ElementClickInterceptedException</li>
+	 * <li>ElementNotInteractableException</li>
+	 * <li>InvalidElementStateException</li>
 	 * <li>WebDriverException</li>
 	 * </ul>
 	 * 
@@ -60,8 +63,12 @@ public class FluentWaitFactory {
 	 */
 	public static FluentWait<WebDriver> getFluentWait(WebDriver driver, Duration timeout, Duration pollingFrequency) {
 		return new FluentWait<>(driver).withTimeout(timeout).pollingEvery(pollingFrequency)
-				.ignoring(StaleElementReferenceException.class).ignoring(NoSuchElementException.class)
-				.ignoring(ElementNotVisibleException.class).ignoring(WebDriverException.class);
+				.ignoring(StaleElementReferenceException.class)
+				.ignoring(NoSuchElementException.class)
+				.ignoring(ElementClickInterceptedException.class)
+				.ignoring(ElementNotInteractableException.class)
+				.ignoring(InvalidElementStateException.class)
+				.ignoring(WebDriverException.class);
 	}
 
 	/**
@@ -72,7 +79,9 @@ public class FluentWaitFactory {
 	 * <ul>
 	 * <li>StaleElementReferenceException</li>
 	 * <li>NoSuchElementException</li>
-	 * <li>ElementNotVisibleException</li>
+	 * <li>ElementClickInterceptedException</li>
+	 * <li>ElementNotInteractableException</li>
+	 * <li>InvalidElementStateException</li>
 	 * <li>WebDriverException</li>
 	 * </ul>
 	 * 
@@ -93,7 +102,9 @@ public class FluentWaitFactory {
 	 * <ul>
 	 * <li>StaleElementReferenceException</li>
 	 * <li>NoSuchElementException</li>
-	 * <li>ElementNotVisibleException</li>
+	 * <li>ElementClickInterceptedException</li>
+	 * <li>ElementNotInteractableException</li>
+	 * <li>InvalidElementStateException</li>
 	 * <li>WebDriverException</li>
 	 * </ul>
 	 * 

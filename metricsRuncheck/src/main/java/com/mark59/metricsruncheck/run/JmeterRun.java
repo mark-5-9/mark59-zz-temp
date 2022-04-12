@@ -49,6 +49,7 @@ import com.opencsv.exceptions.CsvValidationException;
 public class JmeterRun extends PerformanceTest  {
 
 	private static final String IGNORE ="IGNORE";
+	private static final int MAX_ALLOWED_TXN_ID_CHARS = 128;
 	
 	private int fieldPostimeStamp;
 	private int fieldPoselapsed;	
@@ -268,7 +269,7 @@ public class JmeterRun extends PerformanceTest  {
 
 	private TestTransaction extractTransactionFromJmeterXMLfile(String jmeterFileLine) {
 		TestTransaction testTransaction = new TestTransaction();
-		testTransaction.setTxnId(StringUtils.substringBetween(jmeterFileLine, " lb=\"", "\""));
+		testTransaction.setTxnId(truncateOverlyLongIds(StringUtils.substringBetween(jmeterFileLine, " lb=\"", "\"")));
 
 		String jmeterFileDatatype = StringUtils.substringBetween(jmeterFileLine, " dt=\"", "\"");
 		String sampleLineRawDbTxnType = Mark59Utils.convertJMeterFileDatatypeToDbTxntype(jmeterFileDatatype);
@@ -359,6 +360,12 @@ public class JmeterRun extends PerformanceTest  {
 		List<TestTransaction> testTransactionList = new ArrayList<>();
 		String[] csvDataLineFields = csvReadNextLine(csvReader, inputCsvFileName);
 		
+		// at this point, should be at the first line of data in the file
+		if  ( csvDataLineFields != null  && !StringUtils.isNumeric(csvDataLineFields[fieldPostimeStamp]) ) {
+			throw new RuntimeException("Error :  Only elapsed times in epoch (millisecond) format can be processed ! "
+				+ "\nFirst data line of file " + inputCsvFileName + " contains elapsed value of " + csvDataLineFields[fieldPostimeStamp]);
+		}
+		
 		List<String> ignoredErrorsList = Mark59Utils.pipeDelimStringToStringList(ignoredErrors);
 		
 	   	while ( csvDataLineFields != null ) {
@@ -437,7 +444,7 @@ public class JmeterRun extends PerformanceTest  {
 	private TestTransaction extractTransactionFromJmeterCSVsample(String[] csvDataLineFields, List<String> ignoredErrorsList) {
 		TestTransaction testTransaction = new TestTransaction();
 
-		testTransaction.setTxnId(csvDataLineFields[fieldPoslabel]);
+		testTransaction.setTxnId(truncateOverlyLongIds(csvDataLineFields[fieldPoslabel]));
 		
 		String jmeterFileDatatype = csvDataLineFields[fieldPosdataType];
 		String sampleLineRawDbTxnType = Mark59Utils.convertJMeterFileDatatypeToDbTxntype(jmeterFileDatatype);
@@ -475,7 +482,15 @@ public class JmeterRun extends PerformanceTest  {
 		return testTransaction;
 	}
 
-
+	
+	private String truncateOverlyLongIds(String txnId) {
+		if (txnId.length() > MAX_ALLOWED_TXN_ID_CHARS ) {
+			txnId = txnId.substring(0, MAX_ALLOWED_TXN_ID_CHARS - 3) + "...";
+		}
+		return txnId;
+	}
+	
+	
 	private void invalidDatapointMessageAndFail(String jmeterFileLine, Exception e) {
 		System.out.println("!! Error : looks like an invalid datapoint value or type has been entered. ");
 		System.out.println("           Time (t) must be an integer.  Datatype (dt) must be a know datatype + optional multiplier.  eg DATAPOINT or CPU_1000 .. ");

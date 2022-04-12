@@ -12,11 +12,14 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
     <li>New DataHunter REST Api project (minor datahuner DB changes made)</li>
     <li>Add Disabled flag for Transactional SLA (new column on metrics DB SLA table required)</li>
     <li>Option to ignore CDP transactions on SLA Bulk Update</li>		
-    <li>Selenium to 4.1.2, SpringBoot to 2.6.4, H2 to 2.1.210</li>	  
+    <li>Selenium to 4.1.3, SpringBoot to 2.6.6, H2 to 2.1.210</li>	  
     <li>Maven Plugins updated, compiler plugin expliticly declared <br>
-		- align with spring boot versioning, reduces log4j vulerabilities on security scans</li>	  
-    <li>DataHunter Test Samples - Maven Dependency Plugin now excludes 'provided' dependencies  	
+		- align with spring boot versioning, reduce log4j vulerabilities on security scans (2.17.2) </li>	  
+    <li>DataHunter Test Samples - Maven Dependency Plugin now excludes 'provided' dependencies 
+    <li>Truncate txnIds greater than 128 chars when loading to Trend Analysis, rather than fail</li>	 	
     <li>Code cleanup (improve readability in IntelliJ)</li>	
+    <li>Sample DSL: ElementNotVisibleException no longer available, replaced by
+        ElementClickInterceptedException, ElementNotInteractableException,InvalidElementStateException</li>	
   </ul>  
 
 <p>Release 4.1<br>
