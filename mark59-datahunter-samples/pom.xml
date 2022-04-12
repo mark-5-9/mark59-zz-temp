@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<groupId>com.mark59</groupId>
-	<artifactId>dataHunterPerformanceTestSamples</artifactId>
-	<version>4.2</version>
+	<artifactId>mark59-datahunter-samples</artifactId>
+	<version>5.0</version>
 	<packaging>jar</packaging>
 	
-	<name>dataHunterPerformanceTestSamples</name>
+	<name>mark59-datahunter-samples</name>
 
 	<properties>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -45,18 +45,18 @@
 		<!-- End log4j security fix -->	
 	
 
-		<!-- This entry is not required for this project as it is already included as a dependency of mark59-selenium-sample-dsl (above). 
-		     Including it example for use in projects not referring the sample DSL project, so they will require it -->
+		<!-- This entry is not required for this project as it is already included as a dependency of mark59-sample-dsls. 
+			 Including it in this example as will will be required for projects not referring the sample DSL project -->
 		<dependency>
 			<groupId>com.mark59</groupId>
 			<artifactId>mark59-selenium-implementation</artifactId>
-			<version>4.2</version>
+			<version>5.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.mark59</groupId>
-			<artifactId>mark59-selenium-sample-dsl</artifactId>
-			<version>4.2</version>
+			<artifactId>mark59-sample-dsls</artifactId>
+			<version>5.0</version>
 		</dependency>
 		
 		<dependency>

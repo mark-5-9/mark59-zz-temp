@@ -1,73 +1,118 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.6.6</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-	
 	<groupId>com.mark59</groupId>
-	<artifactId>metrics</artifactId>
-	<version>4.2</version>
+	<artifactId>mark59-metrics</artifactId>
 	<packaging>war</packaging>
-
-	<name>metrics (Trend Analysis)</name>
+	<version>5.0</version>
+	<name>mark59-metrics</name>
 
 	<properties>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+	</properties>	
 
 	<dependencies>
 
 		<dependency>
 			<groupId>com.mark59</groupId>
 			<artifactId>mark59-core</artifactId>
-			<version>4.2</version>
+			<version>5.0</version>
+		</dependency>
+      
+   		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
+   		<!-- (note there's a reported dep issue with the newer 5.0.0 poi's) -->
+		<dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi</artifactId>
+		    <version>4.1.2</version>
+		</dependency>
+      
+		<dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi-ooxml</artifactId>
+		    <version>4.1.2</version>
+		</dependency>
+	
+		<dependency>
+			<groupId>com.jcraft</groupId>
+			<artifactId>jsch</artifactId>
+			<version>0.1.55</version>
 		</dependency>
 
-		<!-- Spring Boot related dependencies -->
+		<!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-all -->
+		<!-- (note alignment to this artifact in JMeter)-->
+		<dependency>
+		    <groupId>org.codehaus.groovy</groupId>
+		    <artifactId>groovy-all</artifactId>
+		    <version>3.0.7</version>
+		    <type>pom</type>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.json/json -->
+		<!-- added for the New Relic sample (org.json.* classes)-->
+		<dependency>
+		    <groupId>org.json</groupId>
+		    <artifactId>json</artifactId>
+		    <version>20211205</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-		</dependency>
-
 		<!-- https://github.com/spring-projects/sts4/wiki/Live-Application-Information -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 			<optional>true</optional>
-		</dependency>
+		</dependency>		
 
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+		</dependency>		
+				
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+		</dependency>	
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-jasper</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
-		<!-- Other project dependencies -->
 
 		<dependency>
 		    <groupId>org.apache.commons</groupId>
@@ -79,32 +124,26 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-		</dependency>
-		
+	    </dependency>
+
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
         	<version>2.1.210</version><!--$NO-MVN-MAN-VER$-->
 		</dependency>
 
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		
 	</dependencies>
-
+	
 	<build>
 
-		<!-- phase/goals: clean package  (install not needed as the maven-install-plugin runs in the package phase) -->
-		
-		<plugins>
+		<!-- phase/goals: clean package    (install not needed as the maven-install-plugin is set to run in the package phase) -->
 
+		<plugins>
+		
 			<!-- override spring boot managed version maven-compiler-plugin.version (3.8.1), added due to corporate log4j security scans -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -113,7 +152,7 @@
 			</plugin>
 
 			<!-- spring boot maven plugin -->
-			<!-- Constructs the metrics (Trend Analysis) Spring Boot War during the package phase. -->
+			<!-- Constructs the mark59-server-metrics-web Spring Boot War during the package phase. -->
 
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -160,6 +199,7 @@
 					</execution>
 				</executions>
 			</plugin>
+
 
 		</plugins>
 		<finalName>${project.artifactId}</finalName>

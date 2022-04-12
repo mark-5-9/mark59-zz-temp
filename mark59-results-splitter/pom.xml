@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.mark59</groupId>
-	<artifactId>resultFilesConverter</artifactId>
-	<version>4.2</version>
+	<artifactId>mark59-results-splitter</artifactId>
+	<version>5.0</version>
 	<packaging>jar</packaging>
 
-	<name>resultFilesConverter</name>
+	<name>mark59-results-splitter</name>
 
 	<properties>
 		<maven.compiler.target>1.8</maven.compiler.target>

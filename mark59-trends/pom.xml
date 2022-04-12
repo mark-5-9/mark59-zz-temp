@@ -1,58 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.6.6</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
+
+	
 	<groupId>com.mark59</groupId>
-	<artifactId>dataHunter</artifactId>
+	<artifactId>mark59-trends</artifactId>
+	<version>5.0</version>
 	<packaging>war</packaging>
-	<version>4.2</version>
-	<name>dataHunter</name>
+
+	<name>mark59-trends</name>
 
 	<properties>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>	
+	</properties>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>com.mark59</groupId>
+			<artifactId>mark59-core</artifactId>
+			<version>5.0</version>
+		</dependency>
+
+		<!-- Spring Boot related dependencies -->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 		</dependency>
+
 		<!-- https://github.com/spring-projects/sts4/wiki/Live-Application-Information -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 			<optional>true</optional>
 		</dependency>
-		
-		<!-- Provided -->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-jasper</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
+		<!-- Other project dependencies -->
+
 		<dependency>
 		    <groupId>org.apache.commons</groupId>
 		    <artifactId>commons-lang3</artifactId>
@@ -68,27 +84,25 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
         	<version>2.1.210</version><!--$NO-MVN-MAN-VER$-->
-		</dependency>	
-	
-		<!-- the following only required for testing -->
-	
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
 
-		<!-- goals: clean package  (install phase not needed as the maven-install-plugin runs in the package phase) -->
-
+		<!-- phase/goals: clean package  (install not needed as the maven-install-plugin runs in the package phase) -->
+		
 		<plugins>
 
 			<!-- override spring boot managed version maven-compiler-plugin.version (3.8.1), added due to corporate log4j security scans -->
@@ -99,7 +113,7 @@
 			</plugin>
 
 			<!-- spring boot maven plugin -->
-			<!-- Constructs the DataHunter Spring Boot War during the package phase. -->
+			<!-- Constructs the metrics (Trend Analysis) Spring Boot War during the package phase. -->
 
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -149,7 +163,6 @@
 
 		</plugins>
 		<finalName>${project.artifactId}</finalName>
-
 	</build>
 
 </project>

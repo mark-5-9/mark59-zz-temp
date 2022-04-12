@@ -10,11 +10,11 @@
 	</parent>
 
 	<groupId>com.mark59</groupId>
-	<artifactId>metricsRuncheck</artifactId>
-	<version>4.2</version>
+	<artifactId>mark59-trends-load</artifactId>
+	<version>5.0</version>
 	<packaging>jar</packaging>
 
-	<name>metricsRuncheck</name>
+	<name>mark59-trends-load</name>
 
 	<properties>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -36,8 +36,8 @@
 
 		<dependency>
 			<groupId>com.mark59</groupId>
-			<artifactId>metrics</artifactId>
-			<version>4.2</version>
+			<artifactId>mark59-trends</artifactId>
+			<version>5.0</version>
 		</dependency>
 		
 		<!-- standard Maven dependencies -->
