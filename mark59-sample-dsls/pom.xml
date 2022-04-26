@@ -87,7 +87,7 @@
 			</plugin>
 		
 			<!-- local build goals: clean package -->	
-			<!-- this plugin is for JMeter JSR223 'Groovy' scripting purposes :  creates mark59-selenium-sample-dsl-{version}-for-JSR223 jar 
+			<!-- this plugin is for JMeter JSR223 'Groovy' scripting purposes :  creates mark59-sample-dsls-{version}-for-JSR223 jar 
 			     (in the project target folder) can be placed in a JMeter lib/ext directory to obtain the necessary Mark59 classes -->			
 			<plugin>
 			    <groupId>org.apache.maven.plugins</groupId>

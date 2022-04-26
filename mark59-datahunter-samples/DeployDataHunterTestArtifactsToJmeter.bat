@@ -1,5 +1,5 @@
 REM   -------------------------------------------------------------------------------------------------------------------------------------------------
-REM   |  Use this file to copy Maven build artifacts from target folders in dataHunterPerformanceTestSamples and mark59-server-metrics projects,
+REM   |  Use this file to copy Maven build artifacts from target folders in mark59-datahunter-samples and mark59-server-metrics projects,
 REM   |  into a JMeter instance at C:\apache-jmeter  
 REM   | 
 REM   |  Note that mark59serverprofiles.xlsx is NOT copied. To run the '..usingExcel' testplan, copy it manually to the JMeter bin directory.
@@ -15,19 +15,19 @@ REM   --------------------------------------------------------------------------
 
 MODE con:cols=180 lines=60
 
-cd  ..\dataHunterPerformanceTestSamples   
+cd  ..\mark59-datahunter-samples   
 DEL C:\apache-jmeter\bin\mark59.properties
 DEL C:\apache-jmeter\bin\chromedriver.exe
 DEL C:\apache-jmeter\lib\ext\mark59-server-metrics.jar
-DEL C:\apache-jmeter\lib\ext\dataHunterPerformanceTestSamples.jar
+DEL C:\apache-jmeter\lib\ext\mark59-datahunter-samples.jar
 
-RMDIR /S /Q "C:\apache-jmeter\lib\ext\dataHunterPerformanceTestSamples-dependencies"
-MKDIR "C:\apache-jmeter\lib\ext\dataHunterPerformanceTestSamples-dependencies"
+RMDIR /S /Q "C:\apache-jmeter\lib\ext\mark59-datahunter-samples-dependencies"
+MKDIR "C:\apache-jmeter\lib\ext\mark59-datahunter-samples-dependencies"
 
 COPY .\mark59.properties C:\apache-jmeter\bin
 COPY .\chromedriver.exe  C:\apache-jmeter\bin
 COPY ..\mark59-server-metrics\target\mark59-server-metrics.jar  C:\apache-jmeter\lib\ext
-COPY .\target\dataHunterPerformanceTestSamples.jar  C:\apache-jmeter\lib\ext
-COPY .\target\dataHunterPerformanceTestSamples-dependencies  C:\apache-jmeter\lib\ext\dataHunterPerformanceTestSamples-dependencies
+COPY .\target\mark59-datahunter-samples.jar  C:\apache-jmeter\lib\ext
+COPY .\target\mark59-datahunter-samples-dependencies  C:\apache-jmeter\lib\ext\mark59-datahunter-samples-dependencies
 
 PAUSE

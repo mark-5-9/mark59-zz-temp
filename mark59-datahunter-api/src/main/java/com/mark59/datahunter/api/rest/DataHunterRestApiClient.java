@@ -24,8 +24,8 @@ import com.mark59.datahunter.api.rest.samples.DataHunterRestApiClientSampleUsage
 /**
  *  A DataHunter REST Service Client.
  *  <p>Invokes the DataHunter REST Service.  Please refer to the <code>DataHunterRestController</code> class in the mark59 DataHunter project.
- *  <p>In order to execute this program, the target jar file for the dataHunterRestApiClient project needs to be 
- *  on the class path.  Eg: for a script running in a JMeter instance DataHunterRestApiClient.jar should be placed in JMeter's lib/ext directory.        
+ *  <p>In order to execute this program, the target jar file for the mark59-datahunter-api project needs to be 
+ *  on the class path.  Eg: for a script running in a JMeter instance mark59-datahunter-api.jar should be placed in JMeter's lib/ext directory.        
  *  <p>A few general observations about the DataHunter REST Service:
  *  <ul>
  *  <li>The operations performed by the REST service align as closely as possible to the actions that are available using the DataHunter web 
@@ -50,7 +50,7 @@ public class DataHunterRestApiClient {
 	String dataHunterUrl;
 	
 	/**
-	 * @param dataHunterUrl target datahunter url (eg http://localhost:8081/dataHunter)
+	 * @param dataHunterUrl target datahunter url (eg http://localhost:8081/mark59-datahunter)
 	 */
 	public DataHunterRestApiClient(String dataHunterUrl) {
 		this.dataHunterUrl = dataHunterUrl;

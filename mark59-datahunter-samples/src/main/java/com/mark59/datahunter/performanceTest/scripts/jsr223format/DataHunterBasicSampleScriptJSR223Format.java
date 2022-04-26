@@ -40,7 +40,7 @@ class ThisScript extends SeleniumAbstractJavaSamplerClient {
 	@Override
 	protected Map<String, String> additionalTestParameters() {
 		Map<String, String> jmeterAdditionalParameters = new LinkedHashMap<String, String>();
-		jmeterAdditionalParameters.put("DATAHUNTER_URL",			"http://localhost:8081/dataHunter");
+		jmeterAdditionalParameters.put("DATAHUNTER_URL",			"http://localhost:8081/mark59-datahunter");
 		jmeterAdditionalParameters.put("DATAHUNTER_APPLICATION_ID", "DATAHUNTER_PV_TEST_BASIC");
 		jmeterAdditionalParameters.put("USER", 	 "default_user");		
 		jmeterAdditionalParameters.put("DRIVER", "CHROME");

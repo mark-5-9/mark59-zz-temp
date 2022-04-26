@@ -15,7 +15,7 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="dataHunterUrl" elementType="Argument">
             <stringProp name="Argument.name">dataHunterUrl</stringProp>
-            <stringProp name="Argument.value">http://localhost:8081/dataHunter/</stringProp>
+            <stringProp name="Argument.value">http://localhost:8081/mark59-datahunter/</stringProp>
             <stringProp name="Argument.desc">URL of the DataHunter instance under test (info only)</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
@@ -50,7 +50,7 @@
           <stringProp name="HTTPSampler.port">8081</stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/dataHunter/delete_multiple_policies_action?application=${application}</stringProp>
+          <stringProp name="HTTPSampler.path">/mark59-datahunter/delete_multiple_policies_action?application=${application}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -134,7 +134,7 @@ vars.putObject( &quot;policyIdentifier&quot;, (String)policyIdentifier);</string
           <stringProp name="HTTPSampler.port">8081</stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/dataHunter/add_policy_action?application=${application}&amp;identifier=${policyIdentifier}&amp;lifecycle=&amp;useability=UNUSED&amp;otherdata=&amp;epochtime=</stringProp>
+          <stringProp name="HTTPSampler.path">/mark59-datahunter/add_policy_action?application=${application}&amp;identifier=${policyIdentifier}&amp;lifecycle=&amp;useability=UNUSED&amp;otherdata=&amp;epochtime=</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -174,7 +174,7 @@ vars.putObject( &quot;policyIdentifier&quot;, (String)policyIdentifier);</string
           <stringProp name="HTTPSampler.port">8081</stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/dataHunter/use_next_policy_action?application=${application}&amp;useability=UNUSED&amp;selectOrder=SELECT_MOST_RECENTLY_ADDED&amp;pUseOrLookup=use</stringProp>
+          <stringProp name="HTTPSampler.path">/mark59-datahunter/use_next_policy_action?application=${application}&amp;useability=UNUSED&amp;selectOrder=SELECT_MOST_RECENTLY_ADDED&amp;pUseOrLookup=use</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -240,7 +240,7 @@ vars.putObject( &quot;policyIdentifier&quot;, (String)policyIdentifier);</string
           <stringProp name="HTTPSampler.port">8081</stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/dataHunter/count_policies_action?application=${application}&amp;lifecycle=&amp;useability=</stringProp>
+          <stringProp name="HTTPSampler.path">/mark59-datahunter/count_policies_action?application=${application}&amp;lifecycle=&amp;useability=</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -313,7 +313,7 @@ OUT.println ( &quot;&lt;&lt; JSR223 PostProcessor All Policies Datapoint, count 
           <stringProp name="HTTPSampler.port">8081</stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/dataHunter/count_policies_action?application=${application}&amp;lifecycle=&amp;useability=UNUSED</stringProp>
+          <stringProp name="HTTPSampler.path">/mark59-datahunter/count_policies_action?application=${application}&amp;lifecycle=&amp;useability=UNUSED</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>

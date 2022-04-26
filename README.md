@@ -7,6 +7,12 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
 
 ## Releases 
 
+<p>Release 5.x<br>
+  <ul>
+    <li>Refactor project, database and URL naming conventions</li>
+  </ul>  
+
+  
 <p>Release 4.2<br>
   <ul>
     <li>New DataHunter REST Api project (minor datahuner DB changes made)</li>

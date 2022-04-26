@@ -66,7 +66,7 @@
  </center>
  
  <br><br>
- <a href="/dataHunter?application=${policySelectionCriteria.application}">Home Page</a>
+ <a href="/mark59-datahunter?application=${policySelectionCriteria.application}">Home Page</a>
  
 </body>
 </html>

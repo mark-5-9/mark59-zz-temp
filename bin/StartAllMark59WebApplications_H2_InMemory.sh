@@ -11,7 +11,7 @@
 #   |   
 #   |  Home page URLs  will be:    
 #   |  
-#   |     http://localhost:8081/dataHunter/
+#   |     http://localhost:8081/mark59-datahunter/
 #   |     http://localhost:8083/metrics/
 #   |     http://localhost:8085/mark59-server-metrics-web/
 #   |  
@@ -26,7 +26,7 @@ echo Database is set to "$DATABASE"
 
 cd ..
 echo Starting the DataHunter Spring Boot Application
-gnome-terminal --working-directory=$PWD/dataHunter -- ./StartDataHunterFromTarget.sh  
+gnome-terminal --working-directory=$PWD/mark59-datahunter -- ./StartDataHunterFromTarget.sh  
 
 echo Starting the Metrics Trend Analysis Web Application  
 gnome-terminal --working-directory=$PWD/metrics -- ./StartMetricsTrendAnalysisFromTarget.sh

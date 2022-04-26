@@ -4,9 +4,9 @@
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="DataHunter Selenium Using Downloaded Excel Profiles File" enabled="true">
       <stringProp name="TestPlan.comments">                                                                                                                                       ** BEFORE YOU RUN **
 
-Download the Server Profiles Excel file using the Server Metrics Web application ( http://localhost:8085/mark59-server-metrics-web/serverProfileList -&gt; Download.. ), and copy it into the apache-jmeter/bin directory.  Or alternatively just copy across the mark59serverprofiles.xlsx sheet supplied in the root of the dataHunterPerformanceTestSamples project into the apache-jmeter/bin directory.
+Download the Server Profiles Excel file using the Server Metrics Web application ( http://localhost:8085/mark59-server-metrics-web/serverProfileList -&gt; Download.. ), and copy it into the apache-jmeter/bin directory.  Or alternatively just copy across the mark59serverprofiles.xlsx sheet supplied in the root of the mark59-datahunter-samples project into the apache-jmeter/bin directory.
 
-Finally, the &apos;Quick Start&apos; instructions should of been completed.   This ensures the required jars dataHunterPerformanceTestSamples.jar and mark59-server-metrics.jar are in apache-jmeter/lib/ext, and mark59.properties and a chromdriver.exe are in the apache-jmeter/bin directory (or manually copy all these files over ). 
+Finally, the &apos;Quick Start&apos; instructions should of been completed.   This ensures the required jars mark59-datahunter-samples.jar and mark59-server-metrics.jar are in apache-jmeter/lib/ext, and mark59.properties and a chromdriver.exe are in the apache-jmeter/bin directory (or manually copy all these files over ). 
 </stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
@@ -31,9 +31,9 @@ Finally, the &apos;Quick Start&apos; instructions should of been completed.   Th
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
         <stringProp name="TestPlan.comments">                                                                                                                                        ** BEFORE YOU RUN **
 
-Download the Server Profiles Excel file using the Server Metrics Web application ( http://localhost:8085/mark59-server-metrics-web/serverProfileList -&gt; Download.. ), and copy it into the apache-jmeter/bin directory.  Or alternatively just copy across the mark59serverprofiles.xlsx sheet supplied in the root of the dataHunterPerformanceTestSamples project into the apache-jmeter/bin directory.
+Download the Server Profiles Excel file using the Server Metrics Web application ( http://localhost:8085/mark59-server-metrics-web/serverProfileList -&gt; Download.. ), and copy it into the apache-jmeter/bin directory.  Or alternatively just copy across the mark59serverprofiles.xlsx sheet supplied in the root of the mark59-datahunter-samples project into the apache-jmeter/bin directory.
 
-Finally, the &apos;Quick Start&apos; instructions should of been completed.   This ensures the required jars dataHunterPerformanceTestSamples.jar and mark59-server-metrics.jar are in apache-jmeter/lib/ext, and mark59.properties and a chromdriver.exe are in the apache-jmeter/bin directory (or manually copy all these files over ). 
+Finally, the &apos;Quick Start&apos; instructions should of been completed.   This ensures the required jars mark59-datahunter-samples.jar and mark59-server-metrics.jar are in apache-jmeter/lib/ext, and mark59.properties and a chromdriver.exe are in the apache-jmeter/bin directory (or manually copy all these files over ). 
 </stringProp>
       </SetupThreadGroup>
       <hashTree>
@@ -71,7 +71,7 @@ log.info   (&quot;OS property has been set to : &quot; + os );</stringProp>
         <collectionProp name="Arguments.arguments">
           <elementProp name="dataHunterUrl" elementType="Argument">
             <stringProp name="Argument.name">dataHunterUrl</stringProp>
-            <stringProp name="Argument.value">${__P(DataHunterUrl,http://localhost:8081/dataHunter)}</stringProp>
+            <stringProp name="Argument.value">${__P(DataHunterUrl,http://localhost:8081/mark59-datahunter)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="pacing" elementType="Argument">
@@ -189,7 +189,7 @@ return 0;</stringProp>
         </UserParameters>
         <hashTree/>
         <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="DataHunterLifecycle" enabled="true">
-          <stringProp name="TestPlan.comments">default DATAHUNTER_URL set to  http://localhost:8081/dataHunter</stringProp>
+          <stringProp name="TestPlan.comments">default DATAHUNTER_URL set to  http://localhost:8081/mark59-datahunter</stringProp>
           <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="DATAHUNTER_URL" elementType="Argument">
@@ -348,7 +348,7 @@ return 0;</stringProp>
         </UserParameters>
         <hashTree/>
         <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="DataHunterLifecycleIterator" enabled="true">
-          <stringProp name="TestPlan.comments">default DATAHUNTER_URL set to  http://localhost:8081/dataHunter</stringProp>
+          <stringProp name="TestPlan.comments">default DATAHUNTER_URL set to  http://localhost:8081/mark59-datahunter</stringProp>
           <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="DATAHUNTER_URL" elementType="Argument">

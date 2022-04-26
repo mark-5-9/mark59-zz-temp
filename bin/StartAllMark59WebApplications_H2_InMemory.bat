@@ -10,7 +10,7 @@ REM   |  when the data does not need to persist between tests.
 REM   |   
 REM   |  Home page URLs  will be:    
 REM   |  
-REM   |     http://localhost:8081/dataHunter/
+REM   |     http://localhost:8081/mark59-datahunter/
 REM   |     http://localhost:8083/metrics/
 REM   |     http://localhost:8085/mark59-server-metrics-web/
 REM   |  
@@ -20,7 +20,7 @@ CD /D "%~dp0"
 SET "DATABASE=H2MEM"
 
 ECHO Starting the DataHunter Spring Boot Application  
-CD ../dataHunter
+CD ../mark59-datahunter
 START StartDataHunterFromTarget.bat
 
 ECHO Starting the Metrics (Trend Analysis) Web Application  

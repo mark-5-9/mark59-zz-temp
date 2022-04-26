@@ -26,7 +26,7 @@ import java.util.List;
 public class DslConstants {
 	
 
-	public static final String DEFAULT_DATAHUNTER_URL 				= "http://localhost:8081/dataHunter";	
+	public static final String DEFAULT_DATAHUNTER_URL 				= "http://localhost:8081/mark59-datahunter";	
 
 	public static final String ADD_POLICY_URL_PATH      			= "/add_policy";
 	public static final String COUNT_POLICIES_URL_PATH 				= "/count_policies";	

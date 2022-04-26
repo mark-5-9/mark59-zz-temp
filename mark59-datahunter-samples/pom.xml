@@ -99,8 +99,8 @@
 		<!-- Previous versions of this POM had used the Maven Assembly Plugin to create a single jar as the project outut, but unfortunately it's not a 
 			 general solution, and calls to CDP (DevTools) now fail if you use this approach.
 		     
-		     This particular project (dataHunterPerformanceTestSamples) has a dependency on the mark59-selenium-sample-dsl project, which is not in Central.
-		     So to build this project you can run the mark59 'aggregation' pom, or first install mark59-selenium-sample-dsl (goals: clean package install) -->
+		     This particular project (mark59-datahunter-samples) has a dependency on the mark59-sample-dsls project, which is not in Central.
+		     So to build this project you can run the mark59 'aggregation' pom, or first install mark59-sample-dsls (goals: clean package install) -->
 		
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

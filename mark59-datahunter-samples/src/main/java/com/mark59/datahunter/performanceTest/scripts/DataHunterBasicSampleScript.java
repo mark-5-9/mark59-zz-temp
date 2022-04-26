@@ -67,7 +67,7 @@ public class DataHunterBasicSampleScript  extends SeleniumAbstractJavaSamplerCli
 	@Override
 	protected Map<String, String> additionalTestParameters() {
 		Map<String, String> jmeterAdditionalParameters = new LinkedHashMap<>();
-		jmeterAdditionalParameters.put("DATAHUNTER_URL",			"http://localhost:8081/dataHunter");
+		jmeterAdditionalParameters.put("DATAHUNTER_URL",			"http://localhost:8081/mark59-datahunter");
 		jmeterAdditionalParameters.put("DATAHUNTER_APPLICATION_ID", "DATAHUNTER_PV_TEST_BASIC");
 		jmeterAdditionalParameters.put("USER", 	 "default_user");		
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.DRIVER, Mark59Constants.CHROME);

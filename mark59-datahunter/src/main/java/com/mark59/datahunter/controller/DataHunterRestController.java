@@ -45,8 +45,8 @@ import com.mark59.datahunter.model.UpdateUseStateAndEpochTime;
  *  The DataHunter REST Service Controller.
  *  <p>Invokes DataHunter database functions, to satisfy requests from DataHunter REST Api Clients.
  *  <p>A Client program has been written to assist with calls to this REST service: <code>com.mark59.datahunter.restapi.DataHunterRestApiClient</code> in the 
- *  dataHunterRestApiClient mark59 project. 
- *  <p>To use <code>dataHunterRestApiClient</code>, the target jar file for the dataHunterRestApiClient project needs to be 
+ *  mark59-datahunter-api mark59 project. 
+ *  <p>To use <code>DataHunterRestApiClient</code>, the target jar file for the mark59-datahunter-api project needs to be 
  *  on the class path.  Eg: for a script running in a JMeter instance DataHunterRestApiClient.jar should be placed in JMeter's lib/ext directory.        
  *  <p>A few general observations about the DataHunter REST Service:
  *  <ul>
@@ -55,7 +55,7 @@ import com.mark59.datahunter.model.UpdateUseStateAndEpochTime;
  *  the corresponding DataHunter web application pages. 
  *  <li>Where the REST operation does not require the <code>policies</code> list in the response to be populated with a result, it is populated with a single
  *  policy entry which aligns as much as possible with any selection criteria passed from the request (just informational to assist with debugging)
- *  <li>For detailed examples of the usage of this service, see class <code>DataHunterRestApiClientSampleUsage</code> in the dataHunterRestApiClient project    
+ *  <li>For detailed examples of the usage of this service, see class <code>DataHunterRestApiClientSampleUsage</code> in the mark59-datahunter-api project    
  *  </ul>  
  *   
  * @author Philip Webb
@@ -545,7 +545,7 @@ public class DataHunterRestController {
 	 * 
 	 * <p>Provides a timing calculation between a set of Items that match the input criteria.  It is designed to assist with timing 
 	 * asynchronous events during a performance test.  For further details please refer to the Mark59 user guide, and sample 
-	 * usages from <code>DataHunterRestApiClientSampleUsage</code> in the dataHunterRestApiClient project.
+	 * usages from <code>DataHunterRestApiClientSampleUsage</code> in the mark59-datahunter-api project.
 	 * 
 	 * @param applicationStartsWithOrEquals  must be "EQUALS" or "STARTS_WITH" (applied to application selection)
 	 * @param application application

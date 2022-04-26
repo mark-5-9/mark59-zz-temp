@@ -16,7 +16,7 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="dataHunterUrl" elementType="Argument">
             <stringProp name="Argument.name">dataHunterUrl</stringProp>
-            <stringProp name="Argument.value">${__P(DataHunterUrl,http://localhost:8081/dataHunter)}</stringProp>
+            <stringProp name="Argument.value">${__P(DataHunterUrl,http://localhost:8081/mark59-datahunter)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="dataHunterApplicationId" elementType="Argument">
@@ -111,7 +111,7 @@ if (&quot;true&quot;.equalsIgnoreCase(runningInDocker)){
 
 	Properties systemProperties = System.getProperties();
 	systemProperties.setProperty(&quot;mark59.screenshot.directory&quot;       , &quot;/var/Mark59_Runs/Jmeter_ScreenshotLogs/DataHunter&quot;);
-	systemProperties.setProperty(&quot;mark59.selenium.driver.path.chrome&quot;, &quot;/var/mark59/dataHunterPerformanceTestSamples/_chromedriverforDockerUse&quot;);
+	systemProperties.setProperty(&quot;mark59.selenium.driver.path.chrome&quot;, &quot;/var/mark59/mark59-datahunter-samples/_chromedriverforDockerUse&quot;);
 	
 	OUT.println (&quot;DataHunter Selenium Test Plan:  Mark59 properties directly set within the test plan : &quot;);
 	OUT.println (&quot;mark59.screenshot.directory        : &quot; + systemProperties.getProperty(&quot;mark59.screenshot.directory&quot;));
@@ -240,7 +240,7 @@ return 0;</stringProp>
         </UserParameters>
         <hashTree/>
         <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="DataHunterLifecycle" enabled="true">
-          <stringProp name="TestPlan.comments">default DATAHUNTER_URL set to  http://localhost:8081/dataHunter</stringProp>
+          <stringProp name="TestPlan.comments">default DATAHUNTER_URL set to  http://localhost:8081/mark59-datahunter</stringProp>
           <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="DATAHUNTER_URL" elementType="Argument">
@@ -399,7 +399,7 @@ return 0;</stringProp>
         </UserParameters>
         <hashTree/>
         <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="DataHunterLifecycleIterator" enabled="true">
-          <stringProp name="TestPlan.comments">default DATAHUNTER_URL set to  http://localhost:8081/dataHunter</stringProp>
+          <stringProp name="TestPlan.comments">default DATAHUNTER_URL set to  http://localhost:8081/mark59-datahunter</stringProp>
           <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="DATAHUNTER_URL" elementType="Argument">
@@ -696,7 +696,7 @@ class ThisScript extends SeleniumAbstractJavaSamplerClient {
 	@Override
 	protected Map&lt;String, String&gt; additionalTestParameters() {
 		Map&lt;String, String&gt; jmeterAdditionalParameters = new LinkedHashMap&lt;String, String&gt;();
-		jmeterAdditionalParameters.put(&quot;DATAHUNTER_URL&quot;,			&quot;http://localhost:8081/dataHunter&quot;);
+		jmeterAdditionalParameters.put(&quot;DATAHUNTER_URL&quot;,			&quot;http://localhost:8081/mark59-datahunter&quot;);
 		jmeterAdditionalParameters.put(&quot;DATAHUNTER_APPLICATION_ID&quot;, &quot;DATAHUNTER_PV_TEST_BASIC&quot;);
 		jmeterAdditionalParameters.put(&quot;USER&quot;, 	 &quot;default_user&quot;);		
 		jmeterAdditionalParameters.put(&quot;DRIVER&quot;, &quot;CHROME&quot;);
@@ -834,8 +834,8 @@ import com.mark59.seleniumDSL.pageElements.*;
 // &lt;&lt;  
 	
 /**
- * Note that in this more advanced example access to the com.mark59.seleniumDSL.* packages is assumed (from the mark59-selenium-sample-dsl project).
- * &lt;p&gt;Hint: A quick and dirty way to do this is to copy target jar from the dataHunterPerformanceTestSamples project since it contains sample DSL
+ * Note that in this more advanced example access to the com.mark59.seleniumDSL.* packages is assumed (from the mark59-sample-dsls project).
+ * &lt;p&gt;Hint: A quick and dirty way to do this is to copy target jar from the mark59-datahunter-samples project since it contains sample DSL
  * packages, into the lib/ext directory of your JMeter instance.  
  *   
  * @author Phil Webb
@@ -929,7 +929,7 @@ class ThisScript extends SeleniumAbstractJavaSamplerClient {
 	@Override
 	protected Map&lt;String, String&gt; additionalTestParameters() {
 		Map&lt;String, String&gt; jmeterAdditionalParameters = new LinkedHashMap&lt;String, String&gt;();
-		jmeterAdditionalParameters.put(&quot;DATAHUNTER_URL&quot;,			&quot;http://localhost:8081/dataHunter&quot;);
+		jmeterAdditionalParameters.put(&quot;DATAHUNTER_URL&quot;,			&quot;http://localhost:8081/mark59-datahunter&quot;);
 		jmeterAdditionalParameters.put(&quot;DATAHUNTER_APPLICATION_ID&quot;, &quot;DATAHUNTER_PV_TEST&quot;);
 		jmeterAdditionalParameters.put(&quot;FORCE_TXN_FAIL_PERCENT&quot;, 	&quot;20&quot;);
 		jmeterAdditionalParameters.put(&quot;USER&quot;, 	 &quot;default_user&quot;);		
@@ -1097,7 +1097,7 @@ class ThisScript extends SeleniumAbstractJavaSamplerClient {
 	private synchronized void PrintSomeMsgOnceAtStartUp(String dataHunterUrl, WebDriver driver) {
 		Properties sysprops = System.getProperties();
 		if (!&quot;true&quot;.equals(sysprops.get(&quot;printedOnce&quot;)) ) {	
-			LOG.info(&quot; Using DataHunter with Url &quot; + dataHunterUrl + &quot;/dataHunter&quot;);
+			LOG.info(&quot; Using DataHunter with Url &quot; + dataHunterUrl + &quot;/mark59-datahunter&quot;);
 			Capabilities caps = ((ChromeDriver)driver).getCapabilities();
 			LOG.info(&quot; Browser Name and Version : &quot; + caps.getBrowserName() + &quot; &quot; + caps.getBrowserVersion());
 			if (&quot;chrome&quot;.equalsIgnoreCase(caps.getBrowserName()) &amp;&amp; caps.getCapability(&quot;chrome&quot;) != null ){

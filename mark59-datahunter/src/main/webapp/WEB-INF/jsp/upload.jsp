@@ -97,7 +97,7 @@
  </center>
  
  <br><br>
- <a href="/dataHunter?application=${uploadFile.application}">Home Page</a>
+ <a href="/mark59-datahunter?application=${uploadFile.application}">Home Page</a>
    
 </body>
 </html>

@@ -1,7 +1,7 @@
 #     -------------------------------------------------------------------------------------------------------------------------------------------------
 #     | Deploy Artifacts and Run JMeter DataHunter Selenium Test.
 #     |
-#     | NOTE - you may need to ensure the chromedriver.exe file at root of dataHunterPerformanceTestSamples project is compatible with your Chrome version
+#     | NOTE - you may need to ensure the chromedriver.exe file at root of mark59-datahunter-samples project is compatible with your Chrome version
 #     |        (see Mark59 user guide for details).  
 #     |      - mark59serverprofiles.xlsx is not copied. Before you run the '..usingExcel' testplan, copy it manually to the JMeter bin directory
 #     |        (not necessary before running this bat file as it runs the DataHunterSeleniumTestPlan which doesn't use the spreadsheet).
@@ -30,19 +30,19 @@ ehco StartCdpListeners is StartCdpListeners
 
 {   # try  
 
-    cd ../dataHunterPerformanceTestSamples && 
+    cd ../mark59-datahunter-samples && 
     DH_TEST_SAMPLES_DIR=$(pwd) && 
-    echo dataHunterPerformanceTestSamples base dir is $DH_TEST_SAMPLES_DIR &&
+    echo mark59-datahunter-samples base dir is $DH_TEST_SAMPLES_DIR &&
 
     cp ./mark59.properties ~/apache-jmeter/bin/mark59.properties &&
     cp ./chromedriver ~/apache-jmeter/bin/chromedriver && 
     cp ../mark59-server-metrics/target/mark59-server-metrics.jar  ~/apache-jmeter/lib/ext/mark59-server-metrics.jar && 
-    cp ./target/dataHunterPerformanceTestSamples.jar  ~/apache-jmeter/lib/ext/dataHunterPerformanceTestSamples.jar &&
-    rm -rf ~/apache-jmeter/lib/ext/dataHunterPerformanceTestSamples-dependencies &&
-    cp -r ./target/dataHunterPerformanceTestSamples-dependencies ~/apache-jmeter/lib/ext/dataHunterPerformanceTestSamples-dependencies &&
+    cp ./target/mark59-datahunter-samples.jar  ~/apache-jmeter/lib/ext/mark59-datahunter-samples.jar &&
+    rm -rf ~/apache-jmeter/lib/ext/mark59-datahunter-samples-dependencies &&
+    cp -r ./target/mark59-datahunter-samples-dependencies ~/apache-jmeter/lib/ext/mark59-datahunter-samples-dependencies &&
     mkdir -p ~/Mark59_Runs/Jmeter_Results/DataHunter && 
  
-    gnome-terminal -- sh -c "~/apache-jmeter/bin/jmeter -n -X -f  -t $DH_TEST_SAMPLES_DIR/test-plans/DataHunterSeleniumTestPlan.jmx -l ~/Mark59_Runs/Jmeter_Results/DataHunter/DataHunterTestResults.csv -JDataHunterUrl=http://localhost:8081/dataHunter -JForceTxnFailPercent=0 -JStartCdpListeners=$StartCdpListeners; exec bash"
+    gnome-terminal -- sh -c "~/apache-jmeter/bin/jmeter -n -X -f  -t $DH_TEST_SAMPLES_DIR/test-plans/DataHunterSeleniumTestPlan.jmx -l ~/Mark59_Runs/Jmeter_Results/DataHunter/DataHunterTestResults.csv -JDataHunterUrl=http://localhost:8081/mark59-datahunter -JForceTxnFailPercent=0 -JStartCdpListeners=$StartCdpListeners; exec bash"
 
 } || { # catch 
     echo Deploy was unsuccessful! 

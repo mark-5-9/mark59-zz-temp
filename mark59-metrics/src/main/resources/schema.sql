@@ -77,16 +77,16 @@ INSERT IGNORE INTO COMMANDS VALUES ('DataHunterSeleniumDeployAndExecute','WMIC_W
  echo Running Directly From Server Metrics Web (cmd DataHunterSeleniumDeployAndExecute) & 
  echo  SERVER_METRICS_WEB_BASE_DIR: %SERVER_METRICS_WEB_BASE_DIR% & 
  cd /D %SERVER_METRICS_WEB_BASE_DIR% &  
- cd ..\dataHunterPerformanceTestSamples & 
+ cd ..\mark59-datahunter-samples & 
  DEL C:\apache-jmeter\bin\mark59.properties & COPY .\mark59.properties C:\apache-jmeter\bin &
  DEL C:\apache-jmeter\bin\chromedriver.exe  & COPY .\chromedriver.exe  C:\apache-jmeter\bin &
  DEL C:\apache-jmeter\lib\ext\mark59-server-metrics.jar &
  COPY ..\mark59-server-metrics\target\mark59-server-metrics.jar  C:\apache-jmeter\lib\ext & 
- DEL C:\apache-jmeter\lib\ext\dataHunterPerformanceTestSamples.jar & 
- COPY .\target\dataHunterPerformanceTestSamples.jar  C:\apache-jmeter\lib\ext &
- RMDIR /S /Q C:\apache-jmeter\lib\ext\dataHunterPerformanceTestSamples-dependencies &
- MKDIR C:\apache-jmeter\lib\ext\dataHunterPerformanceTestSamples-dependencies &
- COPY .\target\dataHunterPerformanceTestSamples-dependencies  C:\apache-jmeter\lib\ext\dataHunterPerformanceTestSamples-dependencies &
+ DEL C:\apache-jmeter\lib\ext\mark59-datahunter-samples.jar & 
+ COPY .\target\mark59-datahunter-samples.jar  C:\apache-jmeter\lib\ext &
+ RMDIR /S /Q C:\apache-jmeter\lib\ext\mark59-datahunter-samples-dependencies &
+ MKDIR C:\apache-jmeter\lib\ext\mark59-datahunter-samples-dependencies &
+ COPY .\target\mark59-datahunter-samples-dependencies  C:\apache-jmeter\lib\ext\mark59-datahunter-samples-dependencies &
 
  mkdir C:\Mark59_Runs &
  mkdir C:\Mark59_Runs\Jmeter_Results &
@@ -97,26 +97,26 @@ INSERT IGNORE INTO COMMANDS VALUES ('DataHunterSeleniumDeployAndExecute','WMIC_W
 
  echo Starting JMeter DataHunter test ... &  
 
- jmeter -n -X -f -t %SERVER_METRICS_WEB_BASE_DIR%\..\dataHunterPerformanceTestSamples\test-plans\DataHunterSeleniumTestPlan.jmx -l C:\Mark59_Runs\Jmeter_Results\DataHunter\DataHunterTestResults.csv -JForceTxnFailPercent=0 -JDataHunterUrl=http://localhost:8081/dataHunter -JStartCdpListeners=false &
+ jmeter -n -X -f -t %SERVER_METRICS_WEB_BASE_DIR%\..\mark59-datahunter-samples\test-plans\DataHunterSeleniumTestPlan.jmx -l C:\Mark59_Runs\Jmeter_Results\DataHunter\DataHunterTestResults.csv -JForceTxnFailPercent=0 -JDataHunterUrl=http://localhost:8081/mark59-datahunter -JStartCdpListeners=false &
  PAUSE
 ''
-','N','refer DeployDataHunterTestArtifactsToJmeter.bat and DataHunterExecuteJmeterTest.bat in dataHunterPerformanceTestSamples ','');
+','N','refer DeployDataHunterTestArtifactsToJmeter.bat and DataHunterExecuteJmeterTest.bat in mark59-datahunter-samples ','');
 INSERT IGNORE INTO COMMANDS VALUES ('DataHunterSeleniumDeployAndExecute_LINUX','SSH_LINIX_UNIX','echo This script runs the JMeter deploy in the background, then opens a terminal for JMeter execution.
 echo starting from $PWD;
 
 {   # try  
 
-    cd ../dataHunterPerformanceTestSamples && 
+    cd ../mark59-datahunter-samples && 
     DH_TEST_SAMPLES_DIR=$(pwd) && 
-    echo dataHunterPerformanceTestSamples base dir is $DH_TEST_SAMPLES_DIR &&
+    echo mark59-datahunter-samples base dir is $DH_TEST_SAMPLES_DIR &&
 
     cp ./mark59.properties ~/apache-jmeter/bin/mark59.properties &&
     cp ./chromedriver ~/apache-jmeter/bin/chromedriver && 
     cp ../mark59-server-metrics/target/mark59-server-metrics.jar  ~/apache-jmeter/lib/ext/mark59-server-metrics.jar && 
-    cp ./target/dataHunterPerformanceTestSamples.jar  ~/apache-jmeter/lib/ext/dataHunterPerformanceTestSamples.jar && 
+    cp ./target/mark59-datahunter-samples.jar  ~/apache-jmeter/lib/ext/mark59-datahunter-samples.jar && 
     mkdir -p ~/Mark59_Runs/Jmeter_Results/DataHunter &&
-    rm -rf ~/apache-jmeter/lib/ext/dataHunterPerformanceTestSamples-dependencies &&
-    cp -r ./target/dataHunterPerformanceTestSamples-dependencies ~/apache-jmeter/lib/ext/dataHunterPerformanceTestSamples-dependencies &&
+    rm -rf ~/apache-jmeter/lib/ext/mark59-datahunter-samples-dependencies &&
+    cp -r ./target/mark59-datahunter-samples-dependencies ~/apache-jmeter/lib/ext/mark59-datahunter-samples-dependencies &&
  
     gnome-terminal -- sh -c "~/apache-jmeter/bin/jmeter -n -X -f -t $DH_TEST_SAMPLES_DIR/test-plans/DataHunterSeleniumTestPlan.jmx -l ~/Mark59_Runs/Jmeter_Results/DataHunter/DataHunterTestResults.csv -JForceTxnFailPercent=0 -JStartCdpListeners=false; exec bash"
 

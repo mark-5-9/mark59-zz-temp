@@ -86,7 +86,7 @@
  </center>
   
  <br><br>
- <a href="/dataHunter?application=${asyncMessageaAnalyzerRequest.application}">Home Page</a>
+ <a href="/mark59-datahunter?application=${asyncMessageaAnalyzerRequest.application}">Home Page</a>
  
 </body>
 </html>

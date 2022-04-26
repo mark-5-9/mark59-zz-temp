@@ -25,5 +25,5 @@ mkdir C:\Mark59_Runs\Jmeter_Results\DataHunter
 
 set path=%path%;C:\Windows\System32;C:\windows\system32\wbem
 
-C:\apache-jmeter\bin\jmeter -n -X -f -t ./test-plans/DataHunterSeleniumTestPlan.jmx -l C:\Mark59_Runs\Jmeter_Results\DataHunter\DataHunterTestResults.csv -j C:\apache-jmeter\bin\jmeter.log -JDataHunterUrl=http://localhost:8081/dataHunter -JForceTxnFailPercent=0 -JStartCdpListeners=%StartCdpListeners%
+C:\apache-jmeter\bin\jmeter -n -X -f -t ./test-plans/DataHunterSeleniumTestPlan.jmx -l C:\Mark59_Runs\Jmeter_Results\DataHunter\DataHunterTestResults.csv -j C:\apache-jmeter\bin\jmeter.log -JDataHunterUrl=http://localhost:8081/mark59-datahunter -JForceTxnFailPercent=0 -JStartCdpListeners=%StartCdpListeners%
 PAUSE

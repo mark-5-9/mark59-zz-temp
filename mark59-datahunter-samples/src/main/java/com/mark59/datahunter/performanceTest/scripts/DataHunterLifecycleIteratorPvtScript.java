@@ -86,7 +86,7 @@ public class DataHunterLifecycleIteratorPvtScript  extends SeleniumIteratorAbstr
 		jmeterAdditionalParameters.put(ITERATION_PACING_IN_SECS,  						"10");
 		jmeterAdditionalParameters.put(STOP_THREAD_AFTER_TEST_START_IN_SECS,  			 "0");
 		
-		jmeterAdditionalParameters.put("DATAHUNTER_URL",			"http://localhost:8081/dataHunter");
+		jmeterAdditionalParameters.put("DATAHUNTER_URL",			"http://localhost:8081/mark59-datahunter");
 		jmeterAdditionalParameters.put("DATAHUNTER_APPLICATION_ID", "DATAHUNTER_PV_TEST");
 		jmeterAdditionalParameters.put("FORCE_TXN_FAIL_PERCENT", 	"20");
 		jmeterAdditionalParameters.put("USER", 	user);
@@ -272,7 +272,7 @@ public class DataHunterLifecycleIteratorPvtScript  extends SeleniumIteratorAbstr
 		System.out.println("  -- page title at userActionsOnScriptFailure is " + driver.getTitle() + " --");
 		jm.endTransaction("DH_lifecycle_9998_userActionsOnScriptFailure");
 		SafeSleep.sleep(30000); // stop failures quickly repeating 
-		driver.get(dataHunterUrl + "/dataHunter");	
+		driver.get(dataHunterUrl + "/mark59-datahunter");	
 	}
 	
 	

@@ -65,7 +65,7 @@ public class DataHunterBasicRegressionScript  extends SeleniumAbstractJavaSample
 	@Override
 	protected Map<String, String> additionalTestParameters() {
 		Map<String, String> jmeterAdditionalParameters = new LinkedHashMap<>();
-		jmeterAdditionalParameters.put("DATAHUNTER_URL", "http://localhost:8081/dataHunter");
+		jmeterAdditionalParameters.put("DATAHUNTER_URL", "http://localhost:8081/mark59-datahunter");
 		jmeterAdditionalParameters.put("DATAHUNTER_APPLICATION_ID", "DATAHUNTER_REGRESSION");
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.DRIVER, "CHROME");
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.HEADLESS_MODE, String.valueOf(false));

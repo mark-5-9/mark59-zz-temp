@@ -29,8 +29,8 @@ public static void main(String[] args) throws InterruptedException{
 	
 	
 /**
- * Note that in this more advanced example access to the com.mark59.seleniumDSL.* packages is assumed (from the mark59-selenium-sample-dsl project).
- * <p>Hint: A quick and dirty way to do this is to copy target jar from the dataHunterPerformanceTestSamples project since it contains the sample DSL
+ * Note that in this more advanced example access to the com.mark59.seleniumDSL.* packages is assumed (from the mark59-sample-dsls project).
+ * <p>Hint: A quick and dirty way to do this is to copy target jar from the mark59-datahunter-samples project since it contains the sample DSL
  * packages, into the lib/ext directory of your JMeter instance.  
  *   
  * @author Phil Webb
@@ -138,7 +138,7 @@ class ThisScript extends SeleniumAbstractJavaSamplerClient {
 	@Override
 	protected Map<String, String> additionalTestParameters() {
 		Map<String, String> jmeterAdditionalParameters = new LinkedHashMap<String, String>();
-		jmeterAdditionalParameters.put("DATAHUNTER_URL",			"http://localhost:8081/dataHunter");
+		jmeterAdditionalParameters.put("DATAHUNTER_URL",			"http://localhost:8081/mark59-datahunter");
 		jmeterAdditionalParameters.put("DATAHUNTER_APPLICATION_ID", "DATAHUNTER_PV_TEST");
 		jmeterAdditionalParameters.put("FORCE_TXN_FAIL_PERCENT", 	"20");
 		jmeterAdditionalParameters.put("USER", 	 "default_user");		
@@ -307,7 +307,7 @@ class ThisScript extends SeleniumAbstractJavaSamplerClient {
 	private synchronized void PrintSomeMsgOnceAtStartUp(String dataHunterUrl, WebDriver driver) {
 		Properties sysprops = System.getProperties();
 		if (!"true".equals(sysprops.get("printedOnce")) ) {	
-			LOG.info(" Using DataHunter with Url " + dataHunterUrl + "/dataHunter");
+			LOG.info(" Using DataHunter with Url " + dataHunterUrl + "/mark59-datahunter");
 			Capabilities caps = ((ChromeDriver)driver).getCapabilities();
 			LOG.info(" Browser Name and Version : " + caps.getBrowserName() + " " + caps.getBrowserVersion());
 			if ("chrome".equalsIgnoreCase(caps.getBrowserName()) && caps.getCapability("chrome") != null ){

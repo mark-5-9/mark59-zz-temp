@@ -29,7 +29,7 @@ public class DataHunterRestApiClientSampleUsage {
 	 * 'Asynchronous Message Analyzer' function.
 	 *  
 	 * @param dhApiClient DataHunterRestApiClient
-	 * @see <a href="https://github.com/mark-5-9/mark59-xtras/blob/master/dataHunterFunctionalTest/src/main/java/com/mark59/datahunter/functionalTest/scripts/DataHunterSeleniumFunctionalTest.java#L47">Web App Equivalent Test</a>  
+	 * @see <a href="https://github.com/mark-5-9/mark59-xtras/blob/master/mark59-datahunterFunctionalTest/src/main/java/com/mark59/datahunter/functionalTest/scripts/DataHunterSeleniumFunctionalTest.java#L47">Web App Equivalent Test</a>  
 	 */
 	public void asyncLifeCycleTestWithUseabilityUpdate(DataHunterRestApiClient dhApiClient) {
 
@@ -542,7 +542,8 @@ public class DataHunterRestApiClientSampleUsage {
 	 * @param args none required
 	 */
 	public static void main(String[] args) {
-		DataHunterRestApiClient dhApiClient = new DataHunterRestApiClient("http://localhost:8081/dataHunter"  );
+		System.out.println("running DataHunterRestApiClientSampleUsage ..");
+		DataHunterRestApiClient dhApiClient = new DataHunterRestApiClient("http://localhost:8081/mark59-datahunter"  );
 		DataHunterRestApiClientSampleUsage sample = new DataHunterRestApiClientSampleUsage();
 		sample.basicPolicyAddPrintDeleteChecks(dhApiClient);
 		sample.workingWithMultiplePolicies(dhApiClient);
@@ -551,6 +552,7 @@ public class DataHunterRestApiClientSampleUsage {
 		sample.workingWithUseStateChanges(dhApiClient);
 		sample.workingWithAsyncMessages(dhApiClient);
 		sample.asyncLifeCycleTestWithUseabilityUpdate(dhApiClient);	
+		System.out.println("completed DataHunterRestApiClientSampleUsage run");
 	}
 
 }

@@ -86,7 +86,7 @@
  </center>
  
  <br><br>
- <a href="/dataHunter?application=${updateUseStateAndEpochTime.application}">Home Page</a>
+ <a href="/mark59-datahunter?application=${updateUseStateAndEpochTime.application}">Home Page</a>
  
 </body>
 </html>
