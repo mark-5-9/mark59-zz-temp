@@ -4,7 +4,7 @@
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="DataHunter Selenium Using Downloaded Excel Profiles File" enabled="true">
       <stringProp name="TestPlan.comments">                                                                                                                                       ** BEFORE YOU RUN **
 
-Download the Server Profiles Excel file using the Server Metrics Web application ( http://localhost:8085/mark59-server-metrics-web/serverProfileList -&gt; Download.. ), and copy it into the apache-jmeter/bin directory.  Or alternatively just copy across the mark59serverprofiles.xlsx sheet supplied in the root of the mark59-datahunter-samples project into the apache-jmeter/bin directory.
+Download the Server Profiles Excel file using the Server Metrics Web application ( http://localhost:8085/mark59-metrics/serverProfileList -&gt; Download.. ), and copy it into the apache-jmeter/bin directory.  Or alternatively just copy across the mark59serverprofiles.xlsx sheet supplied in the root of the mark59-datahunter-samples project into the apache-jmeter/bin directory.
 
 Finally, the &apos;Quick Start&apos; instructions should of been completed.   This ensures the required jars mark59-datahunter-samples.jar and mark59-server-metrics.jar are in apache-jmeter/lib/ext, and mark59.properties and a chromdriver.exe are in the apache-jmeter/bin directory (or manually copy all these files over ). 
 </stringProp>
@@ -31,7 +31,7 @@ Finally, the &apos;Quick Start&apos; instructions should of been completed.   Th
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
         <stringProp name="TestPlan.comments">                                                                                                                                        ** BEFORE YOU RUN **
 
-Download the Server Profiles Excel file using the Server Metrics Web application ( http://localhost:8085/mark59-server-metrics-web/serverProfileList -&gt; Download.. ), and copy it into the apache-jmeter/bin directory.  Or alternatively just copy across the mark59serverprofiles.xlsx sheet supplied in the root of the mark59-datahunter-samples project into the apache-jmeter/bin directory.
+Download the Server Profiles Excel file using the Server Metrics Web application ( http://localhost:8085/mark59-metrics/serverProfileList -&gt; Download.. ), and copy it into the apache-jmeter/bin directory.  Or alternatively just copy across the mark59serverprofiles.xlsx sheet supplied in the root of the mark59-datahunter-samples project into the apache-jmeter/bin directory.
 
 Finally, the &apos;Quick Start&apos; instructions should of been completed.   This ensures the required jars mark59-datahunter-samples.jar and mark59-server-metrics.jar are in apache-jmeter/lib/ext, and mark59.properties and a chromdriver.exe are in the apache-jmeter/bin directory (or manually copy all these files over ). 
 </stringProp>
@@ -81,7 +81,7 @@ log.info   (&quot;OS property has been set to : &quot; + os );</stringProp>
           </elementProp>
           <elementProp name="mark59ServerMetricsWebUrl" elementType="Argument">
             <stringProp name="Argument.name">mark59ServerMetricsWebUrl</stringProp>
-            <stringProp name="Argument.value">${__P(Mark59ServerMetricsWebUrl,http://localhost:8085/mark59-server-metrics-web)}</stringProp>
+            <stringProp name="Argument.value">${__P(Mark59ServerMetricsWebUrl,http://localhost:8085/mark59-metrics)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
             <stringProp name="Argument.desc">see ServerMetrics_localhost thread group</stringProp>
           </elementProp>

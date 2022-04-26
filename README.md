@@ -92,7 +92,7 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
     <li>DataHunter 'policies' now named 'items' on pages</li>   
     <li>Trending - show table by default</li>
     <li>Include computation and graphics for 95 and 99th percentiles</li>	
-    <li>Groovy scripting for mark59-server-metrics-web (required db changes)</li>	
+    <li>Groovy scripting for mark59-metrics (required db changes)</li>	
     <li>Plugin dependenices updated to latest versions</li>	
 	<li>Dependenices update (inc SpringBoot 2.4.5, JMeter 5.4.1)</li>	
     <li>Improve JavaDocs, fix typos etc</li>
@@ -111,7 +111,7 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
 
 <p>Release 3.0.(.0) <br>
   <ul>
-    <li>New project: mark59-server-metrics-web.   Significant upgrade of server metric capture in mark59.</li>
+    <li>New project: mark59-metrics.   Significant upgrade of server metric capture in mark59.</li>
     <li>Project rename:  dataHunterPVTest to dataHunterPerformanceTestSamples</li>
     <li>Rename MySQL database pvmetrics to metricsdb (naming consistency across projects)</li>    
     <li>All project can use the h2, MySQL and Postgres database (enable quick start-up for demo and learning)</li>    

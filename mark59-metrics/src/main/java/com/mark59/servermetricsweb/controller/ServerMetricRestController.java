@@ -79,7 +79,7 @@ public class ServerMetricRestController {
 	 *  <p>With the mark59 framework, will be called by implementation(s) of JMeter Java Samplers designed to cater for 
 	 *  metrics capture directly via this API call (refer to com.mark59.servermetrics.ServerMetricsCaptureViaWeb).
 	 *  <p> For example using profile localhost_HOSTID, and from default setting localhost, the url used would be <br>
-	 *  http://localhost:8085/mark59-server-metrics-web/api/metric?reqServerProfileName=localhost_HOSTID
+	 *  http://localhost:8085/mark59-metrics/api/metric?reqServerProfileName=localhost_HOSTID
 	 *  
 	 * @param reqServerProfileName  profile name
 	 * @param reqTestMode whether running as a 'test' (eg directly from the web application)

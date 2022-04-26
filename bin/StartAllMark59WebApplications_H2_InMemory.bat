@@ -12,7 +12,7 @@ REM   |  Home page URLs  will be:
 REM   |  
 REM   |     http://localhost:8081/mark59-datahunter/
 REM   |     http://localhost:8083/metrics/
-REM   |     http://localhost:8085/mark59-server-metrics-web/
+REM   |     http://localhost:8085/mark59-metrics/
 REM   |  
 REM   --------------------------------------------------------------------------------------------------------------
 CD /D "%~dp0"
@@ -27,6 +27,6 @@ ECHO Starting the Metrics (Trend Analysis) Web Application
 CD ../metrics
 START StartMetricsTrendAnalysisFromTarget.bat
 
-ECHO Starting the mark59-server-metrics-web Application  
-CD ../mark59-server-metrics-web
-START StartMark59ServerMetricsWebFromTarget.bat
+ECHO Starting the mark59-metrics Application  
+CD ../mark59-metrics
+START StartMetricsFromTarget.bat

@@ -20,7 +20,7 @@ if [ "$DATABASE" = "H2" ]; then
 fi
 
 if [ "$DATABASE" = "H2TCPSERVER" ]; then
-	# Using H2  Starting mark59-server-metrics-web  (default application server port, db TCP server started on default port) 
+	# Using H2  Starting mark59-metrics  (default application server port, db TCP server started on default port) 
 	java -jar ./target/metrics.war --spring.profiles.active=h2tcpserver --port=8083 --h2.port=9092
 fi
 

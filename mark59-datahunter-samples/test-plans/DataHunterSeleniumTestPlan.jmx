@@ -31,7 +31,7 @@
           </elementProp>
           <elementProp name="mark59ServerMetricsWebUrl" elementType="Argument">
             <stringProp name="Argument.name">mark59ServerMetricsWebUrl</stringProp>
-            <stringProp name="Argument.value">${__P(Mark59ServerMetricsWebUrl,http://localhost:8085/mark59-server-metrics-web)}</stringProp>
+            <stringProp name="Argument.value">${__P(Mark59ServerMetricsWebUrl,http://localhost:8085/mark59-metrics)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
             <stringProp name="Argument.desc">see ServerMetrics_localhost thread group</stringProp>
           </elementProp>
@@ -611,7 +611,7 @@ return 0;</stringProp>
               </elementProp>
               <elementProp name="_" elementType="Argument">
                 <stringProp name="Argument.name">_</stringProp>
-                <stringProp name="Argument.value">- server profile of &apos;localhost&apos; only reports metrics of the mark59-server-metrics-web machine!</stringProp>
+                <stringProp name="Argument.value">- server profile of &apos;localhost&apos; only reports metrics of the mark59-metrics machine!</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="-" elementType="Argument">

@@ -3,7 +3,7 @@
 #   |
 #   |
 #   |  Alternative to running this .sh   ** H2 DATABASE ONLY **
-#   |	   - login  to the server-metrics-web application  "http://localhost:8085/mark59-server-metrics-web" 
+#   |	   - login  to the server-metrics-web application  "http://localhost:8085/mark59-metrics" 
 #   |	   - run the DemoLINUX-DataHunterSeleniumRunCheck profile. 
 #   |
 #   |  JMeter input results file expected at ~/Mark59_Runs/Jmeter_Results/DataHunter/ 

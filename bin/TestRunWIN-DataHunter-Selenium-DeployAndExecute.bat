@@ -9,7 +9,7 @@ REM   |
 REM   |  An instance of JMeter is expected at C:\apache-jmeter
 REM   |
 REM   |  Alternative to running this .bat 
-REM   |		 - login  to the server-metrics-web application  "http://localhost:8085/mark59-server-metrics-web" 
+REM   |		 - login  to the server-metrics-web application  "http://localhost:8085/mark59-metrics" 
 REM   |		 - run the DemoWIN-DataHunter-Selenium-DeployAndExecute profile. 
 REM   |
 REM   |  The only database considerations are that when the test is running server metrics are obtained invoking the 'localhost_WINDOWS' profile in the running

@@ -3,7 +3,7 @@ REM   | Load DataHunter Test Results to Mark59 Metrics (Trend Analysis) database
 REM   |
 REM   |
 REM   |  Alternative to running this .bat  ** H2 DATABASE ONLY **
-REM   |		 - login  to the server-metrics-web application  "http://localhost:8085/mark59-server-metrics-web" 
+REM   |		 - login  to the server-metrics-web application  "http://localhost:8085/mark59-metrics" 
 REM   |		 - run the DemoWIN-DataHunterSeleniumRunCheck profile. 
 REM   |
 REM   |  JMeter input results file expected at C:\Mark59_Runs\Jmeter_Results\DataHunter 

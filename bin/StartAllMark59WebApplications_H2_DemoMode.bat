@@ -9,7 +9,7 @@ REM   |  Assuming you are using (default) server.port values for the application
 REM   |  
 REM   |     http://localhost:8081/mark59-datahunter/
 REM   |     http://localhost:8083/metrics/
-REM   |     http://localhost:8085/mark59-server-metrics-web/
+REM   |     http://localhost:8085/mark59-metrics/
 REM   |  
 REM   --------------------------------------------------------------------------------------------------------------
 CD /D "%~dp0"
@@ -21,8 +21,8 @@ CD ../mark59-datahunter
 START StartDataHunterFromTarget.bat
 
 ECHO Starting the Metrics Application  
-CD ../mark59-server-metrics-web
-START StartMark59ServerMetricsWebFromTarget.bat
+CD ../mark59-metrics
+START StartMetricsFromTarget.bat
 
 rem SET "DATABASE=H2TCPSERVER"
 ECHO Starting the Trends Web Application  

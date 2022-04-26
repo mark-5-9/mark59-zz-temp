@@ -2,7 +2,7 @@
 #   | Generate the JMeter reports for a DataHunter Selenium Test.
 #   |
 #   |  Alternative to running this .bat 
-#   |		 - login  to the server-metrics-web application  "http://localhost:8085/mark59-server-metrics-web" 
+#   |		 - login  to the server-metrics-web application  "http://localhost:8085/mark59-metrics" 
 #   |		 - run the DemoWIN-DataHunter-Selenium-GenJmeterReport profile. 
 #   |
 #   |  There are are no database considerations when running JMeter report generation.

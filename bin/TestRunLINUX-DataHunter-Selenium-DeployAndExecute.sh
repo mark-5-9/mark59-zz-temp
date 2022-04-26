@@ -9,7 +9,7 @@
 #     |  An instance of JMeter is expected at C:\apache-jmeter
 #     |
 #     |  Alternative to running this .sh 
-#     |		 - login  to the server-metrics-web application  "http://localhost:8085/mark59-server-metrics-web" 
+#     |		 - login  to the server-metrics-web application  "http://localhost:8085/mark59-metrics" 
 #     |		 - run the DemoLINUX-DataHunter-Selenium-DeployAndExecute profile. 
 #     |
 #     |  The only database considerations are that when the test is running server metrics are obtained invoking the 'localhost_LINUX' profile from the running

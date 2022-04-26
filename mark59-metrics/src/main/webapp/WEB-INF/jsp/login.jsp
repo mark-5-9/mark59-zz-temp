@@ -45,7 +45,7 @@
  <div class="canterbury">Mark59</div> 
  <p><b>Server Metrics Web Application Login</b></p>
 
- <form method="post" action="/mark59-server-metrics-web/login">
+ <form method="post" action="/mark59-metrics/login">
         <p>
         <!-- use param.error assuming FormLoginConfigurer#failureUrl contains the query parameter error -->
         <c:if test="${param.error != null}">

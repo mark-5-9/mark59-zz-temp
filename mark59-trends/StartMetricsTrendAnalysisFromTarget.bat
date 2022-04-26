@@ -3,7 +3,7 @@ REM   |  This bat assumes - the metrics.war file exists in the ./target director
 REM   |                   - when using a mySQL database, the metricsdb database exists locally (using defaults)
 REM   |
 REM   |  Alternative to running this .bat (H2 database ONLY)
-REM   |		 - login  to the server-metrics-web application  "http://localhost:8085/mark59-server-metrics-web" 
+REM   |		 - login  to the server-metrics-web application  "http://localhost:8085/mark59-metrics" 
 REM   |		 - run the DemoWIN-DataHunter-Selenium-metricsRunCheck profile. 
 REM   |
 REM   |  Note the use of double quotes n a few places, required to cater for the & (ampersand) char, or to enter a space (equates to a blank blank here). 
@@ -27,7 +27,7 @@ IF "%DATABASE%" == "H2" (
 )
 
 IF "%DATABASE%" == "H2TCPSERVER" (
-	rem Using H2  Starting mark59-server-metrics-web  (default application server port, db TCP server started on default port) 
+	rem Using H2  Starting mark59-metrics  (default application server port, db TCP server started on default port) 
 	java -jar ./target/metrics.war --spring.profiles.active=h2tcpserver --port=8083 --h2.port=9092 
 )
 

@@ -10,7 +10,7 @@
 #   |  
 #   |     http://localhost:8081/mark59-datahunter/
 #   |     http://localhost:8083/metrics/
-#   |     http://localhost:8085/mark59-server-metrics-web/
+#   |     http://localhost:8085/mark59-metrics/
 #   |  
 #   --------------------------------------------------------------------------------------------------------------
 
@@ -30,8 +30,8 @@ gnome-terminal --working-directory=$PWD/metrics -- ./StartMetricsTrendAnalysisFr
 
 # DATABASE=H2TCPSERVER
 # export DATABASE
-echo Starting the mark59-server-metrics-web Application 
-gnome-terminal --working-directory=$PWD/mark59-server-metrics-web -- ./StartMark59ServerMetricsWebFromTarget.sh 
+echo Starting the mark59-metrics Application 
+gnome-terminal --working-directory=$PWD/mark59-metrics -- ./StartMetricsFromTarget.sh 
 
 # $SHELL
 

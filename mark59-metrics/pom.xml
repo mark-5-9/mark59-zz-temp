@@ -152,7 +152,7 @@
 			</plugin>
 
 			<!-- spring boot maven plugin -->
-			<!-- Constructs the mark59-server-metrics-web Spring Boot War during the package phase. -->
+			<!-- Constructs the mark59-metrics Spring Boot War during the package phase. -->
 
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

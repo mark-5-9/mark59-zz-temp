@@ -126,7 +126,7 @@ public class Runcheck  implements CommandLineRunner
 		options.addOption("s", "dbSchema",				true, "database schema (MySQL terminology) / database name (Postgres terminology) defaults to metricsdb" );
 		options.addOption("u", "dbUsername",   			true, "Username for the database (defaults to admin)" );				
 		options.addOption("w", "dbpassWord",   			true, "Password for the database" );				
-		options.addOption("y", "dbpassencrYpted",		true, "Encrypted Password for the database (value as per the encryption used by mark59-server-metrics-web application 'Edit Server Profile' page)");				
+		options.addOption("y", "dbpassencrYpted",		true, "Encrypted Password for the database (value as per the encryption used by mark59-metrics application 'Edit Server Profile' page)");				
 		options.addOption("q", "dbxtraurlparms",		true, "Any special parameters to append to the end of the database URL (include the ?). Eg \"?allowPublicKeyRetrieval=truee&useSSL=false\" "
 																+ "(the quotes are needed to escape the ampersand)");				
 		options.addOption("x", "eXcludestart",     		true, "exclude results at the start of the test for the given number of minutes (defaults to 0)" );			
