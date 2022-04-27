@@ -311,17 +311,17 @@ public class Runcheck  implements CommandLineRunner
 		System.out.println( "   Process JMeter xml formatted result in directory C:/jmeter-results/BIGAPP  (file/s ends in .xml)");
 		System.out.println( "   The graph application name will be MY_COMPANY_BIG_APP, with a reference for this run of 'run ref 645'.");
 		System.out.println( "   The metricsdb database is hosted locally on a MySql instance assigned to port 3309 (default user/password of admin/admin) : "  );
-		System.out.println( "   java -jar metricsRuncheck.jar -a MY_COMPANY_BIG_APP -i C:/jmeter-results/BIGAPP -r \"run ref 645\" -p 3309  ");
+		System.out.println( "   java -jar mark59-trends-load.jar -a MY_COMPANY_BIG_APP -i C:/jmeter-results/BIGAPP -r \"run ref 645\" -p 3309  ");
 		System.out.println( "   2. Gatling example ");
 		System.out.println( "   Process Gatling simulation.log in directory C:/GatlingProjects/myBigApp");
 		System.out.println( "   The graph application name will be MY_COMPANY_BIG_APP, with a reference for this run of 'GatlingIsCool'.");
 		System.out.println( "   The metricsdb database is hosted locally on a Postgres instance using all defaults (but you want to disable sslmode) "  );
-		System.out.println( "   java -jar metricsRuncheck.jar -a MY_COMPANY_BIG_APP -i C:/GatlingProjects/myBigApp -d pg -q \"?sslmode=disable\" -t GATLING  -r \"GatlingIsCool\" ");		
+		System.out.println( "   java -jar mark59-trends-load.jar -a MY_COMPANY_BIG_APP -i C:/GatlingProjects/myBigApp -d pg -q \"?sslmode=disable\" -t GATLING  -r \"GatlingIsCool\" ");		
 		System.out.println( "   3. Loadrunner example");		
 		System.out.println( "   Process Loadrunner analysis result at C:/templr/BIGAPP/AnalysisSession (containing file AnalysisSession.mdb).  ");
 		System.out.println( "   The graph application name will be MY_COMPANY_BIG_APP, with a reference for this run of 'run ref 644'.");
 		System.out.println( "   The metricsdb database is hosted locally on a MySql instance assigned to port 3309 (default user/password of admin/admin) : "  );
-		System.out.println( "   java -jar metricsRuncheck.jar -a MY_COMPANY_BIG_APP -i C:/templr/BIGAPP/AnalysisSession/AnalysisSession.mdb -r \"run ref 644\" -p 3309 -t LOADRUNNER" );
+		System.out.println( "   java -jar mark59-trends-load.jar -a MY_COMPANY_BIG_APP -i C:/templr/BIGAPP/AnalysisSession/AnalysisSession.mdb -r \"run ref 644\" -p 3309 -t LOADRUNNER" );
 		System.out.println();
 	}
 

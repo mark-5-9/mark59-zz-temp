@@ -13,9 +13,9 @@ if (reqApp != null && !reqApp.isEmpty()) {
 %>
 
 <div class="sidebar">
-<div><a class=canterbury href="/metrics/overview<%= reqAppUrlParm %>">Mark59</a></div>
+<div><a class=canterbury href="/ark59-trends/overview<%= reqAppUrlParm %>">Mark59</a></div>
 
-  <a <% if (path.contains("overview")){ %> class="active" <% } %> href="/metrics/overview<%= reqAppUrlParm %>">Overview</a> 
+  <a <% if (path.contains("overview")){ %> class="active" <% } %> href="ark59-trends/overview<%= reqAppUrlParm %>">Overview</a> 
   <a <% if (path.contains("dashboard")){ %> class="active" <% } %> href="dashboard?reqAppListSelector=Active">Application Dashboard</a> 
   <a href="trending<%= reqAppUrlParm %>">Trend Analysis</a>  
   <a <% if (path.contains("run")){ %> class="active" <% } %> href="runsList<%= reqAppUrlParm %>" >Run List</a> 

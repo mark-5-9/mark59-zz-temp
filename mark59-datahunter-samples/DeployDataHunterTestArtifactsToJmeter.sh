@@ -1,5 +1,5 @@
 #   |------------------------------------------------------------------------------------------------------------------------------------------------
-#   |  Use this file to copy Maven build artifacts from target folders in mark59-datahunter-samples and mark59-server-metrics projects,
+#   |  Use this file to copy Maven build artifacts from target folders in mark59-datahunter-samples and mark59-metrics projects,
 #   |  into the target JMeter instance at ~/apache-jmeter  
 #   | 
 #   |  Note that mark59serverprofiles.xlsx is NOT copied. To run the '..usingExcel' testplan, copy it manually to the JMeter bin directory.
@@ -21,7 +21,7 @@ echo starting from $PWD;
 
     cp ./mark59.properties ~/apache-jmeter/bin/mark59.properties &&
     cp ./chromedriver ~/apache-jmeter/bin/chromedriver && 
-    cp ../mark59-server-metrics/target/mark59-server-metrics.jar  ~/apache-jmeter/lib/ext/mark59-server-metrics.jar && 
+    cp ../mark59-metrics-api/target/mark59-metrics-api  ~/apache-jmeter/lib/ext/mark59-metrics-api.jar && 
     cp ./target/mark59-datahunter-samples.jar  ~/apache-jmeter/lib/ext/mark59-datahunter-samples.jar &&
     rm -rf ~/apache-jmeter/lib/ext/mark59-datahunter-samples-dependencies &&
     cp -r ./target/mark59-datahunter-samples-dependencies ~/apache-jmeter/lib/ext/mark59-datahunter-samples-dependencies &&

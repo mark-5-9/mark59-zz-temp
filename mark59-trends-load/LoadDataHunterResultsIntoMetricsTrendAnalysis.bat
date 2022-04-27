@@ -1,7 +1,7 @@
 REM   -------------------------------------------------------------------------------------------------------------------------------------------------
-REM   |  Load DataHunter Test Results to Mark59 Metrics (Trend Analysis) database.
+REM   |  Load DataHunter Test Results to Mark59 Trends Analysis database.
 REM   | 
-REM   |  This bat assumes - the metricsRuncheck.jar file exists in the ./target directory (relative to this file) 
+REM   |  This bat assumes - the mark59-trends-load.jar file exists in the ./target directory (relative to this file) 
 REM   |                   - when using a MySQL or Postgres database, the metricsdb database exists locally (using defaults)
 REM   |
 REM   |  Notes : the use of double quotes in a few places, required to cater for the & (ampersand) char, or to enter a space (equates to a blank here). 
@@ -26,34 +26,34 @@ rem SET "DATABASE=H2TCPCLIENT"
 ECHO The database has been set to %DATABASE%
 
 IF "%DATABASE%" == "" (
-	rem Using H2  Starting metricsRuncheck batch for a dataHunter load (defaults taken on parameters) 
+	rem Using H2  Starting mark59-trends-load batch for a dataHunter load (defaults taken on parameters) 
 	ECHO No database set, so assuming H2	
-	java -jar ./target/metricsRuncheck.jar  -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -d h2   	
+	java -jar ./target/mark59-trends-load.jar  -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -d h2   	
 )
 
 IF "%DATABASE%" == "H2" (
-	rem Using H2  Starting metricsRuncheck batch for a dataHunter load (defaults taken on parameters) 
-	java -jar ./target/metricsRuncheck.jar  -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -d h2   	
+	rem Using H2  Starting mark59-trends-load batch for a dataHunter load (defaults taken on parameters) 
+	java -jar ./target/mark59-trends-load.jar  -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -d h2   	
 )
 
 IF "%DATABASE%" == "H2TCPCLIENT" (
-	rem Using H2 using a tcp connection to start  metricsRuncheck batch for a dataHunter load (defaults taken on parameters. (Note for docker use -h metrics) 
-	java -jar ./target/metricsRuncheck.jar  -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -d h2tcpclient -h localhost  -p 9092   	
+	rem Using H2 using a tcp connection to start  mark59-trends-load batch for a dataHunter load (defaults taken on parameters. (Note for docker use -h metrics) 
+	java -jar ./target/mark59-trends-load.jar  -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -d h2tcpclient -h localhost  -p 9092   	
 )
 
 IF "%DATABASE%" == "H2MEM" (
-	rem Using H2 in memory  Starting metricsRuncheck batch for a dataHunter load (defaults taken on parameters) 
-	java -jar ./target/metricsRuncheck.jar  -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -d h2mem   	
+	rem Using H2 in memory  Starting mark59-trends-load batch for a dataHunter load (defaults taken on parameters) 
+	java -jar ./target/mark59-trends-load.jar  -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -d h2mem   	
 )
 
 IF "%DATABASE%" == "MYSQL" (
-	rem using MySQL:  Starting metricsRuncheck batch with some parameters provided (defaults taken on other parameters. ) 
-	java -jar ./target/metricsRuncheck.jar -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -k true -d mysql -h localhost  -p 3306 -s metricsdb -q "?allowPublicKeyRetrieval=true&useSSL=false" -t JMETER  -r "uploaded %date% %time%"
+	rem using MySQL:  Starting mark59-trends-load batch with some parameters provided (defaults taken on other parameters. ) 
+	java -jar ./target/mark59-trends-load.jar -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -k true -d mysql -h localhost  -p 3306 -s metricsdb -q "?allowPublicKeyRetrieval=true&useSSL=false" -t JMETER  -r "uploaded %date% %time%"
 )
 
 IF "%DATABASE%"=="POSTGRES" (
-	rem using Postgress:  Starting metricsRuncheck batch with some parameters provided (defaults taken on other parameters. ) 
-	java -jar ./target/metricsRuncheck.jar -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -d pg -h localhost  -p 5432 -s metricsdb -q "?sslmode=disable" -t JMETER  -r "uploaded %date% %time%"
+	rem using Postgress:  Starting mark59-trends-load batch with some parameters provided (defaults taken on other parameters. ) 
+	java -jar ./target/mark59-trends-load.jar -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -d pg -h localhost  -p 5432 -s metricsdb -q "?sslmode=disable" -t JMETER  -r "uploaded %date% %time%"
 )
 
 PAUSE

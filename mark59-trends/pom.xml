@@ -113,7 +113,7 @@
 			</plugin>
 
 			<!-- spring boot maven plugin -->
-			<!-- Constructs the metrics (Trend Analysis) Spring Boot War during the package phase. -->
+			<!-- Constructs the Trends Analysis Spring Boot War during the package phase. -->
 
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

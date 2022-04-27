@@ -6,7 +6,7 @@
 
 Download the Server Profiles Excel file using the Server Metrics Web application ( http://localhost:8085/mark59-metrics/serverProfileList -&gt; Download.. ), and copy it into the apache-jmeter/bin directory.  Or alternatively just copy across the mark59serverprofiles.xlsx sheet supplied in the root of the mark59-datahunter-samples project into the apache-jmeter/bin directory.
 
-Finally, the &apos;Quick Start&apos; instructions should of been completed.   This ensures the required jars mark59-datahunter-samples.jar and mark59-server-metrics.jar are in apache-jmeter/lib/ext, and mark59.properties and a chromdriver.exe are in the apache-jmeter/bin directory (or manually copy all these files over ). 
+Finally, the &apos;Quick Start&apos; instructions should of been completed.   This ensures the required jars mark59-datahunter-samples.jar and mark59-metrics-api.jar are in apache-jmeter/lib/ext, and mark59.properties and a chromdriver.exe are in the apache-jmeter/bin directory (or manually copy all these files over ). 
 </stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
@@ -33,7 +33,7 @@ Finally, the &apos;Quick Start&apos; instructions should of been completed.   Th
 
 Download the Server Profiles Excel file using the Server Metrics Web application ( http://localhost:8085/mark59-metrics/serverProfileList -&gt; Download.. ), and copy it into the apache-jmeter/bin directory.  Or alternatively just copy across the mark59serverprofiles.xlsx sheet supplied in the root of the mark59-datahunter-samples project into the apache-jmeter/bin directory.
 
-Finally, the &apos;Quick Start&apos; instructions should of been completed.   This ensures the required jars mark59-datahunter-samples.jar and mark59-server-metrics.jar are in apache-jmeter/lib/ext, and mark59.properties and a chromdriver.exe are in the apache-jmeter/bin directory (or manually copy all these files over ). 
+Finally, the &apos;Quick Start&apos; instructions should of been completed.   This ensures the required jars mark59-datahunter-samples.jar and mark59-metrics-api.jar are in apache-jmeter/lib/ext, and mark59.properties and a chromdriver.exe are in the apache-jmeter/bin directory (or manually copy all these files over ). 
 </stringProp>
       </SetupThreadGroup>
       <hashTree>
@@ -557,7 +557,7 @@ return 0;</stringProp>
               </elementProp>
               <elementProp name="build information: " elementType="Argument">
                 <stringProp name="Argument.name">build information: </stringProp>
-                <stringProp name="Argument.value">mark59-server-metrics version 4.2</stringProp>
+                <stringProp name="Argument.value">mark59-metrics version 4.2</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>

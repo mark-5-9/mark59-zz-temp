@@ -24,7 +24,7 @@ function asyncPopulationOfApplicationList() {
 	var appListSelector = document.getElementById("appListSelector").value;
 	var host =  window.location.host; 
 
-	urlPopulateApplicationList = "http://" + host + "/metrics/trendingAsyncPopulateApplicationList?reqAppListSelector=" + appListSelector;    // + urlGraphicData;
+	urlPopulateApplicationList = "http://" + host + "/mark59-trends/trendingAsyncPopulateApplicationList?reqAppListSelector=" + appListSelector;    // + urlGraphicData;
 	ajaxRequestRegisterApplicationListChange(urlPopulateApplicationList);
 }
 

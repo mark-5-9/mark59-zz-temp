@@ -102,7 +102,7 @@ public class ServerMetricsCaptureViaExcel extends AbstractJavaSamplerClient {
 		staticMap.put(OVERRIDE_PROPERTY_MARK59_SERVER_PROFILES_EXCEL_FILE_PATH, "");			
 		staticMap.put(IpUtilities.RESTRICT_TO_ONLY_RUN_ON_IPS_LIST, "");	
 		staticMap.put("______________"       , "");			
-		staticMap.put("build information: ", "mark59-server-metrics version " + AppConstantsServerMetrics.MARK59_SERVER_METRICS_VERSION);			
+		staticMap.put("build information: ", "mark59-metrics (via excel) version " + AppConstantsServerMetrics.MARK59_SERVER_METRICS_VERSION);			
 		
 		defaultArgumentsMap = Collections.unmodifiableMap(staticMap);
 	}

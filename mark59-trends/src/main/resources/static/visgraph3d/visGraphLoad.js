@@ -489,10 +489,10 @@ function drawMissingTransactionsTable(data,sortby,runDatesToGraphArray){
 		var host =  window.location.host; 	
 		
 		if ( txnType != "TRANSACTION" ){  // assume we are displaying a metrics graph
-			slaUrl="http://" + host + "/metrics/metricSlaList?reqApp=" + document.getElementById("application").value 		
+			slaUrl="http://" + host + "/mark59-trends/metricSlaList?reqApp=" + document.getElementById("application").value 		
 			slaUrlLink = "<a id=slaUrlLink href=" + slaUrl + " target='_blank'>Metric Sla Transaction Database Link</a>";
 		} else {
-			slaUrl="http://" + host + "/metrics/slaList?reqApp=" + document.getElementById("application").value 		
+			slaUrl="http://" + host + "/mark59-trends/slaList?reqApp=" + document.getElementById("application").value 		
 			slaUrlLink = "<a id=slaUrlLink href=" + slaUrl + " target='_blank'>SLA Transaction Database Link</a>";
 		}
 			
@@ -528,7 +528,7 @@ function drawIgnoredTransactionsTable(data,sortby){
 
 	if (ignoredTransactionsArray[0].length > 0){ 
 		var host =  window.location.host; 	
-		slaUrl="http://" + host + "/metrics/viewSlaList?reqApp=" + document.getElementById("application").value 		
+		slaUrl="http://" + host + "/mark59-trends/viewSlaList?reqApp=" + document.getElementById("application").value 		
 		slaUrlLink = "<a id=slaUrlLink href=" + slaUrl + " target='_blank'>SLA Transaction Database Link</a>";
 	
 		comparetabContent += "<br><br><br><br>";	
@@ -561,10 +561,10 @@ function drawDisabledSlasTable(data,sortby){
 		
 		
 		if ( txnType != "TRANSACTION" ){  // assume we are displaying a metrics graph
-			slaUrl="http://" + host + "/metrics/metricSlaList?reqApp=" + document.getElementById("application").value 		
+			slaUrl="http://" + host + "/mark59-trends/metricSlaList?reqApp=" + document.getElementById("application").value 		
 			slaUrlLink = "<a id=slaUrlLink href=" + slaUrl + " target='_blank'>Metric Sla Transaction Database Link</a>";
 		} else {
-			slaUrl="http://" + host + "/metrics/viewSlaList?reqApp=" + document.getElementById("application").value 		
+			slaUrl="http://" + host + "/mark59-trends/viewSlaList?reqApp=" + document.getElementById("application").value 		
 			slaUrlLink = "<a id=slaUrlLink href=" + slaUrl + " target='_blank'>SLA Transaction Database Link</a>";
 		}
 			
@@ -752,7 +752,7 @@ function trendingBuildPageLink() {
 	} 
 
 	
-	url="http://" + host + "/metrics/trending"  
+	url="http://" + host + "/mark59-trends/trending"  
 		+ "?reqApp=" 				+ document.getElementById("application").value 		
 		+ "&reqGraph=" 	    		+ document.getElementById("graph").value
 		+ reqSqlSelectLikeUrlParm
@@ -775,47 +775,47 @@ function trendingBuildPageLink() {
 
 function buildTitleHomePageLink(){
 	var host =  window.location.host; 	
-	url="http://" + host + "/metrics/overview?reqApp=" + document.getElementById("application").value
+	url="http://" + host + "/mark59-trends/overview?reqApp=" + document.getElementById("application").value
 	document.getElementById('titleHomePageLink').href = url;  
 }
 
 function buildHomePageLink(){
 	var host =  window.location.host; 	
-	url="http://" + host + "/metrics/overview?reqApp=" + document.getElementById("application").value
+	url="http://" + host + "/mark59-trends/overview?reqApp=" + document.getElementById("application").value
 	document.getElementById('homePageLink').href = url;  	
 }
 
 
 function buildSlaDatabaseLink(){
-	//eg: http://MYSERVER:PORT/metrics/viewSlaList?reqApp=MYAPP
+	//eg: http://MYSERVER:PORT/mark59-trends/viewSlaList?reqApp=MYAPP
 	var host =  window.location.host; 	
-	url="http://" + host + "/metrics/slaList?reqApp=" + document.getElementById("application").value
+	url="http://" + host + "/mark59-trends/slaList?reqApp=" + document.getElementById("application").value
 	document.getElementById('slaDatabaseLink').href = url;  	
 }
 
 function buildMetricSlaDatabaseLink(){
-	//eg: http://MYSERVER:PORT/metrics/metricSlaList?reqApp=MYAPP
+	//eg: http://MYSERVER:PORT/v/metricSlaList?reqApp=MYAPP
 	var host =  window.location.host; 	
-	url="http://" + host + "/metrics/metricSlaList?reqApp=" + document.getElementById("application").value
+	url="http://" + host + "/mark59-trends/metricSlaList?reqApp=" + document.getElementById("application").value
 	document.getElementById('slaMetricDatabaseLink').href = url;  	
 }
 
 function buildRunsListLink(){
-	//eg:http://MYSERVER:PORT/metrics/runsList?reqApp=CI_MYAPP
+	//eg:http://MYSERVER:PORT/mark59-trends/runsList?reqApp=CI_MYAPP
 	var host =  window.location.host; 	
-	url="http://" + host + "/metrics/runsList?reqApp=" + document.getElementById("application").value
+	url="http://" + host + "/mark59-trends/runsList?reqApp=" + document.getElementById("application").value
 	document.getElementById('runsListLink').href = url;  	
 }
 
 function buildEventMappingLink(){
 	var host =  window.location.host; 	
-	url="http://" + host + "/metrics/eventMappingList"
+	url="http://" + host + "/mark59-trends/eventMappingList"
 	document.getElementById('eventMappingLink').href = url;  	
 }
 
 function buildGraphMappingLink(){
 	var host =  window.location.host; 	
-	url="http://" + host + "/metrics/graphMappingList"
+	url="http://" + host + "/mark59-trends/graphMappingList"
 	document.getElementById('graphMappingLink').href = url;  	
 }
 

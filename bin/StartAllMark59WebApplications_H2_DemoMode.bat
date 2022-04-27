@@ -8,7 +8,7 @@ REM   |
 REM   |  Assuming you are using (default) server.port values for the applications, home page URLs  will be:    
 REM   |  
 REM   |     http://localhost:8081/mark59-datahunter/
-REM   |     http://localhost:8083/metrics/
+REM   |     http://localhost:8083/mark59-trends/
 REM   |     http://localhost:8085/mark59-metrics/
 REM   |  
 REM   --------------------------------------------------------------------------------------------------------------
@@ -26,5 +26,5 @@ START StartMetricsFromTarget.bat
 
 rem SET "DATABASE=H2TCPSERVER"
 ECHO Starting the Trends Web Application  
-CD ../metrics
-START StartMetricsTrendAnalysisFromTarget.bat
+CD ../mark59-trends
+START StartTrendsFromTarget.bat

@@ -18,7 +18,7 @@
 	function reloadSlaBulkLoadPage() {
 		var applicationSelector = document.getElementById("application").value;
 		var host =  window.location.host; 
-		reloadSlaBulkLoadPageUrl = "http://" + host + "/metrics/asyncReloadSlaBulkLoadPage?reqApp=" + applicationSelector;   
+		reloadSlaBulkLoadPageUrl = "http://" + host + "/mark59-trends/asyncReloadSlaBulkLoadPage?reqApp=" + applicationSelector;   
 		ajaxRequestRegisterApplicationListChange(reloadSlaBulkLoadPageUrl);
 	}
 

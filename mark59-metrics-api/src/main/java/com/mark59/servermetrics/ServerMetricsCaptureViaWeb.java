@@ -57,7 +57,7 @@ import com.mark59.servermetricsweb.utils.ServerMetricsWebUtils;
  * @author Philip Webb
  * Written: Australian Autumn 2020 
  * 
- * This is the initiating class for web-mark59-server-metrics (metrics capture via API) 
+ * This is the initiating class for mark59-metrics-api (metrics capture via API) 
  * 
  * @see ServerMetricRestController
  * 
@@ -92,7 +92,7 @@ public class ServerMetricsCaptureViaWeb  extends AbstractJavaSamplerClient {
 		staticMap.put("_", "- server profile of 'localhost' only reports metrics of the mark59-metrics machine!");	
 		staticMap.put("-", "   use actual machine name or (better) via Excel 'localhost..' entry instead (see Mark59 User Guide)");	
 		staticMap.put(".", "");		
-		staticMap.put("build information: ", "mark59-server-metrics version " + AppConstantsServerMetrics.MARK59_SERVER_METRICS_VERSION);			
+		staticMap.put("build information: ", "mark59-metrics-api version " + AppConstantsServerMetrics.MARK59_SERVER_METRICS_VERSION);			
 		
 		defaultArgumentsMap = Collections.unmodifiableMap(staticMap);
 	}

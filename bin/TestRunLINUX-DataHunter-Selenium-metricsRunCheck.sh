@@ -1,5 +1,5 @@
 #   -------------------------------------------------------------------------------------------------------------------------------------------------
-#   | Load DataHunter Test Results to Mark59 Metrics (Trend Analysis) database.
+#   | Load DataHunter Test Results to Mark59 Trends Analysis database.
 #   |
 #   |
 #   |  Alternative to running this .sh   ** H2 DATABASE ONLY **
@@ -8,7 +8,7 @@
 #   |
 #   |  JMeter input results file expected at ~/Mark59_Runs/Jmeter_Results/DataHunter/ 
 #   |
-#   |  Loaded run can be seen at http://localhost:8083/metrics/trending?reqApp=DataHunter    (assuming default setup)
+#   |  Loaded run can be seen at http://localhost:8083/mark59-trends/trending?reqApp=DataHunter    (assuming default setup)
 #   |
 #   |  *** YOU NEED TO SELECT WHICH DATABASE TO LOAD RESULTS TO BEFORE EXECUTION ***
 #   |
@@ -25,7 +25,7 @@ DATABASE=H2
 # DATABASE=H2TCPCLIENT
 # DATABASE=H2MEM
 
-cd ../metricsRuncheck;
+cd ../mark59-trends-load;
 ./LoadDataHunterResultsIntoMetricsTrendAnalysis.sh "${DATABASE}";
 
 cd ../bin

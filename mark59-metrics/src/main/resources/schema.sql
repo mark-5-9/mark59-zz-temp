@@ -59,10 +59,10 @@ CREATE TABLE IF NOT EXISTS COMMANDPARSERLINKS  (
 
 INSERT IGNORE INTO SERVERPROFILES VALUES ('DemoLINUX-DataHunterSeleniumDeployAndExecute','SSH_LINIX_UNIX','localhost','','','','','22','60000','','');
 INSERT IGNORE INTO SERVERPROFILES VALUES ('DemoLINUX-DataHunterSeleniumGenJmeterReport','SSH_LINIX_UNIX','localhost','','','','','22','60000','Reports generated at   ~/Mark59_Runs/Jmeter_Reports/DataHunter/   <br>(open each index.html)   ','');
-INSERT IGNORE INTO SERVERPROFILES VALUES ('DemoLINUX-DataHunterSeleniumRunCheck','SSH_LINIX_UNIX','localhost','','','','','22','60000','Loads Trend Analysis (H2 database).  See:<br>http://localhost:8083/metrics/trending?reqApp=DataHunter','');
+INSERT IGNORE INTO SERVERPROFILES VALUES ('DemoLINUX-DataHunterSeleniumRunCheck','SSH_LINIX_UNIX','localhost','','','','','22','60000','Loads Trend Analysis (H2 database).  See:<br>http://localhost:8083/mark59-trends/trending?reqApp=DataHunter','');
 INSERT IGNORE INTO SERVERPROFILES VALUES ('DemoWIN-DataHunterSeleniumDeployAndExecute','WMIC_WINDOWS','localhost','','','','','','','','');
 INSERT IGNORE INTO SERVERPROFILES VALUES ('DemoWIN-DataHunterSeleniumGenJmeterReport','WMIC_WINDOWS','localhost','','','','','','','Hint - in browser open this URL and go to each index.html:  file:///C:/Mark59_Runs/Jmeter_Reports/DataHunter/','');
-INSERT IGNORE INTO SERVERPROFILES VALUES ('DemoWIN-DataHunterSeleniumRunCheck','WMIC_WINDOWS','localhost','','','','','','','Loads Trend Analysis (H2 database).  See:<br>http://localhost:8083/metrics/trending?reqApp=DataHunter','');
+INSERT IGNORE INTO SERVERPROFILES VALUES ('DemoWIN-DataHunterSeleniumRunCheck','WMIC_WINDOWS','localhost','','','','','','','Loads Trend Analysis (H2 database).  See:<br>http://localhost:8083/mark59-trends/trending?reqApp=DataHunter','');
 INSERT IGNORE INTO SERVERPROFILES VALUES ('localhost_LINUX','SSH_LINIX_UNIX','localhost','','','','','22','60000','','');
 INSERT IGNORE INTO SERVERPROFILES VALUES ('localhost_WINDOWS','WMIC_WINDOWS','localhost','','','','','','','','');
 INSERT IGNORE INTO SERVERPROFILES VALUES ('localhost_WINDOWS_HOSTID','WMIC_WINDOWS','localhost','HOSTID','','','','','','HOSTID will be subed <br> with computername  ','');
@@ -80,8 +80,8 @@ INSERT IGNORE INTO COMMANDS VALUES ('DataHunterSeleniumDeployAndExecute','WMIC_W
  cd ..\mark59-datahunter-samples & 
  DEL C:\apache-jmeter\bin\mark59.properties & COPY .\mark59.properties C:\apache-jmeter\bin &
  DEL C:\apache-jmeter\bin\chromedriver.exe  & COPY .\chromedriver.exe  C:\apache-jmeter\bin &
- DEL C:\apache-jmeter\lib\ext\mark59-server-metrics.jar &
- COPY ..\mark59-server-metrics\target\mark59-server-metrics.jar  C:\apache-jmeter\lib\ext & 
+ DEL C:\apache-jmeter\lib\ext\mark59-metrics-api.jar &
+ COPY ..\mark59-metrics-api\target\mark59-metrics-api.jar  C:\apache-jmeter\lib\ext & 
  DEL C:\apache-jmeter\lib\ext\mark59-datahunter-samples.jar & 
  COPY .\target\mark59-datahunter-samples.jar  C:\apache-jmeter\lib\ext &
  RMDIR /S /Q C:\apache-jmeter\lib\ext\mark59-datahunter-samples-dependencies &
@@ -112,7 +112,7 @@ echo starting from $PWD;
 
     cp ./mark59.properties ~/apache-jmeter/bin/mark59.properties &&
     cp ./chromedriver ~/apache-jmeter/bin/chromedriver && 
-    cp ../mark59-server-metrics/target/mark59-server-metrics.jar  ~/apache-jmeter/lib/ext/mark59-server-metrics.jar && 
+    cp ../mark59-metrics-api/target/mark59-metrics-api.jar  ~/apache-jmeter/lib/ext/mark59-metrics-api.jar && 
     cp ./target/mark59-datahunter-samples.jar  ~/apache-jmeter/lib/ext/mark59-datahunter-samples.jar && 
     mkdir -p ~/Mark59_Runs/Jmeter_Results/DataHunter &&
     rm -rf ~/apache-jmeter/lib/ext/mark59-datahunter-samples-dependencies &&
@@ -141,24 +141,24 @@ echo starting from $PWD;
 }
 ','Y','refer bin/TestRunLINUX-DataHunter-Selenium-GenJmeterReport.sh','');
 INSERT IGNORE INTO COMMANDS VALUES ('DataHunterSeleniumRunCheck','WMIC_WINDOWS','process call create ''cmd.exe /c 
- echo Load DataHunter Test Results into  Mark59 Metrics (Trend Analysis) h2 database. & 
+ echo Load DataHunter Test Results into  Mark59 Trends Analysis h2 database. & 
  cd /D  %SERVER_METRICS_WEB_BASE_DIR% & 
- cd ../metricsRuncheck &  
+ cd ../mark59-trends-load &  
  
- java -jar ./target/metricsRuncheck.jar -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -d h2 &
+ java -jar ./target/mark59-trends-load.jar -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -d h2 &
  PAUSE
 ''
 ','N','','');
-INSERT IGNORE INTO COMMANDS VALUES ('DataHunterSeleniumRunCheck_LINUX','SSH_LINIX_UNIX','echo This script runs metricsRuncheck,to load results from a DataHunter test run into the Metrics Trend Analysis Graph.
+INSERT IGNORE INTO COMMANDS VALUES ('DataHunterSeleniumRunCheck_LINUX','SSH_LINIX_UNIX','echo This script runs mark59-trends-load,to load results from a DataHunter test run into the Metrics Trend Analysis Graph.
 echo starting from $PWD;
 
 {   # try  
 
-    cd ../metricsRuncheck/target &&
-    gnome-terminal -- sh -c "java -jar metricsRuncheck.jar -a DataHunter -i ~/Mark59_Runs/Jmeter_Results/DataHunter -d h2; exec bash"
+    cd ../mark59-trends-load/target &&
+    gnome-terminal -- sh -c "java -jar mark59-trends-load.jar -a DataHunter -i ~/Mark59_Runs/Jmeter_Results/DataHunter -d h2; exec bash"
 
 } || { # catch 
-    echo attempt to execute metricsRuncheck has failed! 
+    echo attempt to execute mark59-trends-load has failed! 
 }
 ','Y','refer bin/TestRunLINUX-DataHunter-Selenium-metricsRunCheck.sh','');
 INSERT IGNORE INTO COMMANDS VALUES ('FreePhysicalMemory','WMIC_WINDOWS','OS get FreePhysicalMemory','N','','');
