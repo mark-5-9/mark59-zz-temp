@@ -834,7 +834,7 @@ import com.mark59.seleniumDSL.pageElements.*;
 // &lt;&lt;  
 	
 /**
- * Note that in this more advanced example access to the com.mark59.seleniumDSL.* packages is assumed (from the mark59-sample-dsls project).
+ * Note that in this more advanced example access to the com.mark59.seleniumDSL.* packages is assumed (from the mark59-dsl-samples project).
  * &lt;p&gt;Hint: A quick and dirty way to do this is to copy target jar from the mark59-datahunter-samples project since it contains sample DSL
  * packages, into the lib/ext directory of your JMeter instance.  
  *   

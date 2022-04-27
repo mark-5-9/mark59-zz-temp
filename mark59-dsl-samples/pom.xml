@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.mark59</groupId>
-	<artifactId>mark59-sample-dsls</artifactId>
+	<artifactId>mark59-dsl-samples</artifactId>
 	<version>5.0</version>
 	<packaging>jar</packaging>
 
-	<name>mark59-sample-dsls</name>
+	<name>mark59-dsl-samples</name>
 
 	<properties>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -87,7 +87,7 @@
 			</plugin>
 		
 			<!-- local build goals: clean package -->	
-			<!-- this plugin is for JMeter JSR223 'Groovy' scripting purposes :  creates mark59-sample-dsls-{version}-for-JSR223 jar 
+			<!-- this plugin is for JMeter JSR223 'Groovy' scripting purposes :  creates mark59-dsl-samples-{version}-for-JSR223 jar 
 			     (in the project target folder) can be placed in a JMeter lib/ext directory to obtain the necessary Mark59 classes -->			
 			<plugin>
 			    <groupId>org.apache.maven.plugins</groupId>

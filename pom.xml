@@ -16,7 +16,7 @@
 	     
 	     Note if using package and later plan to build projects individually you may need to run multiple 
 	     install goals as some projects are dependent on others (eg mark59-datahunter-samples is dependent on 
-	     mark59-sample-dsls, which is dependent on mark59-selenium-implementation, which is dependent
+	     mark59-dsl-samples, which is dependent on mark59-selenium-implementation, which is dependent
 	     on mark59-core) -->	
 
 	<modules>
@@ -25,7 +25,7 @@
 		<module>mark59-selenium-implementation</module>
 		<module>mark59-datahunter-api</module>
 		
-		<module>mark59-sample-dsls</module>
+		<module>mark59-dsl-samples</module>
 
 		<module>mark59-datahunter</module>
 		<module>mark59-datahunter-samples</module>
