@@ -25,8 +25,8 @@ rsync -av -m --exclude '.*' --exclude '*/src' --exclude '*/webapp' --exclude '*/
 # In the command below, for a _PRE_RELEASE version: do NOT include the directives "--exclude 'mark59-core' --exclude 'mark59-selenium-implementation' " 
 #     (that way core and selenium-implementation project jars are avaiable before they have been added in Maven Central)
 # When building the full _RELEASE zip file, add the directives in. That is, the end of the command should look like :
-#      ... --exclude 'resultFilesConverter' --exclude 'mark59-core' --exclude 'mark59-selenium-implementation' "${SOURCE_DIR}" "${DEST_DIR}"  
+#      ... --exclude 'mark59-results-splitter' --exclude 'mark59-core' --exclude 'mark59-selenium-implementation' "${SOURCE_DIR}" "${DEST_DIR}"  
 
-rsync -a -m --exclude '.*' --exclude '*/classes' --exclude '*/test-classes' --exclude '*/maven*' --exclude 'archive-tmp' --exclude '*/m2e-wtp*' --exclude '*/surefire*' --exclude '*.log' --exclude '*.original' --exclude '/pom.xml' --exclude 'bin' --exclude 'databaseScripts' --exclude 'dataHunter' --exclude 'mark59-datahunter-api' --exclude 'mark59-metrics' --exclude 'mark59-metrics-api' --exclude 'mark59-trends' --exclude 'mark59-trends-load' --exclude 'resultFilesConverter' --exclude 'mark59-core' --exclude 'mark59-selenium-implementation' "${SOURCE_DIR}" "${DEST_DIR}"
+rsync -a -m --exclude '.*' --exclude '*/classes' --exclude '*/test-classes' --exclude '*/maven*' --exclude 'archive-tmp' --exclude '*/m2e-wtp*' --exclude '*/surefire*' --exclude '*.log' --exclude '*.original' --exclude '/pom.xml' --exclude 'bin' --exclude 'databaseScripts' --exclude 'dataHunter' --exclude 'mark59-datahunter-api' --exclude 'mark59-metrics' --exclude 'mark59-metrics-api' --exclude 'mark59-trends' --exclude 'mark59-trends-load' --exclude 'mark59-results-splitter' --exclude 'mark59-core' --exclude 'mark59-selenium-implementation' "${SOURCE_DIR}" "${DEST_DIR}"
 
 $SHELL

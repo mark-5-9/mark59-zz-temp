@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mark59.converter;
+package com.mark59.splitter;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -23,7 +23,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -76,7 +79,7 @@ import com.opencsv.exceptions.CsvValidationException;
  * @author Philip Webb
  * Written: Australian Winter 2019  
  */
-public class ResultFilesConverter { 
+public class ResultsSplitter { 
 
 	public static final String ERROR_TXNS_NO						= "No";
 	public static final String ERROR_TXNS_RENAME					= "Rename";
@@ -226,9 +229,9 @@ public class ResultFilesConverter {
 		System.out.println( "Sample usage");
 		System.out.println( "------------");
 		System.out.println( "1.  Concatenate a set of Jmeter result files in D:/Jmeter_Results/MyTestApp, into a single .csv result file, output file MyTestAppJmeterResult.csv to directory D:/Jmeter_Results/MyTestApp/MERGED : ");
-		System.out.println( "      java -jar ResultFilesConverter.jar -iD:\\Jmeter_Results\\MyTestApp\\ -fMyTestAppJmeterResult" );
+		System.out.println( "      java -jar mark59-results-splitter.jar -iD:\\Jmeter_Results\\MyTestApp\\ -fMyTestAppJmeterResult" );
 		System.out.println( "2.  As above (but with the current directory set as D:/Jmeter_Results/MyTestApp before running), but this time split the metric data types out into separate csv files, and suffix errored txns named with _ERRORED  ");
-		System.out.println( "      java -jar ResultFilesConverter.jar -fMyTestAppJmeterResult -eRename -mSplitByDataType" );		
+		System.out.println( "      java -jar mark59-results-splitter.jar -fMyTestAppJmeterResult -eRename -mSplitByDataType" );		
 		System.out.println();
 	}
 
@@ -807,10 +810,10 @@ public class ResultFilesConverter {
 //        for a quick and dirty test ...
 //        args = new String[]{"-i", "C:/Jmeter_Results/myapp", "-f", "myapp_TestResults_converted.csv", "-m", "SplitByDataType", "-e", "No", "-x", "True" };
         
-		ResultFilesConverter resultFilesConverter = new ResultFilesConverter(); 
-		resultFilesConverter.parseArguments(args);    
-		resultFilesConverter.clearOutputDirectory();     
-        resultFilesConverter.convert();
+		ResultsSplitter resultsSplitter = new ResultsSplitter(); 
+		resultsSplitter.parseArguments(args);    
+		resultsSplitter.clearOutputDirectory();     
+        resultsSplitter.convert();
         
         System.out.println();
         System.out.println( "Result Files Converter completed." );        

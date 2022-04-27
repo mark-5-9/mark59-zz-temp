@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mark59.converterTest;
+package com.mark59.splitterTest;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,22 +24,22 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-import com.mark59.converter.ResultFilesConverter;
+import com.mark59.splitter.ResultsSplitter;
 
 import junit.framework.TestCase;
 
 /**
- * Simple unit test JmterResultsConverter.
+ * Simple unit test ResultsSplitter.
  * @author Philip Webb
  * Written: Australian Winter 2019  
  * 
  * Hint: the assert is pretty basic, just use git (or whatever source control) to look for changes in the output files... 
  */
-public class ResultFilesConverterTest     extends TestCase
+public class ResultsSplitterTest     extends TestCase
 {
 	int actualSamplesCount=0;
 	
-    public void testJmterResultsOneFileMetricsFileConverterTest() throws IOException, ParserConfigurationException, SAXException
+    public void testJmterResultsOneFileMetricsFileSplitterTest() throws IOException, ParserConfigurationException, SAXException
     {
     	Files.deleteIfExists(Paths.get("./TESTDATA/MERGED/jmterResultsFileConvertedToCSV.csv"));
     	Files.deleteIfExists(Paths.get("./TESTDATA/MERGED"));
@@ -47,14 +47,14 @@ public class ResultFilesConverterTest     extends TestCase
 
 		String[] args = { "-i./TESTDATA",
     						"-fjmterResultsFileConvertedToCSV.csv",
-    						"-m" +  ResultFilesConverter.METRICS_FILE_NO,	
-    						"-e" +  ResultFilesConverter.ERROR_TXNS_NO, 
+    						"-m" +  ResultsSplitter.METRICS_FILE_NO,	
+    						"-e" +  ResultsSplitter.ERROR_TXNS_NO, 
     						"-x" +  "True"};
     	
-		ResultFilesConverter resultFilesConverter = new ResultFilesConverter(); 
-		resultFilesConverter.parseArguments(args);    
-		resultFilesConverter.clearOutputDirectory();     
-		actualSamplesCount=resultFilesConverter.convert();
+		ResultsSplitter resultsSplitter = new ResultsSplitter(); 
+		resultsSplitter.parseArguments(args);    
+		resultsSplitter.clearOutputDirectory();     
+		actualSamplesCount=resultsSplitter.convert();
         assertEquals(122, actualSamplesCount);
         
     	Files.delete(Paths.get("./TESTDATA/MERGED/jmterResultsFileConvertedToCSV.csv"));
@@ -62,7 +62,7 @@ public class ResultFilesConverterTest     extends TestCase
     }
   	
 	
-    public void testJmterResultsMetricsFileConverterTest() throws IOException, ParserConfigurationException, SAXException
+    public void testJmterResultsMetricsFileSplitterTest() throws IOException, ParserConfigurationException, SAXException
     {
     	Files.deleteIfExists(Paths.get("./TESTDATA/SEPARATE_METRICS/jmterResultsFileConvertedToCSV_METRICS.csv"));
     	Files.deleteIfExists(Paths.get("./TESTDATA/SEPARATE_METRICS/jmterResultsFileConvertedToCSV.csv"));
@@ -72,14 +72,14 @@ public class ResultFilesConverterTest     extends TestCase
 		String[] args = { "-i./TESTDATA",
 							"-o./TESTDATA/SEPARATE_METRICS",
     						"-fjmterResultsFileConvertedToCSV.csv",
-    						"-m" +  ResultFilesConverter.METRICS_FILE_CREATE_METRICS_REPORT,	
-    						"-e" +  ResultFilesConverter.ERROR_TXNS_RENAME,
+    						"-m" +  ResultsSplitter.METRICS_FILE_CREATE_METRICS_REPORT,	
+    						"-e" +  ResultsSplitter.ERROR_TXNS_RENAME,
     						"-x" +  "False"};
     	
-		ResultFilesConverter resultFilesConverter = new ResultFilesConverter(); 
-		resultFilesConverter.parseArguments(args);    
-		resultFilesConverter.clearOutputDirectory();     
-		actualSamplesCount=resultFilesConverter.convert();
+		ResultsSplitter resultsSplitter = new ResultsSplitter(); 
+		resultsSplitter.parseArguments(args);    
+		resultsSplitter.clearOutputDirectory();     
+		actualSamplesCount=resultsSplitter.convert();
         assertEquals(145, actualSamplesCount);
         
     	Files.delete(Paths.get("./TESTDATA/SEPARATE_METRICS/jmterResultsFileConvertedToCSV_METRICS.csv"));
@@ -88,7 +88,7 @@ public class ResultFilesConverterTest     extends TestCase
     }
     
     
-    public void testJmterResultsSplitByDatatypeConverterTest() throws IOException, ParserConfigurationException, SAXException
+    public void testJmterResultsSplitByDatatypeTest() throws IOException, ParserConfigurationException, SAXException
     {
     	Files.deleteIfExists(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_CPU_UTIL.csv"));
     	Files.deleteIfExists(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_DATAPOINT.csv"));
@@ -100,13 +100,13 @@ public class ResultFilesConverterTest     extends TestCase
 		String[] args = { "-i./TESTDATA",
 							"-o./TESTDATA/MERGED_SPLIT_BY_DATAYPE",
     						"-fjmterResultsFileConvertedToCSV.csv",
-    						"-m" +  ResultFilesConverter.METRICS_FILE_SPLIT_BY_DATATYPE,	
-    						"-e" +  ResultFilesConverter.ERROR_TXNS_RENAME };
+    						"-m" +  ResultsSplitter.METRICS_FILE_SPLIT_BY_DATATYPE,	
+    						"-e" +  ResultsSplitter.ERROR_TXNS_RENAME };
     	
-		ResultFilesConverter resultFilesConverter = new ResultFilesConverter(); 
-		resultFilesConverter.parseArguments(args);    
-		resultFilesConverter.clearOutputDirectory();     
-		actualSamplesCount=resultFilesConverter.convert();
+		ResultsSplitter resultsSplitter = new ResultsSplitter(); 
+		resultsSplitter.parseArguments(args);    
+		resultsSplitter.clearOutputDirectory();     
+		actualSamplesCount=resultsSplitter.convert();
         assertEquals(122, actualSamplesCount);
         
     	Files.delete(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_CPU_UTIL.csv"));

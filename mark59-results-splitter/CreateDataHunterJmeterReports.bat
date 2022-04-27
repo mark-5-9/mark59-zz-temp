@@ -8,7 +8,7 @@ REM   |                    - JMeter reports to      C:\Mark59_Runs\Jmeter_Report
 REM   | 
 REM   |  To directly execute :
 REM   |  ---------------------
-REM   |  This bat assumes  - resultFilesConverter.jar exists in the ./target directory (relative to this file) 
+REM   |  This bat assumes  - mark59-results-splitter.jar exists in the ./target directory (relative to this file) 
 REM   |                    - you have JMeter test results in C:\Mark59_Runs\Jmeter_Results\DataHunter\ 
 REM   |                    - a Jmeter instance exists at C:\apache-jmeter
 REM   | 
@@ -23,7 +23,7 @@ C:
 if exist C:\Mark59_Runs\Jmeter_Results\DataHunter\MERGED\ RD /S /Q C:\Mark59_Runs\Jmeter_Results\DataHunter\MERGED	  
 mkdir C:\Mark59_Runs\Jmeter_Results\DataHunter\MERGED\   
 
-java -jar ./target/resultFilesConverter.jar -iC:\Mark59_Runs\Jmeter_Results\DataHunter -fDataHunterTestResults_converted.csv -mSplitByDataType -eNo -xTrue 
+java -jar ./target/mark59-results-splitter.jar -iC:\Mark59_Runs\Jmeter_Results\DataHunter -fDataHunterTestResults_converted.csv -mSplitByDataType -eNo -xTrue 
 
 if exist C:\Mark59_Runs\Jmeter_Reports\DataHunter\ RD /Q /S C:\Mark59_Runs\Jmeter_Reports\DataHunter  
 

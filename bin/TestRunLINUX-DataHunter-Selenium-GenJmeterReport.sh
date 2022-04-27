@@ -14,7 +14,7 @@
 #   -------------------------------------------------------------------------------------------------------------------------------------------------
 {   # try  
 
-    cd ../resultFilesConverter
+    cd ../mark59-results-splitter
     gnome-terminal -- sh -c "./CreateDataHunterJmeterReports.sh; exec bash"
 
 } || { # catch 

@@ -62,7 +62,7 @@
 						<descriptorRefs><descriptorRef>jar-with-dependencies</descriptorRef></descriptorRefs>
 						<archive>
 							<manifest>
-								<mainClass>com.mark59.converter.ResultFilesConverter</mainClass>
+								<mainClass>com.mark59.splitter.ResultsSplitter</mainClass>
 							</manifest>
 						</archive>
 				</configuration>

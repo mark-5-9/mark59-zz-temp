@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mark59.converter;
+package com.mark59.splitter;
 
 /**
  * The datatypes available for output onto a JMeter results file.

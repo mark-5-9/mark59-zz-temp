@@ -138,7 +138,7 @@ echo starting from $PWD;
 }','Y','refer bin/TestRunLINUX-DataHunter-Selenium-DeployAndExecute.sh','');
 INSERT INTO COMMANDS VALUES ('DataHunterSeleniumGenJmeterReport','WMIC_WINDOWS','process call create ''cmd.exe /c 
  cd /D %SERVER_METRICS_WEB_BASE_DIR% & 
- cd../resultFilesConverter & 
+ cd../mark59-results-splitter & 
  CreateDataHunterJmeterReports.bat''
 ','N','','');
 INSERT INTO COMMANDS VALUES ('DataHunterSeleniumGenJmeterReport_LINUX','SSH_LINIX_UNIX','echo This script creates a set of JMeter reports from a DataHunter test run.
@@ -146,7 +146,7 @@ echo starting from $PWD;
 
 {   # try  
 
-    cd ../resultFilesConverter
+    cd ../mark59-results-splitter
     gnome-terminal -- sh -c "./CreateDataHunterJmeterReports.sh; exec bash"
 
 } || { # catch 

@@ -14,6 +14,6 @@ REM   |
 REM   -------------------------------------------------------------------------------------------------------------------------------------------------
 CD /D "%~dp0"
 
-cd ../resultFilesConverter
+cd ../mark59-results-splitter
 CALL CreateDataHunterJmeterReports.bat
 		

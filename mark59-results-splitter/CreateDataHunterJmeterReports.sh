@@ -1,7 +1,7 @@
 echo 'running the results converter/splitter ...' &&
 mkdir -p ~/Mark59_Runs/Jmeter_Results/DataHunter/MERGED &&
  
-java -jar ./target/resultFilesConverter.jar -i ~/Mark59_Runs/Jmeter_Results/DataHunter -fDataHunterTestResults_converted.csv -mSplitByDataType -eNo -xTrue  && 
+java -jar ./target/mark59-results-splitter.jar -i ~/Mark59_Runs/Jmeter_Results/DataHunter -fDataHunterTestResults_converted.csv -mSplitByDataType -eNo -xTrue  && 
  
 rm -rf ~/Mark59_Runs/Jmeter_Reports/DataHunter &&
 mkdir -p ~/Mark59_Runs/Jmeter_Reports/DataHunter/DataHunter &&
