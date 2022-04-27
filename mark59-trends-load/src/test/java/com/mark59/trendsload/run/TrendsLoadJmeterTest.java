@@ -1,4 +1,4 @@
-package com.mark59.metricsruncheck.run;
+package com.mark59.trendsload.run;
 
 import java.util.List;
 
@@ -17,12 +17,12 @@ import com.mark59.metrics.data.beans.Run;
 import com.mark59.metrics.data.beans.Transaction;
 import com.mark59.metrics.metricSla.MetricSlaResult;
 import com.mark59.metrics.sla.SlaTransactionResult;
-import com.mark59.metricsruncheck.Runcheck;
+import com.mark59.trendsload.TrendsLoad;
 
 import junit.framework.TestCase;
 
 
-public class RuncheckJmeterTest extends TestCase {
+public class TrendsLoadJmeterTest extends TestCase {
 
 	EmbeddedDatabase db; 
 	ApplicationContext context;
@@ -32,21 +32,21 @@ public class RuncheckJmeterTest extends TestCase {
 	}
 	
 	@Test
-	public void testRuncheckJMeterGeneralTest() {
-		Runcheck.parseArguments(new String[] { "-a", "DataHunter", "-i", "./src/test/resources/JmeterResultsDataHunterGeneral", "-d", Mark59Constants.H2MEM, "-s","metricsmem",
+	public void testTrendsLoadJMeterGeneralTest() {
+		TrendsLoad.parseArguments(new String[] { "-a", "DataHunter", "-i", "./src/test/resources/JmeterResultsDataHunterGeneral", "-d", Mark59Constants.H2MEM, "-s","metricsmem",
 				"-e","The operation lasted too long:|Test failed: text expected to contain|The result was the wrong size" });
-		SpringApplication springApplication = new SpringApplication(Runcheck.class);
+		SpringApplication springApplication = new SpringApplication(TrendsLoad.class);
 		springApplication.setWebApplicationType(WebApplicationType.NONE);
 		springApplication.setBannerMode(Banner.Mode.OFF);	
 		context = springApplication.run();
 		
-		Runcheck runcheck = (Runcheck) context.getBean("runcheck");		
-		List<MetricSlaResult> metricSlaResults = runcheck.getMetricSlaResults();
+		TrendsLoad trendsLoad = (TrendsLoad) context.getBean("trendsLoad");		
+		List<MetricSlaResult> metricSlaResults = trendsLoad.getMetricSlaResults();
 		assertEquals(1, metricSlaResults.size() );
 		assertEquals("Metric SLA Failed Warning  : metric out of expected range for CPU_UTIL Average on localhost.  Range is set as 5.0 to 60.0, actual was 65.25"
 				, metricSlaResults.get(0).getMessageText()  );
 		
-		List<SlaTransactionResult> slaTransactionResults = runcheck.getSlaTransactionResults();
+		List<SlaTransactionResult> slaTransactionResults = trendsLoad.getSlaTransactionResults();
 		assertEquals(2, slaTransactionResults.size() );
 		for (SlaTransactionResult slaTransactionResult : slaTransactionResults){ 
 			// System.out.println("slaRes>>" + slaTransactionResult);
@@ -65,7 +65,7 @@ public class RuncheckJmeterTest extends TestCase {
 			}
 		}
 			
-		PerformanceTest performanceTest = runcheck.getPerformanceTest();
+		PerformanceTest performanceTest = trendsLoad.getPerformanceTest();
 	
 		Run run = performanceTest.getRunSummary();
 		assertEquals("DataHunter", run.getApplication());

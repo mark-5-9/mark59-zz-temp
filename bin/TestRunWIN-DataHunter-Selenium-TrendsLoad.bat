@@ -1,10 +1,10 @@
 REM   -------------------------------------------------------------------------------------------------------------------------------------------------
-REM   | Load DataHunter Test Results to Mark59 Trends Analysis database.
+REM   | Load DataHunter Test Results to Mark59 Trends database.
 REM   |
 REM   |
 REM   |  Alternative to running this .bat  ** H2 DATABASE ONLY **
 REM   |		 - login  to the server-metrics-web application  "http://localhost:8085/mark59-metrics" 
-REM   |		 - run the DemoWIN-DataHunterSeleniumRunCheck profile. 
+REM   |		 - run the DemoWIN-DataHunterSeleniumTrendsLoad profile. 
 REM   |
 REM   |  JMeter input results file expected at C:\Mark59_Runs\Jmeter_Results\DataHunter 
 REM   |
@@ -25,6 +25,6 @@ rem -- special purpose values
 rem SET "DATABASE=H2TCPCLIENT"
 rem SET "DATABASE=H2MEM"
 
-ECHO Starting the Trends Analysis runCheck Load Results program  
+ECHO Starting the Trends Load Results program  
 CD ../mark59-trends-load
-START LoadDataHunterResultsIntoMetricsTrendAnalysis.bat
+START LoadDataHunterResultsIntoTrends.bat

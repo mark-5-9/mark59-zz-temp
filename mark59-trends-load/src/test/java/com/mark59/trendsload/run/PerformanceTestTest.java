@@ -1,4 +1,4 @@
-package com.mark59.metricsruncheck.run;
+package com.mark59.trendsload.run;
 
 import javax.sql.DataSource;
 
@@ -38,22 +38,6 @@ import junit.framework.TestCase;
 
 public class PerformanceTestTest extends TestCase {
 
-//	@Autowired
-//	DataSource dataSource;
-//    @Autowired
-//    String currentDatabaseProfile;  
-//	@Autowired
-//	MetricSlaDAO metricSlaDAO;
-//	@Autowired
-//	TransactionDAO transactionDAO;
-//	@Autowired
-//	SlaDAO slaDAO;
-//	@Autowired
-//	RunDAO runDAO;
-//	@Autowired
-//	TestTransactionsDAO testTransactionsDAO;
-//	@Autowired
-//	EventMappingDAO eventMappingDAO;
 	@Autowired
 	ApplicationContext context;
 	
@@ -82,8 +66,7 @@ public class PerformanceTestTest extends TestCase {
 	public EventMappingDAO eventMappingDAO() {	return new EventMappingDAOjdbcTemplateImpl();}
 	@Bean
 	public TestTransactionsDAO testTransactionsDAO() {return new TestTransactionsDAOjdbcTemplateImpl();	}
-	
-	
+		
 	PerformanceTest performanceTest;
 	EmbeddedDatabase db; 
 	

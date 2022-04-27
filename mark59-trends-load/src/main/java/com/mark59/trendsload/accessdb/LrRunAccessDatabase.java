@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mark59.metricsruncheck.accessdb;
+package com.mark59.trendsload.accessdb;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,7 +48,7 @@ import com.mark59.metrics.data.beans.TestTransaction;
 import com.mark59.metrics.data.beans.Transaction;
 import com.mark59.metrics.data.eventMapping.dao.EventMappingDAO;
 import com.mark59.metrics.data.testTransactions.dao.TestTransactionsDAO;
-import com.mark59.metricsruncheck.run.EventAttributes;
+import com.mark59.trendsload.run.EventAttributes;
 
 /**
  * @author Philip Webb
@@ -104,7 +104,7 @@ public class LrRunAccessDatabase {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new RuntimeException(" Runcheck: extractEventMapTableFromMdb Error - IO on reading access db  : Event_map" );
+			throw new RuntimeException(" TrendsLoad: extractEventMapTableFromMdb Error - IO on reading access db  : Event_map" );
 		}
 		return lrEventMapTable;
 	}
@@ -151,7 +151,7 @@ public class LrRunAccessDatabase {
 			
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new RuntimeException("Runcheck: calculateAndSetRunTimesUsingLoadrunnerAccessDB Error - IO on reading access db  : Result" );
+			throw new RuntimeException("TrendsLoad: calculateAndSetRunTimesUsingLoadrunnerAccessDB Error - IO on reading access db  : Result" );
 		}
 		return new DateRangeBean(runStartTime, runEndTime );
 	}
@@ -236,7 +236,7 @@ public class LrRunAccessDatabase {
 			} // end of event_meter table 
 		
 		} catch (IOException e) {
-			System.out.println( " Runcheck: extractEventMapTableFromMdb Error - IO on reading access db  :"   );
+			System.out.println( " TrendsLoad: extractEventMapTableFromMdb Error - IO on reading access db  :"   );
 			e.printStackTrace();
 			throw new RuntimeException();
 		}
@@ -299,7 +299,7 @@ public class LrRunAccessDatabase {
 			try {
 				eventTransactions.add(extractMetricsFromLoadrunnerMdbMeterTables(run, eventAttributes, dateRangeBean, filteredDateRangeBean));
 			} catch (IOException e) {
-				System.out.println( " Runcheck: extractSystemMetricEventsFromMDB Error - IO on reading access db  :"   );
+				System.out.println( " TrendsLoad: extractSystemMetricEventsFromMDB Error - IO on reading access db  :"   );
 				e.printStackTrace();
 				throw new RuntimeException();
 			}

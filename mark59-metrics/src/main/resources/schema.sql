@@ -59,10 +59,10 @@ CREATE TABLE IF NOT EXISTS COMMANDPARSERLINKS  (
 
 INSERT IGNORE INTO SERVERPROFILES VALUES ('DemoLINUX-DataHunterSeleniumDeployAndExecute','SSH_LINIX_UNIX','localhost','','','','','22','60000','','');
 INSERT IGNORE INTO SERVERPROFILES VALUES ('DemoLINUX-DataHunterSeleniumGenJmeterReport','SSH_LINIX_UNIX','localhost','','','','','22','60000','Reports generated at   ~/Mark59_Runs/Jmeter_Reports/DataHunter/   <br>(open each index.html)   ','');
-INSERT IGNORE INTO SERVERPROFILES VALUES ('DemoLINUX-DataHunterSeleniumRunCheck','SSH_LINIX_UNIX','localhost','','','','','22','60000','Loads Trend Analysis (H2 database).  See:<br>http://localhost:8083/mark59-trends/trending?reqApp=DataHunter','');
+INSERT IGNORE INTO SERVERPROFILES VALUES ('DemoLINUX-DataHunterSeleniumTrendsLoad','SSH_LINIX_UNIX','localhost','','','','','22','60000','Loads Trend Analysis (H2 database).  See:<br>http://localhost:8083/mark59-trends/trending?reqApp=DataHunter','');
 INSERT IGNORE INTO SERVERPROFILES VALUES ('DemoWIN-DataHunterSeleniumDeployAndExecute','WMIC_WINDOWS','localhost','','','','','','','','');
 INSERT IGNORE INTO SERVERPROFILES VALUES ('DemoWIN-DataHunterSeleniumGenJmeterReport','WMIC_WINDOWS','localhost','','','','','','','Hint - in browser open this URL and go to each index.html:  file:///C:/Mark59_Runs/Jmeter_Reports/DataHunter/','');
-INSERT IGNORE INTO SERVERPROFILES VALUES ('DemoWIN-DataHunterSeleniumRunCheck','WMIC_WINDOWS','localhost','','','','','','','Loads Trend Analysis (H2 database).  See:<br>http://localhost:8083/mark59-trends/trending?reqApp=DataHunter','');
+INSERT IGNORE INTO SERVERPROFILES VALUES ('DemoWIN-DataHunterSeleniumTrendsLoad','WMIC_WINDOWS','localhost','','','','','','','Loads Trend Analysis (H2 database).  See:<br>http://localhost:8083/mark59-trends/trending?reqApp=DataHunter','');
 INSERT IGNORE INTO SERVERPROFILES VALUES ('localhost_LINUX','SSH_LINIX_UNIX','localhost','','','','','22','60000','','');
 INSERT IGNORE INTO SERVERPROFILES VALUES ('localhost_WINDOWS','WMIC_WINDOWS','localhost','','','','','','','','');
 INSERT IGNORE INTO SERVERPROFILES VALUES ('localhost_WINDOWS_HOSTID','WMIC_WINDOWS','localhost','HOSTID','','','','','','HOSTID will be subed <br> with computername  ','');
@@ -140,7 +140,7 @@ echo starting from $PWD;
     echo attempt to generate JMeter Reports has failed! 
 }
 ','Y','refer bin/TestRunLINUX-DataHunter-Selenium-GenJmeterReport.sh','');
-INSERT IGNORE INTO COMMANDS VALUES ('DataHunterSeleniumRunCheck','WMIC_WINDOWS','process call create ''cmd.exe /c 
+INSERT IGNORE INTO COMMANDS VALUES ('DataHunterSeleniumTrendsLoad','WMIC_WINDOWS','process call create ''cmd.exe /c 
  echo Load DataHunter Test Results into  Mark59 Trends Analysis h2 database. & 
  cd /D  %SERVER_METRICS_WEB_BASE_DIR% & 
  cd ../mark59-trends-load &  
@@ -149,7 +149,7 @@ INSERT IGNORE INTO COMMANDS VALUES ('DataHunterSeleniumRunCheck','WMIC_WINDOWS',
  PAUSE
 ''
 ','N','','');
-INSERT IGNORE INTO COMMANDS VALUES ('DataHunterSeleniumRunCheck_LINUX','SSH_LINIX_UNIX','echo This script runs mark59-trends-load,to load results from a DataHunter test run into the Metrics Trend Analysis Graph.
+INSERT IGNORE INTO COMMANDS VALUES ('DataHunterSeleniumTrendsLoad_LINUX','SSH_LINIX_UNIX','echo This script runs mark59-trends-load,to load results from a DataHunter test run into the Metrics Trend Analysis Graph.
 echo starting from $PWD;
 
 {   # try  
@@ -160,7 +160,7 @@ echo starting from $PWD;
 } || { # catch 
     echo attempt to execute mark59-trends-load has failed! 
 }
-','Y','refer bin/TestRunLINUX-DataHunter-Selenium-metricsRunCheck.sh','');
+','Y','refer bin/TestRunLINUX-DataHunter-Selenium-metricsTrendsLoad.sh','');
 INSERT IGNORE INTO COMMANDS VALUES ('FreePhysicalMemory','WMIC_WINDOWS','OS get FreePhysicalMemory','N','','');
 INSERT IGNORE INTO COMMANDS VALUES ('FreeVirtualMemory','WMIC_WINDOWS','OS get FreeVirtualMemory','N','','');
 INSERT IGNORE INTO COMMANDS VALUES ('LINUX_free_m_1_1','SSH_LINIX_UNIX','free -m 1 1','N','linux memory','');
@@ -458,10 +458,10 @@ else
 
 INSERT IGNORE INTO SERVERCOMMANDLINKS VALUES ('DemoLINUX-DataHunterSeleniumDeployAndExecute','DataHunterSeleniumDeployAndExecute_LINUX');
 INSERT IGNORE INTO SERVERCOMMANDLINKS VALUES ('DemoLINUX-DataHunterSeleniumGenJmeterReport','DataHunterSeleniumGenJmeterReport_LINUX');
-INSERT IGNORE INTO SERVERCOMMANDLINKS VALUES ('DemoLINUX-DataHunterSeleniumRunCheck','DataHunterSeleniumRunCheck_LINUX');
+INSERT IGNORE INTO SERVERCOMMANDLINKS VALUES ('DemoLINUX-DataHunterSeleniumTrendsLoad','DataHunterSeleniumTrendsLoad_LINUX');
 INSERT IGNORE INTO SERVERCOMMANDLINKS VALUES ('DemoWIN-DataHunterSeleniumDeployAndExecute','DataHunterSeleniumDeployAndExecute');
 INSERT IGNORE INTO SERVERCOMMANDLINKS VALUES ('DemoWIN-DataHunterSeleniumGenJmeterReport','DataHunterSeleniumGenJmeterReport');
-INSERT IGNORE INTO SERVERCOMMANDLINKS VALUES ('DemoWIN-DataHunterSeleniumRunCheck','DataHunterSeleniumRunCheck');
+INSERT IGNORE INTO SERVERCOMMANDLINKS VALUES ('DemoWIN-DataHunterSeleniumTrendsLoad','DataHunterSeleniumTrendsLoad');
 INSERT IGNORE INTO SERVERCOMMANDLINKS VALUES ('localhost_LINUX','LINUX_free_m_1_1');
 INSERT IGNORE INTO SERVERCOMMANDLINKS VALUES ('localhost_LINUX','LINUX_mpstat_1_1');
 INSERT IGNORE INTO SERVERCOMMANDLINKS VALUES ('localhost_WINDOWS','FreePhysicalMemory');
@@ -485,8 +485,8 @@ INSERT IGNORE INTO COMMANDPARSERLINKS VALUES ('DataHunterSeleniumDeployAndExecut
 INSERT IGNORE INTO COMMANDPARSERLINKS VALUES ('DataHunterSeleniumDeployAndExecute_LINUX','Return1');
 INSERT IGNORE INTO COMMANDPARSERLINKS VALUES ('DataHunterSeleniumGenJmeterReport','Return1');
 INSERT IGNORE INTO COMMANDPARSERLINKS VALUES ('DataHunterSeleniumGenJmeterReport_LINUX','Return1');
-INSERT IGNORE INTO COMMANDPARSERLINKS VALUES ('DataHunterSeleniumRunCheck','Return1');
-INSERT IGNORE INTO COMMANDPARSERLINKS VALUES ('DataHunterSeleniumRunCheck_LINUX','Return1');
+INSERT IGNORE INTO COMMANDPARSERLINKS VALUES ('DataHunterSeleniumTrendsLoad','Return1');
+INSERT IGNORE INTO COMMANDPARSERLINKS VALUES ('DataHunterSeleniumTrendsLoad_LINUX','Return1');
 INSERT IGNORE INTO COMMANDPARSERLINKS VALUES ('FreePhysicalMemory','Memory_FreePhysicalG');
 INSERT IGNORE INTO COMMANDPARSERLINKS VALUES ('FreeVirtualMemory','Memory_FreeVirtualG');
 INSERT IGNORE INTO COMMANDPARSERLINKS VALUES ('LINUX_free_m_1_1','LINUX_Memory_freeG');

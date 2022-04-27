@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mark59.metricsruncheck;
+package com.mark59.trendsload;
 
 import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
@@ -25,7 +25,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.mark59.metrics.application.AppConstantsMetrics;
 
 /**
- * Entry point into RunCheck.  Runcheck loads test run the data into a database used by the Mark59 Metric Trends Analysis web application,
+ * Entry point into TrendsLoad.  Loads test run the data into a database used by the Mark59 Trends web application,
  * checking transaction and metric SLAs for the run in the process.  
  *
  */
@@ -33,7 +33,7 @@ import com.mark59.metrics.application.AppConstantsMetrics;
 public class ApplicationEntry  implements CommandLineRunner  {
 		
 	/**
-	 * Spring's behavior is that it will execute this (required Override) method <b>and</b> the override 'run' method in Runcheck
+	 * Spring's behavior is that it will execute this (required Override) method <b>and</b> the override 'run' method in TrendsLoad
 	 */
 	@Override
 	public void run(String... args) throws Exception {
@@ -44,7 +44,7 @@ public class ApplicationEntry  implements CommandLineRunner  {
 
 	public static void main(String[] args) {
   
-		System.out.println("Starting Runcheck .. (version "  + AppConstantsMetrics.MARK59_TRENDING_VERSION + ")"  );
+		System.out.println("Starting TrendsLoad .. (version "  + AppConstantsMetrics.MARK59_TRENDING_VERSION + ")"  );
 
 //		args = new String[] { "-a", "DataHunter", "-i", "C:/Mark59_Runs/Jmeter_Results/DataHunter", "-d","mysql", "-h","localhost", "-p", "3306", "-q", "?allowPublicKeyRetrieval=true&useSSL=false", "-t", "JMETER", "-r", "sample_run_01" };
 //		args = new String[] { "-a", "DataHunter", "-i", "C:/Mark59_Runs/Jmeter_Results/DataHunter", "-d","pg",    "-h","localhost", "-t", "JMETER", "-q", "?sslmode=disable", "-r", "sample_run_pg01"  };
@@ -56,13 +56,13 @@ public class ApplicationEntry  implements CommandLineRunner  {
 	
 		
 		// arguments are parsed before Spring Configuration, as the config uses values passed in the args.
-		Runcheck.parseArguments(args);
+		TrendsLoad.parseArguments(args);
 
 		SpringApplication application = new SpringApplication(ApplicationEntry.class);
 		application.setWebApplicationType(WebApplicationType.NONE);
 		application.setBannerMode(Banner.Mode.OFF);
 		application.run(args);
 		
-		System.out.println("\nRuncheck completed.");		
+		System.out.println("\nTrendsLoad completed.");		
 	}
 }

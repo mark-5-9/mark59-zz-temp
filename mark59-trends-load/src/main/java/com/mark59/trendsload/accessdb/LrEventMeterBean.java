@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mark59.metricsruncheck.accessdb;
+package com.mark59.trendsload.accessdb;
 
 import java.math.BigDecimal;
 

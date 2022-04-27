@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mark59.metricsruncheck.run;
+package com.mark59.trendsload.run;
 
 import java.util.List;
 import java.util.Map;

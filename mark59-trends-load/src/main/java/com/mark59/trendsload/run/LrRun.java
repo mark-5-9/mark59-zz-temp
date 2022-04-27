@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mark59.metricsruncheck.run;
+package com.mark59.trendsload.run;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ import com.mark59.metrics.application.AppConstantsMetrics;
 import com.mark59.metrics.data.beans.DateRangeBean;
 import com.mark59.metrics.data.beans.Run;
 import com.mark59.metrics.data.beans.Transaction;
-import com.mark59.metricsruncheck.accessdb.LrRunAccessDatabase;
+import com.mark59.trendsload.accessdb.LrRunAccessDatabase;
 	
 /**
  * @author Philip Webb

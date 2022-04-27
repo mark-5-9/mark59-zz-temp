@@ -71,10 +71,10 @@ CREATE TABLE IF NOT EXISTS COMMANDPARSERLINKS  (
 
 INSERT INTO `SERVERPROFILES` VALUES ('DemoLINUX-DataHunterSeleniumDeployAndExecute','SSH_LINIX_UNIX','localhost','','','','','22','60000','',NULL);
 INSERT INTO `SERVERPROFILES` VALUES ('DemoLINUX-DataHunterSeleniumGenJmeterReport','SSH_LINIX_UNIX','localhost','','','','','22','60000','Reports generated at   ~/Mark59_Runs/Jmeter_Reports/DataHunter/   <br>(open each index.html)   ',NULL);
-INSERT INTO `SERVERPROFILES` VALUES ('DemoLINUX-DataHunterSeleniumRunCheck','SSH_LINIX_UNIX','localhost','','','','','22','60000','Loads Trend Analysis (H2 database).  See:<br>http://localhost:8083/mark59-trends/trending?reqApp=DataHunter',NULL);
+INSERT INTO `SERVERPROFILES` VALUES ('DemoLINUX-DataHunterSeleniumTrendsLoad','SSH_LINIX_UNIX','localhost','','','','','22','60000','Loads Trend Analysis (H2 database).  See:<br>http://localhost:8083/mark59-trends/trending?reqApp=DataHunter',NULL);
 INSERT INTO `SERVERPROFILES` VALUES ('DemoWIN-DataHunterSeleniumDeployAndExecute','WMIC_WINDOWS','localhost','','','','','','','',NULL);
 INSERT INTO `SERVERPROFILES` VALUES ('DemoWIN-DataHunterSeleniumGenJmeterReport','WMIC_WINDOWS','localhost','','','','','','','Hint - in browser open this URL and go to each index.html:  file:///C:/Mark59_Runs/Jmeter_Reports/DataHunter/',NULL);
-INSERT INTO `SERVERPROFILES` VALUES ('DemoWIN-DataHunterSeleniumRunCheck','WMIC_WINDOWS','localhost','','','','','','','Loads Trend Analysis (H2 database).  See:<br>http://localhost:8083/mark59-trends/trending?reqApp=DataHunter',NULL);
+INSERT INTO `SERVERPROFILES` VALUES ('DemoWIN-DataHunterSeleniumTrendsLoad','WMIC_WINDOWS','localhost','','','','','','','Loads Trend Analysis (H2 database).  See:<br>http://localhost:8083/mark59-trends/trending?reqApp=DataHunter',NULL);
 INSERT INTO `SERVERPROFILES` VALUES ('localhost_LINUX','SSH_LINIX_UNIX','localhost','','','','','22','60000','',NULL);
 INSERT INTO `SERVERPROFILES` VALUES ('localhost_WINDOWS','WMIC_WINDOWS','localhost','','','','','','','','null');
 INSERT INTO `SERVERPROFILES` VALUES ('localhost_WINDOWS_HOSTID','WMIC_WINDOWS','localhost','HOSTID','','','','','','\'HOSTID\' will be subed <br> with computername  ',NULL);
@@ -88,8 +88,8 @@ INSERT INTO `COMMANDS` VALUES ('DataHunterSeleniumDeployAndExecute','WMIC_WINDOW
 INSERT INTO `COMMANDS` VALUES ('DataHunterSeleniumDeployAndExecute_LINUX','SSH_LINIX_UNIX','echo This script runs the JMeter deploy in the background, then opens a terminal for JMeter execution.\r\necho starting from $PWD;\r\n\r\n{   # try  \r\n\r\n    cd ../mark59-datahunter-samples && \r\n    DH_TEST_SAMPLES_DIR=$(pwd) && \r\n    echo mark59-datahunter-samples base dir is $DH_TEST_SAMPLES_DIR &&\r\n\r\n    cp ./mark59.properties ~/apache-jmeter/bin/mark59.properties &&\r\n    cp ./chromedriver ~/apache-jmeter/bin/chromedriver && \r\n    cp ../mark59-metrics-api/target/mark59-metrics-api.jar  ~/apache-jmeter/lib/ext/mark59-metrics-api.jar && \r\n    cp ./target/mark59-datahunter-samples.jar  ~/apache-jmeter/lib/ext/mark59-datahunter-samples.jar && \r\n    mkdir -p ~/Mark59_Runs/Jmeter_Results/DataHunter &&\r\n    rm -rf ~/apache-jmeter/lib/ext/mark59-datahunter-samples-dependencies &&\r\n    cp -r ./target/mark59-datahunter-samples-dependencies ~/apache-jmeter/lib/ext/mark59-datahunter-samples-dependencies &&\r\n \r\n    gnome-terminal -- sh -c \"~/apache-jmeter/bin/jmeter -n -X -f  -t $DH_TEST_SAMPLES_DIR/test-plans/DataHunterSeleniumTestPlan.jmx -l ~/Mark59_Runs/Jmeter_Results/DataHunter/DataHunterTestResults.csv -JForceTxnFailPercent=0 -JStartCdpListeners=false; exec bash\"\r\n\r\n} || { # catch \r\n    echo Deploy was unsuccessful! \r\n}','Y','refer bin/TestRunLINUX-DataHunter-Selenium-DeployAndExecute.sh','[]');
 INSERT INTO `COMMANDS` VALUES ('DataHunterSeleniumGenJmeterReport','WMIC_WINDOWS','process call create \'cmd.exe /c \r\n cd /D %SERVER_METRICS_WEB_BASE_DIR% & \r\n cd../mark59-results-splitter & \r\n CreateDataHunterJmeterReports.bat\'\r\n','N','',NULL);
 INSERT INTO `COMMANDS` VALUES ('DataHunterSeleniumGenJmeterReport_LINUX','SSH_LINIX_UNIX','echo This script creates a set of JMeter reports from a DataHunter test run.\r\necho starting from $PWD;\r\n\r\n{   # try  \r\n\r\n    cd ../mark59-results-splitter\r\n    gnome-terminal -- sh -c \"./CreateDataHunterJmeterReports.sh; exec bash\"\r\n\r\n} || { # catch \r\n    echo attempt to generate JMeter Reports has failed! \r\n}\r\n','Y','refer bin/TestRunLINUX-DataHunter-Selenium-GenJmeterReport.sh',NULL);
-INSERT INTO `COMMANDS` VALUES ('DataHunterSeleniumRunCheck','WMIC_WINDOWS','process call create \'cmd.exe /c \r\n echo Load DataHunter Test Results into  Mark59 Trends Analysis h2 database. & \r\n cd /D  %SERVER_METRICS_WEB_BASE_DIR% & \r\n cd ../mark59-trends-load &  \r\n \r\n java -jar ./target/mark59-trends-load.jar -a DataHunter -i C:\\Mark59_Runs\\Jmeter_Results\\DataHunter -d h2 &\r\n PAUSE\r\n\'\r\n','N','',NULL);
-INSERT INTO `COMMANDS` VALUES ('DataHunterSeleniumRunCheck_LINUX','SSH_LINIX_UNIX','echo This script runs mark59-trends-load,to load results from a DataHunter test run into the Metrics Trend Analysis Graph.\r\necho starting from $PWD;\r\n\r\n{   # try  \r\n\r\n    cd ../mark59-trends-load/target &&\r\n    gnome-terminal -- sh -c \"java -jar mark59-trends-load.jar -a DataHunter -i ~/Mark59_Runs/Jmeter_Results/DataHunter -d h2; exec bash\"\r\n\r\n} || { # catch \r\n    echo attempt to execute mark59-trends-load has failed! \r\n}\r\n','Y','refer bin/TestRunLINUX-DataHunter-Selenium-metricsRunCheck.sh',NULL);
+INSERT INTO `COMMANDS` VALUES ('DataHunterSeleniumTrendsLoad','WMIC_WINDOWS','process call create \'cmd.exe /c \r\n echo Load DataHunter Test Results into  Mark59 Trends Analysis h2 database. & \r\n cd /D  %SERVER_METRICS_WEB_BASE_DIR% & \r\n cd ../mark59-trends-load &  \r\n \r\n java -jar ./target/mark59-trends-load.jar -a DataHunter -i C:\\Mark59_Runs\\Jmeter_Results\\DataHunter -d h2 &\r\n PAUSE\r\n\'\r\n','N','',NULL);
+INSERT INTO `COMMANDS` VALUES ('DataHunterSeleniumTrendsLoad_LINUX','SSH_LINIX_UNIX','echo This script runs mark59-trends-load,to load results from a DataHunter test run into the Metrics Trend Analysis Graph.\r\necho starting from $PWD;\r\n\r\n{   # try  \r\n\r\n    cd ../mark59-trends-load/target &&\r\n    gnome-terminal -- sh -c \"java -jar mark59-trends-load.jar -a DataHunter -i ~/Mark59_Runs/Jmeter_Results/DataHunter -d h2; exec bash\"\r\n\r\n} || { # catch \r\n    echo attempt to execute mark59-trends-load has failed! \r\n}\r\n','Y','refer bin/TestRunLINUX-DataHunter-Selenium-metricsTrendsLoad.sh',NULL);
 INSERT INTO `COMMANDS` VALUES ('FreePhysicalMemory','WMIC_WINDOWS','OS get FreePhysicalMemory','N','',NULL);
 INSERT INTO `COMMANDS` VALUES ('FreeVirtualMemory','WMIC_WINDOWS','OS get FreeVirtualMemory','N','',NULL);
 INSERT INTO `COMMANDS` VALUES ('LINUX_free_m_1_1','SSH_LINIX_UNIX','free -m 1 1','N','linux memory',NULL);
@@ -116,10 +116,10 @@ INSERT INTO `COMMANDRESPONSEPARSERS` VALUES ('WicnCpu','CPU_UTIL','','java.util.
 
 INSERT INTO `SERVERCOMMANDLINKS` VALUES ('DemoLINUX-DataHunterSeleniumDeployAndExecute','DataHunterSeleniumDeployAndExecute_LINUX');
 INSERT INTO `SERVERCOMMANDLINKS` VALUES ('DemoLINUX-DataHunterSeleniumGenJmeterReport','DataHunterSeleniumGenJmeterReport_LINUX');
-INSERT INTO `SERVERCOMMANDLINKS` VALUES ('DemoLINUX-DataHunterSeleniumRunCheck','DataHunterSeleniumRunCheck_LINUX');
+INSERT INTO `SERVERCOMMANDLINKS` VALUES ('DemoLINUX-DataHunterSeleniumTrendsLoad','DataHunterSeleniumTrendsLoad_LINUX');
 INSERT INTO `SERVERCOMMANDLINKS` VALUES ('DemoWIN-DataHunterSeleniumDeployAndExecute','DataHunterSeleniumDeployAndExecute');
 INSERT INTO `SERVERCOMMANDLINKS` VALUES ('DemoWIN-DataHunterSeleniumGenJmeterReport','DataHunterSeleniumGenJmeterReport');
-INSERT INTO `SERVERCOMMANDLINKS` VALUES ('DemoWIN-DataHunterSeleniumRunCheck','DataHunterSeleniumRunCheck');
+INSERT INTO `SERVERCOMMANDLINKS` VALUES ('DemoWIN-DataHunterSeleniumTrendsLoad','DataHunterSeleniumTrendsLoad');
 INSERT INTO `SERVERCOMMANDLINKS` VALUES ('localhost_LINUX','LINUX_free_m_1_1');
 INSERT INTO `SERVERCOMMANDLINKS` VALUES ('localhost_LINUX','LINUX_mpstat_1_1');
 INSERT INTO `SERVERCOMMANDLINKS` VALUES ('localhost_WINDOWS','FreePhysicalMemory');
@@ -142,8 +142,8 @@ INSERT INTO `COMMANDPARSERLINKS` VALUES ('DataHunterSeleniumDeployAndExecute','R
 INSERT INTO `COMMANDPARSERLINKS` VALUES ('DataHunterSeleniumDeployAndExecute_LINUX','Return1');
 INSERT INTO `COMMANDPARSERLINKS` VALUES ('DataHunterSeleniumGenJmeterReport','Return1');
 INSERT INTO `COMMANDPARSERLINKS` VALUES ('DataHunterSeleniumGenJmeterReport_LINUX','Return1');
-INSERT INTO `COMMANDPARSERLINKS` VALUES ('DataHunterSeleniumRunCheck','Return1');
-INSERT INTO `COMMANDPARSERLINKS` VALUES ('DataHunterSeleniumRunCheck_LINUX','Return1');
+INSERT INTO `COMMANDPARSERLINKS` VALUES ('DataHunterSeleniumTrendsLoad','Return1');
+INSERT INTO `COMMANDPARSERLINKS` VALUES ('DataHunterSeleniumTrendsLoad_LINUX','Return1');
 INSERT INTO `COMMANDPARSERLINKS` VALUES ('FreePhysicalMemory','Memory_FreePhysicalG');
 INSERT INTO `COMMANDPARSERLINKS` VALUES ('FreeVirtualMemory','Memory_FreeVirtualG');
 INSERT INTO `COMMANDPARSERLINKS` VALUES ('LINUX_free_m_1_1','LINUX_Memory_freeG');

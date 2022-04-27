@@ -1,10 +1,10 @@
 #   -------------------------------------------------------------------------------------------------------------------------------------------------
-#   | Load DataHunter Test Results to Mark59 Trends Analysis database.
+#   | Load DataHunter Test Results to Mark59 Trends database.
 #   |
 #   |
 #   |  Alternative to running this .sh   ** H2 DATABASE ONLY **
 #   |	   - login  to the server-metrics-web application  "http://localhost:8085/mark59-metrics" 
-#   |	   - run the DemoLINUX-DataHunterSeleniumRunCheck profile. 
+#   |	   - run the DemoLINUX-DataHunterSeleniumTrendsLoadprofile. 
 #   |
 #   |  JMeter input results file expected at ~/Mark59_Runs/Jmeter_Results/DataHunter/ 
 #   |
@@ -26,7 +26,7 @@ DATABASE=H2
 # DATABASE=H2MEM
 
 cd ../mark59-trends-load;
-./LoadDataHunterResultsIntoMetricsTrendAnalysis.sh "${DATABASE}";
+./LoadDataHunterResultsIntoTrends.sh "${DATABASE}";
 
 cd ../bin
 $SHELL

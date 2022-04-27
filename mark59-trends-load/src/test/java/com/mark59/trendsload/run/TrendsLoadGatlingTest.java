@@ -1,4 +1,4 @@
-package com.mark59.metricsruncheck.run;
+package com.mark59.trendsload.run;
 
 import java.util.List;
 
@@ -19,12 +19,12 @@ import com.mark59.metrics.data.beans.Run;
 import com.mark59.metrics.data.beans.Transaction;
 import com.mark59.metrics.metricSla.MetricSlaResult;
 import com.mark59.metrics.sla.SlaTransactionResult;
-import com.mark59.metricsruncheck.Runcheck;
+import com.mark59.trendsload.TrendsLoad;
 
 import junit.framework.TestCase;
 
 
-public class RuncheckGatlingTest extends TestCase {
+public class TrendsLoadGatlingTest extends TestCase {
 
 	EmbeddedDatabase db; 
 	ApplicationContext context;
@@ -34,17 +34,17 @@ public class RuncheckGatlingTest extends TestCase {
 	}
 	
 	@Test
-	public void testRuncheckGatling341GeneralTest() {
-		Runcheck.parseArguments(new String[] { "-a", "DataHunter", "-i", "./src/test/resources/GatlingResults", "-l","simulation.logv341",
+	public void testTrendsLoadGatling341GeneralTest() {
+		TrendsLoad.parseArguments(new String[] { "-a", "DataHunter", "-i", "./src/test/resources/GatlingResults", "-l","simulation.logv341",
 				"-d", Mark59Constants.H2MEM, "-s","metricsmem",	"-e","responseTimeInMillis|errormsgStartsWith2|errormsgStartsWith3",  "-t","GATLING"  });
-		SpringApplication springApplication = new SpringApplication(Runcheck.class);
+		SpringApplication springApplication = new SpringApplication(TrendsLoad.class);
 		springApplication.setWebApplicationType(WebApplicationType.NONE);
 		springApplication.setBannerMode(Banner.Mode.OFF);	
 		context = springApplication.run();
 		
-		Runcheck runcheck = (Runcheck) context.getBean("runcheck");	
+		TrendsLoad trendsLoad = (TrendsLoad) context.getBean("trendsLoad");	
 		
-		List<MetricSlaResult> metricSlaResults = runcheck.getMetricSlaResults();
+		List<MetricSlaResult> metricSlaResults = trendsLoad.getMetricSlaResults();
 		assertEquals(3, metricSlaResults.size() );
 		for (MetricSlaResult metricSlaResult : metricSlaResults){
 			// System.out.println("metricSlaRes>>" + metricSlaResult);
@@ -65,7 +65,7 @@ public class RuncheckGatlingTest extends TestCase {
 			}
 		}
 		
-		List<SlaTransactionResult> slaTransactionResults = runcheck.getSlaTransactionResults();
+		List<SlaTransactionResult> slaTransactionResults = trendsLoad.getSlaTransactionResults();
 		assertEquals(4, slaTransactionResults.size() );
 		for (SlaTransactionResult slaTransactionResult : slaTransactionResults){ 
 			// System.out.println("slaRes>>" + slaTransactionResult);
@@ -94,11 +94,11 @@ public class RuncheckGatlingTest extends TestCase {
 			}
 		}
 		
-		List<String> slasWithMissingTxns = runcheck.getSlasWithMissingTxns();
+		List<String> slasWithMissingTxns = trendsLoad.getSlasWithMissingTxns();
 		assertEquals(1, slasWithMissingTxns.size());		
 		assertEquals("DH_lifecycle_0200_addPolicy", slasWithMissingTxns.get(0));		
 		
-		PerformanceTest performanceTest = runcheck.getPerformanceTest();
+		PerformanceTest performanceTest = trendsLoad.getPerformanceTest();
 		
 		Run run = performanceTest.getRunSummary();
 		assertEquals("DataHunter", run.getApplication());
@@ -134,30 +134,30 @@ public class RuncheckGatlingTest extends TestCase {
 			}
 		}
 		
-		List<Transaction> metricTxns = runcheck.getPerformanceTest().getMetricTransactionSummariesThisRun();
+		List<Transaction> metricTxns = trendsLoad.getPerformanceTest().getMetricTransactionSummariesThisRun();
 		assertEquals(0, metricTxns.size() );
 	}
 	
 	
 	@Test
-	public void testRuncheckGatling331Test() {
-		Runcheck.parseArguments(new String[] { "-a", "junit331", "-i", "./src/test/resources/GatlingResults", "-l","simulation.logv331",
+	public void testTrendsLoadGatling331Test() {
+		TrendsLoad.parseArguments(new String[] { "-a", "junit331", "-i", "./src/test/resources/GatlingResults", "-l","simulation.logv331",
 				"-d", Mark59Constants.H2MEM, "-s","metricsmem",	"-e","responseTimeInMillis|errormsgStartsWith2|errormsgStartsWith",  "-t","GATLING"  });
-		SpringApplication springApplication = new SpringApplication(Runcheck.class);
+		SpringApplication springApplication = new SpringApplication(TrendsLoad.class);
 		springApplication.setWebApplicationType(WebApplicationType.NONE);
 		springApplication.setBannerMode(Banner.Mode.OFF);	
 		context = springApplication.run();
 		
-		Runcheck runcheck = (Runcheck) context.getBean("runcheck");	
-		assertEquals(0, runcheck.getMetricSlaResults().size());
-		assertEquals(0, runcheck.getSlaTransactionResults().size() );
-		assertEquals(0, runcheck.getSlasWithMissingTxns().size());		
+		TrendsLoad trendsLoad = (TrendsLoad) context.getBean("trendsLoad");	
+		assertEquals(0, trendsLoad.getMetricSlaResults().size());
+		assertEquals(0, trendsLoad.getSlaTransactionResults().size() );
+		assertEquals(0, trendsLoad.getSlasWithMissingTxns().size());		
 		
-		Run run = runcheck.getPerformanceTest().getRunSummary();
+		Run run = trendsLoad.getPerformanceTest().getRunSummary();
 		assertEquals("junit331", run.getApplication());
 		String apprun = StringUtils.substringBefore(run.toString(), "isRunIgnored");
 		
-		List<Transaction> transactions = runcheck.getPerformanceTest().getTransactionSummariesThisRun();
+		List<Transaction> transactions = trendsLoad.getPerformanceTest().getTransactionSummariesThisRun();
 		assertEquals(2, transactions.size() );
 		for (Transaction transaction : transactions) {
 			// System.out.println("Txn>>" + transaction);
@@ -175,7 +175,7 @@ public class RuncheckGatlingTest extends TestCase {
 	
 	
 	@Test
-	public void testRuncheckGatling351andMockupDatapointandRuntimesTest() {
+	public void testTrendsLoadGatling351andMockupDatapointandRuntimesTest() {
 		EventMapping eventMapping = new EventMapping();
 		eventMapping.setTxnType("DATAPOINT");
 		eventMapping.setPerformanceTool("Gatling");
@@ -193,25 +193,25 @@ public class RuncheckGatlingTest extends TestCase {
 		jdbcTemplate.update(sql, eventMapping.getTxnType(),eventMapping.getPerformanceTool(), eventMapping.getMetricSource(), eventMapping.getMatchWhenLike(), eventMapping.getTargetNameLB(), eventMapping.getTargetNameRB(),
 				eventMapping.getIsPercentage(), eventMapping.getIsInvertedPercentage(), eventMapping.getComment());
 		
-		Runcheck.parseArguments(new String[] { "-a", "junit351", "-i", "./src/test/resources/GatlingResults", "-l","simulation.logv351",
+		TrendsLoad.parseArguments(new String[] { "-a", "junit351", "-i", "./src/test/resources/GatlingResults", "-l","simulation.logv351",
 				"-d", Mark59Constants.H2MEM, "-s","metricsmem",	"-t","GATLING"  });
-		SpringApplication springApplication = new SpringApplication(Runcheck.class);
+		SpringApplication springApplication = new SpringApplication(TrendsLoad.class);
 		springApplication.setWebApplicationType(WebApplicationType.NONE);
 		springApplication.setBannerMode(Banner.Mode.OFF);	
 		context = springApplication.run();
 		
-		Runcheck runcheck = (Runcheck) context.getBean("runcheck");	
-		assertEquals(0, runcheck.getMetricSlaResults().size());
-		assertEquals(0, runcheck.getSlaTransactionResults().size() );
-		assertEquals(0, runcheck.getSlasWithMissingTxns().size());		
+		TrendsLoad trendsLoad = (TrendsLoad) context.getBean("trendsLoad");	
+		assertEquals(0, trendsLoad.getMetricSlaResults().size());
+		assertEquals(0, trendsLoad.getSlaTransactionResults().size() );
+		assertEquals(0, trendsLoad.getSlasWithMissingTxns().size());		
 			
-		Run run = runcheck.getPerformanceTest().getRunSummary();
+		Run run = trendsLoad.getPerformanceTest().getRunSummary();
 		assertEquals("junit351", run.getApplication());
 		assertEquals("1622693982008", StringUtils.substringBetween(run.getPeriod(), "[", ":" ).trim());
 		assertEquals("1622693982162", StringUtils.substringBetween(run.getPeriod(), ":", "]" ).trim());
 		String apprun = StringUtils.substringBefore(run.toString(), "isRunIgnored");
 		
-		List<Transaction> transactions = runcheck.getPerformanceTest().getTransactionSummariesThisRun();
+		List<Transaction> transactions = trendsLoad.getPerformanceTest().getTransactionSummariesThisRun();
 		assertEquals(1, transactions.size() );
 		for (Transaction transaction : transactions) {
 			// System.out.println("Txn>>" + transaction);
@@ -223,7 +223,7 @@ public class RuncheckGatlingTest extends TestCase {
 			}
 		}
 		
-		List<Transaction> metricTxns = runcheck.getPerformanceTest().getMetricTransactionSummariesThisRun();
+		List<Transaction> metricTxns = trendsLoad.getPerformanceTest().getMetricTransactionSummariesThisRun();
 		assertEquals(1, metricTxns.size() );
 		for (Transaction transaction : metricTxns) {
 			System.out.println("metricTxns>>" + transaction);
@@ -238,24 +238,24 @@ public class RuncheckGatlingTest extends TestCase {
 
 	
 	@Test
-	public void testRuncheckGatling360Test() {
-		Runcheck.parseArguments(new String[] { "-a", "junit360", "-i", "./src/test/resources/GatlingResults", "-l","simulation.logv360",
+	public void testTrendsLoadGatling360Test() {
+		TrendsLoad.parseArguments(new String[] { "-a", "junit360", "-i", "./src/test/resources/GatlingResults", "-l","simulation.logv360",
 				"-d", Mark59Constants.H2MEM, "-s","metricsmem",	"-e","responseTimeInMillis",  "-t","GATLING"  });
-		SpringApplication springApplication = new SpringApplication(Runcheck.class);
+		SpringApplication springApplication = new SpringApplication(TrendsLoad.class);
 		springApplication.setWebApplicationType(WebApplicationType.NONE);
 		springApplication.setBannerMode(Banner.Mode.OFF);	
 		context = springApplication.run();
 		
-		Runcheck runcheck = (Runcheck) context.getBean("runcheck");	
-		assertEquals(0, runcheck.getMetricSlaResults().size());
-		assertEquals(0, runcheck.getSlaTransactionResults().size() );
-		assertEquals(0, runcheck.getSlasWithMissingTxns().size());		
+		TrendsLoad trendsLoad = (TrendsLoad) context.getBean("trendsLoad");	
+		assertEquals(0, trendsLoad.getMetricSlaResults().size());
+		assertEquals(0, trendsLoad.getSlaTransactionResults().size() );
+		assertEquals(0, trendsLoad.getSlasWithMissingTxns().size());		
 		
-		Run run = runcheck.getPerformanceTest().getRunSummary();
+		Run run = trendsLoad.getPerformanceTest().getRunSummary();
 		assertEquals("junit360", run.getApplication());
 		String apprun = StringUtils.substringBefore(run.toString(), "isRunIgnored");
 		
-		List<Transaction> transactions = runcheck.getPerformanceTest().getTransactionSummariesThisRun();
+		List<Transaction> transactions = trendsLoad.getPerformanceTest().getTransactionSummariesThisRun();
 		assertEquals(2, transactions.size() );
 		for (Transaction transaction : transactions) {
 			// System.out.println("Txn>>" + transaction);
@@ -273,24 +273,24 @@ public class RuncheckGatlingTest extends TestCase {
 	
 	
 	@Test
-	public void testRuncheckGatling900CustomTest() {
-		Runcheck.parseArguments(new String[] { "-a", "junit900", "-i", "./src/test/resources/GatlingResults", "-l","simulation.log900Custom",
+	public void testTrendsLoadGatling900CustomTest() {
+		TrendsLoad.parseArguments(new String[] { "-a", "junit900", "-i", "./src/test/resources/GatlingResults", "-l","simulation.log900Custom",
 				"-d", Mark59Constants.H2MEM, "-s","metricsmem",	"-m","3,4,5,6,7",  "-t","GATLING"  });
-		SpringApplication springApplication = new SpringApplication(Runcheck.class);
+		SpringApplication springApplication = new SpringApplication(TrendsLoad.class);
 		springApplication.setWebApplicationType(WebApplicationType.NONE);
 		springApplication.setBannerMode(Banner.Mode.OFF);	
 		context = springApplication.run();
 		
-		Runcheck runcheck = (Runcheck) context.getBean("runcheck");	
-		assertEquals(0, runcheck.getMetricSlaResults().size());
-		assertEquals(0, runcheck.getSlaTransactionResults().size() );
-		assertEquals(0, runcheck.getSlasWithMissingTxns().size());	
+		TrendsLoad trendsLoad = (TrendsLoad) context.getBean("trendsLoad");	
+		assertEquals(0, trendsLoad.getMetricSlaResults().size());
+		assertEquals(0, trendsLoad.getSlaTransactionResults().size() );
+		assertEquals(0, trendsLoad.getSlasWithMissingTxns().size());	
 		
-		Run run = runcheck.getPerformanceTest().getRunSummary();
+		Run run = trendsLoad.getPerformanceTest().getRunSummary();
 		assertEquals("junit900", run.getApplication());
 		String apprun = StringUtils.substringBefore(run.toString(), "isRunIgnored");
 		
-		List<Transaction> transactions = runcheck.getPerformanceTest().getTransactionSummariesThisRun();
+		List<Transaction> transactions = trendsLoad.getPerformanceTest().getTransactionSummariesThisRun();
 		assertEquals(2, transactions.size() );
 		for (Transaction transaction : transactions) {
 			// System.out.println("Txn>>" + transaction);

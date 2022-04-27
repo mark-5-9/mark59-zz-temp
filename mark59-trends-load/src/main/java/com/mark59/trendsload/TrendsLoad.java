@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mark59.metricsruncheck;
+package com.mark59.trendsload;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -50,10 +50,10 @@ import com.mark59.metrics.metricSla.MetricSlaChecker;
 import com.mark59.metrics.metricSla.MetricSlaResult;
 import com.mark59.metrics.sla.SlaChecker;
 import com.mark59.metrics.sla.SlaTransactionResult;
-import com.mark59.metricsruncheck.run.GatlingRun;
-import com.mark59.metricsruncheck.run.JmeterRun;
-import com.mark59.metricsruncheck.run.LrRun;
-import com.mark59.metricsruncheck.run.PerformanceTest;
+import com.mark59.trendsload.run.GatlingRun;
+import com.mark59.trendsload.run.JmeterRun;
+import com.mark59.trendsload.run.LrRun;
+import com.mark59.trendsload.run.PerformanceTest;
 
 /**
  * @author Philip Webb
@@ -61,7 +61,7 @@ import com.mark59.metricsruncheck.run.PerformanceTest;
  */
 
 @SpringBootApplication
-public class Runcheck  implements CommandLineRunner 
+public class TrendsLoad  implements CommandLineRunner 
 {
 	
     @Autowired
@@ -149,7 +149,7 @@ public class Runcheck  implements CommandLineRunner
 			commandLine = parser.parse(options, args);
 		} catch (ParseException exp) {
 			System.err.println("Parsing failed.  Reason: " + exp.getMessage());
-			formatter.printHelp("Runcheck", options);
+			formatter.printHelp("TrendsLoad", options);
 			printSampleUsage();
 			throw new RuntimeException();
 		}		
@@ -172,28 +172,28 @@ public class Runcheck  implements CommandLineRunner
 				&& !Mark59Constants.PG.equalsIgnoreCase(argDatabasetype)
 				&& !Mark59Constants.H2TCPCLIENT.equalsIgnoreCase(argDatabasetype)
 				&& !Mark59Constants.H2MEM.equalsIgnoreCase(argDatabasetype)) {    // h2mem used for internal testing
-			formatter.printHelp("Runcheck", options);
+			formatter.printHelp("TrendsLoad", options);
 			printSampleUsage();
 			throw new RuntimeException(
 					"The database type (d) argument must be set to 'pg', 'mysql', 'h2', 'h2mem' or 'h2tcpclient'! (or not used, in which case 'mysql' is assumed)");
 		}
 		if ( !AppConstantsMetrics.JMETER.equalsIgnoreCase(argTool)  &&  !AppConstantsMetrics.LOADRUNNER.equalsIgnoreCase(argTool) && !AppConstantsMetrics.GATLING.equalsIgnoreCase(argTool) ) {
-			formatter.printHelp( "Runcheck", options );
+			formatter.printHelp( "TrendsLoad", options );
 			printSampleUsage();
 			throw new RuntimeException("The tool (t) argument must be set to JMETER or LOADRUNNER or GATLING ! (or not used, in which case JMETER is assumed)");  
 		}
 		if ( !String.valueOf(false).equalsIgnoreCase(argKeeprawresults)  &&  !String.valueOf(true).equalsIgnoreCase(argKeeprawresults)) {
-			formatter.printHelp( "Runcheck", options );
+			formatter.printHelp( "TrendsLoad", options );
 			printSampleUsage();
 			throw new RuntimeException("The Keeprawresults (k) argument must be set to 'true' or 'false' ! (or not used, in which case 'false' is assumed)");  
 		}
 		if (!StringUtils.isNumeric(argExcludestart) ) {
-			formatter.printHelp( "Runcheck", options );
+			formatter.printHelp( "TrendsLoad", options );
 			printSampleUsage();
 			throw new RuntimeException("The excludestart (x) parameter must be numeric");  
 		}
 		if (!StringUtils.isNumeric(argCaptureperiod) && !argCaptureperiod.equalsIgnoreCase(AppConstantsMetrics.ALL) ) {
-			formatter.printHelp( "Runcheck", options );
+			formatter.printHelp( "TrendsLoad", options );
 			printSampleUsage();
 			throw new RuntimeException("The captureperiod (c) parameter must be numeric or '" + AppConstantsMetrics.ALL + "'" );  
 		}
@@ -203,14 +203,14 @@ public class Runcheck  implements CommandLineRunner
 					(!StringUtils.isNumeric(mPos.get(0)) || !StringUtils.isNumeric(mPos.get(1)) ||
 					 !StringUtils.isNumeric(mPos.get(2)) || !StringUtils.isNumeric(mPos.get(3)) ||
 					 !StringUtils.isNumeric(mPos.get(4)) )){
-				formatter.printHelp( "Runcheck", options );
+				formatter.printHelp( "TrendsLoad", options );
 				printSampleUsage();
 				throw new RuntimeException("The simlogcustoM (m) parameter must blank or 5 comma-delimited integers") ;  
 			}
 		}
 		if (! ( argTimeZone.equals("GMT") || !TimeZone.getTimeZone(argTimeZone).getID().equals("GMT"))){
 			// https://stackoverflow.com/questions/13092865/timezone-validation-in-java
-			formatter.printHelp( "Runcheck", options );
+			formatter.printHelp( "TrendsLoad", options );
 			printSampleUsage();
 			throw new RuntimeException("The timezone argumment (z) is invalid : " +  argTimeZone );  
 		}
@@ -280,7 +280,7 @@ public class Runcheck  implements CommandLineRunner
 		}
 		
 		System.out.println();
-		System.out.println("Runcheck executing using the following arguments " );
+		System.out.println("TrendsLoad executing using the following arguments " );
 		System.out.println("------------------------------------------------ " );	
 		System.out.println(" application    : " + argApplication );				    
 		System.out.println(" input          : " + argInput );
@@ -386,7 +386,7 @@ public class Runcheck  implements CommandLineRunner
 		printSlasWitMissingTxnsInThisRun(cdpTaggedMissingTransactions);		
 		
 		if (cdpTaggedMissingTransactions.isEmpty()  && cdpTaggedTransactionsWithFailedSlas.isEmpty() ){
-			System.out.println( "Runcheck:  No transactional SLA has failed (as recorded on the SLA Reference Database)");
+			System.out.println( "TrendsLoad:  No transactional SLA has failed (as recorded on the SLA Reference Database)");
 		} 
 		
 		metricSlaResults = new MetricSlaChecker().listFailedMetricSLAs(application, runTime, null, metricSlaDAO, transactionDAO);
@@ -396,7 +396,7 @@ public class Runcheck  implements CommandLineRunner
 
 	private void printSlasWitMissingTxnsInThisRun(List<String> cdpTaggedMissingTransactions) {
 		for (String slaWithMissingTxn : cdpTaggedMissingTransactions) {
-    		System.out.println( "Runcheck: SLA Failed : Error : an SLA exists for transaction " + slaWithMissingTxn + ", but that transaction does not appear in the run results ! "  );			
+    		System.out.println( "TrendsLoad: SLA Failed : Error : an SLA exists for transaction " + slaWithMissingTxn + ", but that transaction does not appear in the run results ! "  );			
 		}
 	}
 
@@ -409,33 +409,33 @@ public class Runcheck  implements CommandLineRunner
 			}
 
 			if ( !slaTransactionResult.isPassed90thResponse()){
-	    		System.out.println( "Runcheck: SLA Failed Warning  : " + slaTransactionResult.getTxnId() + " has failed it's 90th Percentile Response Time SLA as recorded on the SLA database ! "  );
+	    		System.out.println( "TrendsLoad: SLA Failed Warning  : " + slaTransactionResult.getTxnId() + " has failed it's 90th Percentile Response Time SLA as recorded on the SLA database ! "  );
 	    		System.out.println( "                      response was " + slaTransactionResult.getTxn90thResponse() + " secs, SLA of " +  slaTransactionResult.getSla90thResponse());				
 				
 			}
 			if ( !slaTransactionResult.isPassed95thResponse()){
-	    		System.out.println( "Runcheck: SLA Failed Warning  : " + slaTransactionResult.getTxnId() + " has failed it's 95th Percentile Response Time SLA as recorded on the SLA database ! "  );
+	    		System.out.println( "TrendsLoad: SLA Failed Warning  : " + slaTransactionResult.getTxnId() + " has failed it's 95th Percentile Response Time SLA as recorded on the SLA database ! "  );
 	    		System.out.println( "                      response was " + slaTransactionResult.getTxn95thResponse() + " secs, SLA of " +  slaTransactionResult.getSla95thResponse());				
 				
 			}
 			if ( !slaTransactionResult.isPassed99thResponse()){
-	    		System.out.println( "Runcheck: SLA Failed Warning  : " + slaTransactionResult.getTxnId() + " has failed it's 99th Percentile Response Time SLA as recorded on the SLA database ! "  );
+	    		System.out.println( "TrendsLoad: SLA Failed Warning  : " + slaTransactionResult.getTxnId() + " has failed it's 99th Percentile Response Time SLA as recorded on the SLA database ! "  );
 	    		System.out.println( "                      response was " + slaTransactionResult.getTxn99thResponse() + " secs, SLA of " +  slaTransactionResult.getSla99thResponse());				
 				
 			}
 			if ( !slaTransactionResult.isPassedFailPercent()){
-	    		System.out.println( "Runcheck: SLA Failed : Error : " + slaTransactionResult.getTxnId() + " has failed it's % Error Rate SLA as recorded on the SLA database ! "  );
+	    		System.out.println( "TrendsLoad: SLA Failed : Error : " + slaTransactionResult.getTxnId() + " has failed it's % Error Rate SLA as recorded on the SLA database ! "  );
 	    		System.out.println( "                      % error was " + new DecimalFormat("#.##").format(slaTransactionResult.getTxnFailurePercent()) + 
 	    				" %, SLA of " +  slaTransactionResult.getSlaFailurePercent());				
 			}
 			if ( !slaTransactionResult.isPassedFailCount()){
-	    		System.out.println( "Runcheck: SLA Failed : Error : " + slaTransactionResult.getTxnId() + " has failed it's Fail Count SLA as recorded on the SLA database ! "  );
+	    		System.out.println( "TrendsLoad: SLA Failed : Error : " + slaTransactionResult.getTxnId() + " has failed it's Fail Count SLA as recorded on the SLA database ! "  );
 	    		System.out.println( "                      count was " + slaTransactionResult.getTxnFailCount() + 
 	    				" Fail Count SLA is " +  slaTransactionResult.getSlaFailCount());				
 			}
 	
 			if ( !slaTransactionResult.isPassedPassCount()){
-	    		System.out.println( "Runcheck: SLA Failed : Error : " + slaTransactionResult.getTxnId() + " has failed it's Pass Count SLA as recorded on the SLA database ! "  );
+	    		System.out.println( "TrendsLoad: SLA Failed : Error : " + slaTransactionResult.getTxnId() + " has failed it's Pass Count SLA as recorded on the SLA database ! "  );
 	    		System.out.println( "                      count was " + slaTransactionResult.getTxnPassCount() + 
 	    				" Pass Count SLA is " +  slaTransactionResult.getSlaPassCount() + ", with variance of " + slaTransactionResult.getSlaPassCountVariancePercent() + "%") ;				
 			}
@@ -446,10 +446,10 @@ public class Runcheck  implements CommandLineRunner
 	
 	private void printMetricSlaResults(List<MetricSlaResult> metricSlaResults) {
 		for (MetricSlaResult metricSlaResult : metricSlaResults) {
-			System.out.println( "Runcheck: " + metricSlaResult.getMessageText()); 
+			System.out.println( "TrendsLoad: " + metricSlaResult.getMessageText()); 
 		}
 		if (metricSlaResults.isEmpty()){
-			System.out.println( "Runcheck:  No metric SLA has failed (as recorded on the SLA Metrics Reference Database)");
+			System.out.println( "TrendsLoad:  No metric SLA has failed (as recorded on the SLA Metrics Reference Database)");
 		}
 	}
 
