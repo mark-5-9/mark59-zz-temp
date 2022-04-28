@@ -314,7 +314,7 @@ return 0;</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
-          <stringProp name="classname">com.mark59.datahunter.performanceTest.scripts.DataHunterLifecyclePvtScript</stringProp>
+          <stringProp name="classname">com.mark59.datahunter.samples.scripts.DataHunterLifecyclePvtScript</stringProp>
         </JavaSampler>
         <hashTree/>
       </hashTree>
@@ -498,7 +498,7 @@ return 0;</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
-          <stringProp name="classname">com.mark59.datahunter.performanceTest.scripts.DataHunterLifecycleIteratorPvtScript</stringProp>
+          <stringProp name="classname">com.mark59.datahunter.samples.scripts.DataHunterLifecycleIteratorPvtScript</stringProp>
         </JavaSampler>
         <hashTree/>
       </hashTree>
@@ -562,7 +562,7 @@ return 0;</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
-          <stringProp name="classname">com.mark59.servermetrics.ServerMetricsCaptureViaExcel</stringProp>
+          <stringProp name="classname">com.mark59.metrics.api.ServerMetricsCaptureViaExcel</stringProp>
         </JavaSampler>
         <hashTree/>
       </hashTree>

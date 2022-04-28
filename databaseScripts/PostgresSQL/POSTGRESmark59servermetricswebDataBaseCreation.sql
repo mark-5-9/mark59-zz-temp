@@ -210,9 +210,9 @@ INSERT INTO COMMANDS VALUES ('WinCpuCmd','WMIC_WINDOWS','cpu get loadpercentage'
 INSERT INTO COMMANDS VALUES ('SimpleScriptSampleCmd', 'GROOVY_SCRIPT', 
 'import java.util.ArrayList;
 import java.util.List;
-import com.mark59.servermetricsweb.data.beans.ServerProfile;
-import com.mark59.servermetricsweb.pojos.ParsedMetric;
-import com.mark59.servermetricsweb.pojos.ScriptResponse;
+import com.mark59.metrics.data.beans.ServerProfile;
+import com.mark59.metrics.pojos.ParsedMetric;
+import com.mark59.metrics.pojos.ScriptResponse;
 
 ScriptResponse scriptResponse = new ScriptResponse();
 List<ParsedMetric> parsedMetrics = new ArrayList<ParsedMetric>();
@@ -243,8 +243,8 @@ import java.util.Scanner;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import com.mark59.servermetricsweb.pojos.ParsedMetric;
-import com.mark59.servermetricsweb.pojos.ScriptResponse;
+import com.mark59.metrics.pojos.ParsedMetric;
+import com.mark59.metrics.pojos.ScriptResponse;
 
 ScriptResponse scriptResponse = new ScriptResponse(); 
 List<ParsedMetric> parsedMetrics = new ArrayList<ParsedMetric>();
