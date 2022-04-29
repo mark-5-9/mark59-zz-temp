@@ -3,8 +3,8 @@
  
 CREATE USER admin SUPERUSER PASSWORD 'admin';
 
--- DROP DATABASE mark59servermetricswebdb;
-CREATE DATABASE mark59servermetricswebdb WITH ENCODING='UTF8' OWNER=admin TEMPLATE=template0 LC_COLLATE='C' LC_CTYPE='C';
+-- DROP DATABASE MARK59METRICSDB;
+CREATE DATABASE MARK59METRICSDB WITH ENCODING='UTF8' OWNER=admin TEMPLATE=template0 LC_COLLATE='C' LC_CTYPE='C';
  
 DROP TABLE IF EXISTS  SERVERPROFILES;
 DROP TABLE IF EXISTS  COMMANDS;
@@ -72,10 +72,10 @@ CREATE TABLE IF NOT EXISTS COMMANDPARSERLINKS  (
 
 INSERT INTO SERVERPROFILES VALUES ('DemoLINUX-DataHunterSeleniumDeployAndExecute','SSH_LINIX_UNIX','localhost','','','','','22','60000','','');
 INSERT INTO SERVERPROFILES VALUES ('DemoLINUX-DataHunterSeleniumGenJmeterReport','SSH_LINIX_UNIX','localhost','','','','','22','60000','Reports generated at   ~/Mark59_Runs/Jmeter_Reports/DataHunter/   <br>(open each index.html)   ','');
-INSERT INTO SERVERPROFILES VALUES ('DemoLINUX-DataHunterSeleniumTrendsLoad','SSH_LINIX_UNIX','localhost','','','','','22','60000','Loads Trend Analysis (H2 database).  See:<br>http://localhost:8083/mark59-trends/trending?reqApp=DataHunter','');
+INSERT INTO SERVERPROFILES VALUES ('DemoLINUX-DataHunterSeleniumTrendsLoad','SSH_LINIX_UNIX','localhost','','','','','22','60000','Loads Trend Analysis (PG database).  See:<br>http://localhost:8083/mark59-trends/trending?reqApp=DataHunter','');
 INSERT INTO SERVERPROFILES VALUES ('DemoWIN-DataHunterSeleniumDeployAndExecute','WMIC_WINDOWS','localhost','','','','','','','','');
 INSERT INTO SERVERPROFILES VALUES ('DemoWIN-DataHunterSeleniumGenJmeterReport','WMIC_WINDOWS','localhost','','','','','','','Hint - in browser open this URL and go to each index.html:  file:///C:/Mark59_Runs/Jmeter_Reports/DataHunter/','');
-INSERT INTO SERVERPROFILES VALUES ('DemoWIN-DataHunterSeleniumTrendsLoad','WMIC_WINDOWS','localhost','','','','','','','Loads Trend Analysis (H2 database).  See:<br>http://localhost:8083/mark59-trends/trending?reqApp=DataHunter','');
+INSERT INTO SERVERPROFILES VALUES ('DemoWIN-DataHunterSeleniumTrendsLoad','WMIC_WINDOWS','localhost','','','','','','','Loads Trend Analysis (PG database).  See:<br>http://localhost:8083/mark59-trends/trending?reqApp=DataHunter','');
 INSERT INTO SERVERPROFILES VALUES ('localhost_LINUX','SSH_LINIX_UNIX','localhost','','','','','22','60000','','');
 INSERT INTO SERVERPROFILES VALUES ('localhost_WINDOWS','WMIC_WINDOWS','localhost','','','','','','','','');
 INSERT INTO SERVERPROFILES VALUES ('localhost_WINDOWS_HOSTID','WMIC_WINDOWS','localhost','HOSTID','','','','','','HOSTID will be subed <br> with computername  ','');
@@ -154,11 +154,11 @@ echo starting from $PWD;
 }
 ','Y','refer bin/TestRunLINUX-DataHunter-Selenium-GenJmeterReport.sh','');
 INSERT INTO COMMANDS VALUES ('DataHunterSeleniumTrendsLoad','WMIC_WINDOWS','process call create ''cmd.exe /c 
- echo Load DataHunter Test Results into  Mark59 Trends Analysis h2 database. & 
+ echo Load DataHunter Test Results into Mark59 Trends Analysis PG database. & 
  cd /D  %SERVER_METRICS_WEB_BASE_DIR% & 
  cd ../mark59-trends-load &  
  
- java -jar ./target/mark59-trends-load.jar -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -d h2 &
+ java -jar ./target/mark59-trends-load.jar -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -d pg &
  PAUSE
 ''
 ','N','','');
@@ -168,7 +168,7 @@ echo starting from $PWD;
 {   # try  
 
     cd ../mark59-trends-load/target &&
-    gnome-terminal -- sh -c "java -jar mark59-trends-load.jar -a DataHunter -i ~/Mark59_Runs/Jmeter_Results/DataHunter -d h2; exec bash"
+    gnome-terminal -- sh -c "java -jar mark59-trends-load.jar -a DataHunter -i ~/Mark59_Runs/Jmeter_Results/DataHunter -d pg; exec bash"
 
 } || { # catch 
     echo attempt to execute mark59-trends-load has failed! 
