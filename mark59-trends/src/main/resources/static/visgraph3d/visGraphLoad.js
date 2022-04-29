@@ -817,8 +817,8 @@ function buildGraphMappingLink(){
 	document.getElementById('graphMappingLink').href = htmlDecode("http://" + host + "/mark59-trends/graphMappingList");  	
 }
 
-function htmlDecode(input) {
-  var doc = new DOMParser().parseFromString(input, "text/html");
+function htmlDecode(url) {
+  var doc = new DOMParser().parseFromString(encodeURI(url), "text/html");
   return doc.documentElement.textContent;
 }
 
