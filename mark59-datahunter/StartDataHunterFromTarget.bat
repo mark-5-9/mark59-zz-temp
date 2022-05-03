@@ -1,12 +1,13 @@
 REM   -------------------------------------------------------------------------------------------------------------------------------------------------
 REM   |  This bat assumes - the mark59-datahunterwar file exists in the ./target directory (relative to this file) 
-REM   |                   - when using a MySQL or Postgres database, the datahunterdb database exists locally (using defaults)
+REM   |                   - when using a MySQL or Postgres database, the mark59datahunterdb database exists locally (using defaults)
 REM   |
 REM   |  Note the use of double quotes n a few places, required to cater for the & (ampersand) char, or to enter a space (equates to a blank blank here). 
 REM   -------------------------------------------------------------------------------------------------------------------------------------------------
 @echo off
 MODE con:cols=180 lines=500
 rem SET "DATABASE=MYSQL"
+rem SET "DATABASE=POSTGRES"
 
 ECHO The database has been set to %DATABASE%
 
@@ -28,7 +29,7 @@ IF "%DATABASE%" == "H2MEM" (
 
 IF "%DATABASE%" == "MYSQL" (
 	rem Using MySQL. Starting DataHunter providing DB connection and server information (using default values) 
-	java -jar ./target/mark59-datahunter.war  --spring.profiles.active=mysql --port=8081 --mysql.server=localhost --mysql.port=3306 --mysql.schema=datahunterdb --mysql.xtra.url.parms="?allowPublicKeyRetrieval=true&useSSL=false" --mysql.username=admin --mysql.password=admin
+	java -jar ./target/mark59-datahunter.war  --spring.profiles.active=mysql --port=8081 --mysql.server=localhost --mysql.port=3306 --mysql.schema=mark59datahunterdb --mysql.xtra.url.parms="?allowPublicKeyRetrieval=true&useSSL=false" --mysql.username=admin --mysql.password=admin
 )
 
 rem -- another MySQL example -- 
@@ -37,7 +38,9 @@ rem java -jar ./target/mark59-datahunter.war
 
 IF "%DATABASE%"=="POSTGRES" (
 	rem Using Postgres.  Starting DataHunter providing DB connection and server information (using postgres default values) 
-	java -jar ./target/mark59-datahunter.war --spring.profiles.active=pg ---port=8081  --pg.server=localhost --pg.port=5432  --pg.database=datahunterdb --pg.xtra.url.parms=" " --pg.username=admin --pg.password=admin
+	java -jar ./target/mark59-datahunter.war --spring.profiles.active=pg ---port=8081  --pg.server=localhost --pg.port=5432  --pg.database=mark59datahunterdb --pg.xtra.url.parms=" " --pg.username=admin --pg.password=admin
+
+	
 )
 
 PAUSE

@@ -7,15 +7,15 @@
 -- **   ------------------
 -- **   Rename the databases as below (we suggest also doing a backup): 
 -- **
--- **       datahunterdb               to MARK59DATAHUNTERDB 
--- **       mark59servermetricswebdb   to MARK59METRICSDB
--- **       metricsdb                  to MARK59TRENDSDB 
+-- **       datahunterdb               to mark59datahunterdb 
+-- **       mark59servermetricswebdb   to mark59metricsdb
+-- **       metricsdb                  to mark59trendsdb 
 -- **
 -- *************************************************************************************
 
---  Updates for the MARK59METRICSDB (ex mark59servermetricswebdb) tables
+--  Updates for the mark59metricsdb (ex mark59servermetricswebdb) tables
 --  --------------------------------------------------------------------
---  Due to code and name changes the following changes may be needed depending on your requirments.
+--  Due to code and name changes the following changes may be needed depending on your requirements.
 --  The changes assume you want/have the sample Profiles as originally provided in 4.2, and have followed similar
 --   patterns  when creating additional Profiles.  Please review before execution.        
 

@@ -30,13 +30,13 @@ public class TrendsLoadGatlingTest extends TestCase {
 	ApplicationContext context;
 
 	public void setUp() {
-		db = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).setName("metricsmem;MODE=MySQL;").addScript("copyofschema.sql").build();
+		db = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).setName("trendsmem;MODE=MySQL;").addScript("copyofschema.sql").build();
 	}
 	
 	@Test
 	public void testTrendsLoadGatling341GeneralTest() {
 		TrendsLoad.parseArguments(new String[] { "-a", "DataHunter", "-i", "./src/test/resources/GatlingResults", "-l","simulation.logv341",
-				"-d", Mark59Constants.H2MEM, "-s","metricsmem",	"-e","responseTimeInMillis|errormsgStartsWith2|errormsgStartsWith3",  "-t","GATLING"  });
+				"-d", Mark59Constants.H2MEM, "-s","trendsmem",	"-e","responseTimeInMillis|errormsgStartsWith2|errormsgStartsWith3",  "-t","GATLING"  });
 		SpringApplication springApplication = new SpringApplication(TrendsLoad.class);
 		springApplication.setWebApplicationType(WebApplicationType.NONE);
 		springApplication.setBannerMode(Banner.Mode.OFF);	
@@ -142,7 +142,7 @@ public class TrendsLoadGatlingTest extends TestCase {
 	@Test
 	public void testTrendsLoadGatling331Test() {
 		TrendsLoad.parseArguments(new String[] { "-a", "junit331", "-i", "./src/test/resources/GatlingResults", "-l","simulation.logv331",
-				"-d", Mark59Constants.H2MEM, "-s","metricsmem",	"-e","responseTimeInMillis|errormsgStartsWith2|errormsgStartsWith",  "-t","GATLING"  });
+				"-d", Mark59Constants.H2MEM, "-s","trendsmem",	"-e","responseTimeInMillis|errormsgStartsWith2|errormsgStartsWith",  "-t","GATLING"  });
 		SpringApplication springApplication = new SpringApplication(TrendsLoad.class);
 		springApplication.setWebApplicationType(WebApplicationType.NONE);
 		springApplication.setBannerMode(Banner.Mode.OFF);	
@@ -194,7 +194,7 @@ public class TrendsLoadGatlingTest extends TestCase {
 				eventMapping.getIsPercentage(), eventMapping.getIsInvertedPercentage(), eventMapping.getComment());
 		
 		TrendsLoad.parseArguments(new String[] { "-a", "junit351", "-i", "./src/test/resources/GatlingResults", "-l","simulation.logv351",
-				"-d", Mark59Constants.H2MEM, "-s","metricsmem",	"-t","GATLING"  });
+				"-d", Mark59Constants.H2MEM, "-s","trendsmem",	"-t","GATLING"  });
 		SpringApplication springApplication = new SpringApplication(TrendsLoad.class);
 		springApplication.setWebApplicationType(WebApplicationType.NONE);
 		springApplication.setBannerMode(Banner.Mode.OFF);	
@@ -240,7 +240,7 @@ public class TrendsLoadGatlingTest extends TestCase {
 	@Test
 	public void testTrendsLoadGatling360Test() {
 		TrendsLoad.parseArguments(new String[] { "-a", "junit360", "-i", "./src/test/resources/GatlingResults", "-l","simulation.logv360",
-				"-d", Mark59Constants.H2MEM, "-s","metricsmem",	"-e","responseTimeInMillis",  "-t","GATLING"  });
+				"-d", Mark59Constants.H2MEM, "-s","trendsmem",	"-e","responseTimeInMillis",  "-t","GATLING"  });
 		SpringApplication springApplication = new SpringApplication(TrendsLoad.class);
 		springApplication.setWebApplicationType(WebApplicationType.NONE);
 		springApplication.setBannerMode(Banner.Mode.OFF);	
@@ -275,7 +275,7 @@ public class TrendsLoadGatlingTest extends TestCase {
 	@Test
 	public void testTrendsLoadGatling900CustomTest() {
 		TrendsLoad.parseArguments(new String[] { "-a", "junit900", "-i", "./src/test/resources/GatlingResults", "-l","simulation.log900Custom",
-				"-d", Mark59Constants.H2MEM, "-s","metricsmem",	"-m","3,4,5,6,7",  "-t","GATLING"  });
+				"-d", Mark59Constants.H2MEM, "-s","trendsmem",	"-m","3,4,5,6,7",  "-t","GATLING"  });
 		SpringApplication springApplication = new SpringApplication(TrendsLoad.class);
 		springApplication.setWebApplicationType(WebApplicationType.NONE);
 		springApplication.setBannerMode(Banner.Mode.OFF);	

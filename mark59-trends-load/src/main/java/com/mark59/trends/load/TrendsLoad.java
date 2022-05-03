@@ -123,7 +123,7 @@ public class TrendsLoad  implements CommandLineRunner
 																+ "** NOTE: all db options applicable to MySQL or Postgres ONLY\n"  
 																+ "*******************************************");
 		options.addOption("p", "dbPort",    			true, "Port number for the database where results will be held (defaults to 3306 for MySQL, 5432 for Postgres, 9902 for H2 tcp)" );		
-		options.addOption("s", "dbSchema",				true, "database schema (MySQL terminology) / database name (Postgres terminology) defaults to metricsdb" );
+		options.addOption("s", "dbSchema",				true, "database schema (MySQL terminology) / database name (Postgres terminology) defaults to mark59trendsdb" );
 		options.addOption("u", "dbUsername",   			true, "Username for the database (defaults to admin)" );				
 		options.addOption("w", "dbpassWord",   			true, "Password for the database" );				
 		options.addOption("y", "dbpassencrYpted",		true, "Encrypted Password for the database (value as per the encryption used by mark59-metrics application 'Edit Server Profile' page)");				
@@ -232,7 +232,7 @@ public class TrendsLoad  implements CommandLineRunner
 		
 		String dbserver	 	 	= commandLine.getOptionValue("h", "localhost");
 		String dbPort 	 	 	= commandLine.getOptionValue("p", dbDefaultPort);
-		String dbSchema	 		= commandLine.getOptionValue("s", "metricsdb");
+		String dbSchema	 		= commandLine.getOptionValue("s", "mark59trendsdb");
 		String dbUsername 	 	= commandLine.getOptionValue("u", "admin");
 		String dbxtraurlparms	= commandLine.getOptionValue("q", "");
 	
@@ -259,12 +259,12 @@ public class TrendsLoad  implements CommandLineRunner
 		if (Mark59Constants.H2.equalsIgnoreCase(argDatabasetype)){
 			dbserver   = "localhost (all db settings hard-coded for h2";
 			dbPort     = "";
-			dbSchema   = "metrics";
+			dbSchema   = "trends";
 			dbUsername = "sa";
 		} else if (Mark59Constants.H2MEM.equalsIgnoreCase(argDatabasetype)){
 			dbserver   = "localhost (all db settings hard-coded for h2mem)";
 			dbPort     = "";
-			dbSchema   = "metricsmem";
+			dbSchema   = "trendsmem";
 			dbUsername = "sa";			
 		} 
 		
@@ -281,7 +281,7 @@ public class TrendsLoad  implements CommandLineRunner
 		
 		System.out.println();
 		System.out.println("TrendsLoad executing using the following arguments " );
-		System.out.println("------------------------------------------------ " );	
+		System.out.println("-------------------------------------------------- " );	
 		System.out.println(" application    : " + argApplication );				    
 		System.out.println(" input          : " + argInput );
 		System.out.println(" database       : " + argDatabasetype );
@@ -310,17 +310,17 @@ public class TrendsLoad  implements CommandLineRunner
 		System.out.println( "   1. JMeter example ");
 		System.out.println( "   Process JMeter xml formatted result in directory C:/jmeter-results/BIGAPP  (file/s ends in .xml)");
 		System.out.println( "   The graph application name will be MY_COMPANY_BIG_APP, with a reference for this run of 'run ref 645'.");
-		System.out.println( "   The metricsdb database is hosted locally on a MySql instance assigned to port 3309 (default user/password of admin/admin) : "  );
+		System.out.println( "   The mark59trendsdb database is hosted locally on a MySql instance assigned to port 3309 (default user/password of admin/admin) : "  );
 		System.out.println( "   java -jar mark59-trends-load.jar -a MY_COMPANY_BIG_APP -i C:/jmeter-results/BIGAPP -r \"run ref 645\" -p 3309  ");
 		System.out.println( "   2. Gatling example ");
 		System.out.println( "   Process Gatling simulation.log in directory C:/GatlingProjects/myBigApp");
 		System.out.println( "   The graph application name will be MY_COMPANY_BIG_APP, with a reference for this run of 'GatlingIsCool'.");
-		System.out.println( "   The metricsdb database is hosted locally on a Postgres instance using all defaults (but you want to disable sslmode) "  );
+		System.out.println( "   The mark59trendsdb database is hosted locally on a Postgres instance using all defaults (but you want to disable sslmode) "  );
 		System.out.println( "   java -jar mark59-trends-load.jar -a MY_COMPANY_BIG_APP -i C:/GatlingProjects/myBigApp -d pg -q \"?sslmode=disable\" -t GATLING  -r \"GatlingIsCool\" ");		
 		System.out.println( "   3. Loadrunner example");		
 		System.out.println( "   Process Loadrunner analysis result at C:/templr/BIGAPP/AnalysisSession (containing file AnalysisSession.mdb).  ");
 		System.out.println( "   The graph application name will be MY_COMPANY_BIG_APP, with a reference for this run of 'run ref 644'.");
-		System.out.println( "   The metricsdb database is hosted locally on a MySql instance assigned to port 3309 (default user/password of admin/admin) : "  );
+		System.out.println( "   The mark59trendsdb database is hosted locally on a MySql instance assigned to port 3309 (default user/password of admin/admin) : "  );
 		System.out.println( "   java -jar mark59-trends-load.jar -a MY_COMPANY_BIG_APP -i C:/templr/BIGAPP/AnalysisSession/AnalysisSession.mdb -r \"run ref 644\" -p 3309 -t LOADRUNNER" );
 		System.out.println();
 	}

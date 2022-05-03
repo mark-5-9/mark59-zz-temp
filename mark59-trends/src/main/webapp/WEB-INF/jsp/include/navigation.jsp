@@ -27,10 +27,10 @@ if (reqApp != null && !reqApp.isEmpty()) {
   <a <% if (path.contains("graphmapping")){ %> class="active" <% } %> href="graphMappingList">Graph Mapping Admin</a>
  
   <c:if test="${currentDatabaseProfile == 'h2'}">  
-      <a <% if (path.contains("h2-console")) { %> class="active" <% } %> href="h2-console">H2 Console URL: jdbc:h2:~/metrics</a> 
+      <a <% if (path.contains("h2-console")) { %> class="active" <% } %> href="h2-console">H2 Console URL: jdbc:h2:~/trends</a> 
   </c:if>
   <c:if test="${currentDatabaseProfile == 'h2mem'}">  
-      <a <% if (path.contains("h2-console")) { %> class="active" <% } %> href="h2-console">H2 Console URL: jdbc:h2:mem:metricsmem</a> 
+      <a <% if (path.contains("h2-console")) { %> class="active" <% } %> href="h2-console">H2 Console URL: jdbc:h2:mem:trendsmem</a> 
   </c:if>    
   
 </div>

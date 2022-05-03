@@ -1,6 +1,6 @@
 REM   -------------------------------------------------------------------------------------------------------------------------------------------------
 REM   |  This bat assumes - the mark59-trends.war file exists in the ./target directory (relative to this file) 
-REM   |                   - when using a mySQL database, the metricsdb database exists locally (using defaults)
+REM   |                   - when using a mySQL database, the mark59trendsdb database exists locally (using defaults)
 REM   |
 REM   |  Alternative to running this .bat (H2 database ONLY)
 REM   |		 - login  to the server-metrics-web application  "http://localhost:8085/mark59-trends" 
@@ -38,12 +38,12 @@ IF "%DATABASE%" == "H2MEM" (
 
 IF "%DATABASE%" == "MYSQL" (
 	rem Using MySQL.  Starting Trend Analysis. Providing DB connection and server information (using default values)  
-	java -jar ./target/mark59-trends.war --spring.profiles.active=mysql --port=8083  --mysql.server=localhost --mysql.port=3306  --mysql.schema=metricsdb  --mysql.xtra.url.parms="?allowPublicKeyRetrieval=true&useSSL=false" --mysql.username=admin --mysql.password=admin
+	java -jar ./target/mark59-trends.war --spring.profiles.active=mysql --port=8083  --mysql.server=localhost --mysql.port=3306  --mysql.schema=mark59trendsdb  --mysql.xtra.url.parms="?allowPublicKeyRetrieval=true&useSSL=false" --mysql.username=admin --mysql.password=admin
 )
 
 IF "%DATABASE%"=="POSTGRES" (
 	rem Using Postgres   Starting Trend Analysis. Providing DB connection and server information (using postres default values) 
-	java -jar ./target/mark59-trends.war --spring.profiles.active=pg ---port=8083  --pg.server=localhost --pg.port=5432  --pg.database=metricsdb --pg.xtra.url.parms="?sslmode=disable" --pg.username=admin --pg.password=admin
+	java -jar ./target/mark59-trends.war --spring.profiles.active=pg ---port=8083  --pg.server=localhost --pg.port=5432  --pg.database=mark59trendsdb --pg.xtra.url.parms="?sslmode=disable" --pg.username=admin --pg.password=admin
 )
 
 PAUSE

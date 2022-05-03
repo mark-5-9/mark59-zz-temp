@@ -2,7 +2,7 @@
 #   |  Load DataHunter Test Results to Mark59 Trends Analysis database.
 #   | 
 #   |  This bat assumes - the mark59-trends-load.jar file exists in the ./target directory (relative to this file) 
-#   |                   - when using a MySQL or Postgres database, the metricsdb database exists locally (using defaults)
+#   |                   - when using a MySQL or Postgres database, the mark59trendsdb database exists locally (using defaults)
 #   |
 #   |  Notes : the use of double quotes in a few places, required to cater for the & (ampersand) char, or to enter a space (equates to a blank here). 
 #   |          the current time is use as the reference..
@@ -50,11 +50,11 @@ fi
 
 if [ "$DATABASE" = "MYSQL" ]; then
 	# using MySQL:  Starting mark59-trends-load batch with some parameters provided (defaults taken on other parameters. ) 
-	java -jar ./target/mark59-trends-load.jar -a DataHunter -i ~/Mark59_Runs/Jmeter_Results/DataHunter/ -d mysql -h localhost  -p 3306 -s metricsdb -q "?allowPublicKeyRetrieval=true&useSSL=false" -t JMETER  -r ${CURRENTDATE}
+	java -jar ./target/mark59-trends-load.jar -a DataHunter -i ~/Mark59_Runs/Jmeter_Results/DataHunter/ -d mysql -h localhost  -p 3306 -s mark59trendsdb -q "?allowPublicKeyRetrieval=true&useSSL=false" -t JMETER  -r ${CURRENTDATE}
 fi
 
 if [ "$DATABASE" = "POSTGRES" ]; then
 	# using Postgress:  Starting mark59-trends-load batch with some parameters provided (defaults taken on other parameters. ) 
-	java -jar ./target/mark59-trends-load.jar -a DataHunter -i ~/Mark59_Runs/Jmeter_Results/DataHunter/ -d pg -h localhost  -p 5432 -s metricsdb -q "?sslmode=disable" -t JMETER  -r ${CURRENTDATE}
+	java -jar ./target/mark59-trends-load.jar -a DataHunter -i ~/Mark59_Runs/Jmeter_Results/DataHunter/ -d pg -h localhost  -p 5432 -s mark59trendsdb -q "?sslmode=disable" -t JMETER  -r ${CURRENTDATE}
 fi
 

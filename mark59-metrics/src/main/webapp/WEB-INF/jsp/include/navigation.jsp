@@ -16,10 +16,10 @@ String path = request.getServletPath().toLowerCase();
   <a <% if (path.contains("parserlist")){ %> class="active" <% } %> href="commandResponseParserList">Response Parsers</a>
   
   <c:if test="${currentDatabaseProfile == 'h2'}">
-      <a <% if (path.contains("h2-console")) { %> class="active" <% } %> href="h2-console">H2 Console URL: jdbc:h2:~/servers</a>
+      <a <% if (path.contains("h2-console")) { %> class="active" <% } %> href="h2-console">H2 Console URL: jdbc:h2:~/metrics</a>
   </c:if>       
  <c:if test="${currentDatabaseProfile == 'h2mem'}">
-      <a <% if (path.contains("h2-console")) { %> class="active" <% } %> href="h2-console">H2 Console URL: jdbc:h2:mem:serversmem</a>
+      <a <% if (path.contains("h2-console")) { %> class="active" <% } %> href="h2-console">H2 Console URL: jdbc:h2:mem:metricsmem</a>
   </c:if>       
   
   <a <% if (path.contains("logout")) { %> class="active" <% } %> href="logout">Logout</a>  

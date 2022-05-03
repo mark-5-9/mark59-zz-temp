@@ -2,7 +2,7 @@ REM   --------------------------------------------------------------------------
 REM   |  Load DataHunter Test Results to Mark59 Trends Analysis database.
 REM   | 
 REM   |  This bat assumes - the mark59-trends-load.jar file exists in the ./target directory (relative to this file) 
-REM   |                   - when using a MySQL or Postgres database, the metricsdb database exists locally (using defaults)
+REM   |                   - when using a MySQL or Postgres database, the mark59trendsdb database exists locally (using defaults)
 REM   |
 REM   |  Notes : the use of double quotes in a few places, required to cater for the & (ampersand) char, or to enter a space (equates to a blank here). 
 REM   |          the current time is use as the reference..
@@ -48,12 +48,12 @@ IF "%DATABASE%" == "H2MEM" (
 
 IF "%DATABASE%" == "MYSQL" (
 	rem using MySQL:  Starting mark59-trends-load batch with some parameters provided (defaults taken on other parameters. ) 
-	java -jar ./target/mark59-trends-load.jar -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -k true -d mysql -h localhost  -p 3306 -s metricsdb -q "?allowPublicKeyRetrieval=true&useSSL=false" -t JMETER  -r "uploaded %date% %time%"
+	java -jar ./target/mark59-trends-load.jar -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -k true -d mysql -h localhost  -p 3306 -s mark59trendsdb -q "?allowPublicKeyRetrieval=true&useSSL=false" -t JMETER  -r "uploaded %date% %time%"
 )
 
 IF "%DATABASE%"=="POSTGRES" (
 	rem using Postgress:  Starting mark59-trends-load batch with some parameters provided (defaults taken on other parameters. ) 
-	java -jar ./target/mark59-trends-load.jar -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -d pg -h localhost  -p 5432 -s metricsdb -q "?sslmode=disable" -t JMETER  -r "uploaded %date% %time%"
+	java -jar ./target/mark59-trends-load.jar -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -d pg -h localhost  -p 5432 -s mark59trendsdb -q "?sslmode=disable" -t JMETER  -r "uploaded %date% %time%"
 )
 
 PAUSE

@@ -1,7 +1,7 @@
--- DROP DATABASE IF EXISTS metricsdb;
-CREATE DATABASE metricsdb CHARACTER SET utf8mb4  COLLATE utf8mb4_bin; 
+-- DROP DATABASE IF EXISTS mark59trendsdb;
+CREATE DATABASE mark59trendsdb CHARACTER SET utf8mb4  COLLATE utf8mb4_bin; 
 
-USE metricsdb;
+USE mark59trendsdb;
 
 -- PLEASE RUN  "MYSQLcreateAdminUser.sql"  TO CREATE THE 'ADMIN' USER IF YOU HAVE NOT ALREADY DONE SO.  
 

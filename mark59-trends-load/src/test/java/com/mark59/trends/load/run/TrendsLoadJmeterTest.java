@@ -28,12 +28,12 @@ public class TrendsLoadJmeterTest extends TestCase {
 	ApplicationContext context;
 
 	public void setUp() {
-		db = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).setName("metricsmem;MODE=MySQL;").addScript("copyofschema.sql").build();
+		db = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).setName("trendsmem;MODE=MySQL;").addScript("copyofschema.sql").build();
 	}
 	
 	@Test
 	public void testTrendsLoadJMeterGeneralTest() {
-		TrendsLoad.parseArguments(new String[] { "-a", "DataHunter", "-i", "./src/test/resources/JmeterResultsDataHunterGeneral", "-d", Mark59Constants.H2MEM, "-s","metricsmem",
+		TrendsLoad.parseArguments(new String[] { "-a", "DataHunter", "-i", "./src/test/resources/JmeterResultsDataHunterGeneral", "-d", Mark59Constants.H2MEM, "-s","trendsmem",
 				"-e","The operation lasted too long:|Test failed: text expected to contain|The result was the wrong size" });
 		SpringApplication springApplication = new SpringApplication(TrendsLoad.class);
 		springApplication.setWebApplicationType(WebApplicationType.NONE);
