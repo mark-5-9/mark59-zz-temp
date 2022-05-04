@@ -52,9 +52,9 @@ public class ApplicationEntry extends SpringBootServletInitializer {
     
     private static void setUserAccessibleDefinedVariables() {
     	// this variable is used in the win demo scripts (it's awkward to getting to pwd using the WMIC cmd window) 
-		System.setProperty(AppConstantsServerMetricsWeb.SERVER_METRICS_WEB_BASE_DIR, System.getProperty("user.dir"));
-		LOG.trace("User variable " + AppConstantsServerMetricsWeb.SERVER_METRICS_WEB_BASE_DIR + " : "
-				+ System.getProperty(AppConstantsServerMetricsWeb.SERVER_METRICS_WEB_BASE_DIR));
+		System.setProperty(AppConstantsServerMetricsWeb.METRICS_BASE_DIR, System.getProperty("user.dir"));
+		LOG.trace("User variable " + AppConstantsServerMetricsWeb.METRICS_BASE_DIR + " : "
+				+ System.getProperty(AppConstantsServerMetricsWeb.METRICS_BASE_DIR));
     }
 	
 }

@@ -14,28 +14,26 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties()
 public class PropertiesConfiguration {
 	
-	private String mark59servermetricswebuserid;
-	private String mark59servermetricswebpasswrd;
-	private String mark59servermetricswebhide;
+	private String mark59metricsid;
+	private String mark59metricspasswrd;
+	private String mark59metricshide;
 	
-	public String getMark59servermetricswebuserid() {
-		return mark59servermetricswebuserid;
+	public String getMark59metricsid() {
+		return mark59metricsid;
 	}
-	public void setMark59servermetricswebuserid(String mark59servermetricswebuserid) {
-		this.mark59servermetricswebuserid = mark59servermetricswebuserid;
+	public void setMark59metricsid(String mark59metricsid) {
+		this.mark59metricsid = mark59metricsid;
 	}
-	public String getMark59servermetricswebpasswrd() {
-		return mark59servermetricswebpasswrd;
+	public String getMark59metricspasswrd() {
+		return mark59metricspasswrd;
 	}
-	public void setMark59servermetricswebpasswrd(String mark59servermetricswebpasswrd) {
-		this.mark59servermetricswebpasswrd = mark59servermetricswebpasswrd;
+	public void setMark59metricspasswrd(String mark59metricspasswrd) {
+		this.mark59metricspasswrd = mark59metricspasswrd;
 	}
-	public String getMark59servermetricswebhide() {
-		return mark59servermetricswebhide;
+	public String getMark59metricshide() {
+		return mark59metricshide;
 	}
-	public void setMark59servermetricswebhide(String mark59servermetricswebhide) {
-		this.mark59servermetricswebhide = mark59servermetricswebhide;
+	public void setMark59metricshide(String mark59metricshide) {
+		this.mark59metricshide = mark59metricshide;
 	}
-	
-	
 }

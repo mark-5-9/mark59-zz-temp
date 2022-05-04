@@ -77,9 +77,9 @@ public class CommandDriverWinWmicImpl implements CommandDriver {
 		
 		if ("localhost".equalsIgnoreCase(serverProfile.getServer())) {
 			runtimeCommand = WMIC_DIR + MessageFormat.format(WMIC_COMMAND_LOCAL_FORMAT, command.getCommand().replaceAll("\\R", " "));
-			if (System.getProperty(AppConstantsServerMetricsWeb.SERVER_METRICS_WEB_BASE_DIR) != null ) {
+			if (System.getProperty(AppConstantsServerMetricsWeb.METRICS_BASE_DIR) != null ) {
 				runtimeCommand = runtimeCommand
-						.replace("%"+AppConstantsServerMetricsWeb.SERVER_METRICS_WEB_BASE_DIR+"%", System.getProperty(AppConstantsServerMetricsWeb.SERVER_METRICS_WEB_BASE_DIR));
+						.replace("%"+AppConstantsServerMetricsWeb.METRICS_BASE_DIR+"%", System.getProperty(AppConstantsServerMetricsWeb.METRICS_BASE_DIR));
 			}
 					
 			runtimeCommandLog = " :<br><font face='Courier'>" + runtimeCommand.replaceAll("\\R", " ")  + "</font>";

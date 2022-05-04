@@ -32,18 +32,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-		String userid   = springBootConfiguration.getMark59servermetricswebuserid();
-		String passwrd  = springBootConfiguration.getMark59servermetricswebpasswrd();
-		String hide     = springBootConfiguration.getMark59servermetricswebhide();
+		String id       = springBootConfiguration.getMark59metricsid();
+		String passwrd  = springBootConfiguration.getMark59metricspasswrd();
+		String hide     = springBootConfiguration.getMark59metricshide();
 		
 		if ( hide!= null && (hide.toLowerCase().startsWith("y") || hide.toLowerCase().startsWith("t"))){
 			System.out.println("hide activated");
 		} else {
-			System.out.println("userid=" + userid + ",passwrd=" + passwrd 
-					+ "       Please set 'mark59servermetricswebhide' as 'true' to hide credentials"
+			System.out.println("id=" + id + ",passwrd=" + passwrd 
+					+ "       Please set 'mark59metricshide' as 'true' to hide credentials"
 					+ " (either as a command line argument or OS environment variable)");
 		}
-		auth.inMemoryAuthentication().withUser(userid).password(encoder.encode(passwrd)).roles("USER");
+		auth.inMemoryAuthentication().withUser(id).password(encoder.encode(passwrd)).roles("USER");
 	}
     
 

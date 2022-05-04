@@ -8,9 +8,35 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
 ## Releases 
 
 <p>Release 5.x<br>
-  <ul>
-    <li>Refactor project, database and URL naming conventions</li>
-  </ul>  
+
+  <ul>  
+	<li>Change project, URL and database URL names.  This is planned as a once-off refactor :)
+	  <ul>
+	    <li>Web application Urls context path changes
+	       	<ul>
+				<li>/dataHunter                to /mark59-datahunter</li> 
+				<li>/mark59-server-metrics-web to /mark59-metrics</li>
+				<li>/metrics                   to /mark59-trends</li>     	
+	    	</ul> 
+		</li>
+	    <li>PG, MYSQL Database Renames
+	    	<ul>
+				<li>datahunterdb               to mark59datahunterdb</li> 
+				<li>mark59servermetricswebdb   to mark59metricsdb</li>
+				<li>metricsdb                  to mark59trendsdb</li>     	
+	    	</ul> 
+	    </li>
+	    <li>mark59-metrics (ex mark59-server-metrics-web) properties renamed 
+	    	<ul>
+				<li>mark59servermetricswebuserid  to mark59metricsid</li> 
+				<li>mark59servermetricswebpasswrd to mark59metricspasswrd</li>
+				<li>mark59servermetricswebhide    to mark59metricshide</li>     	
+	    	</ul> 
+	    </li>
+	  </ul>  
+	</li>
+
+  </ul>
 
   
 <p>Release 4.2<br>

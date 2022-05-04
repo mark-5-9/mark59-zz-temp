@@ -79,9 +79,9 @@ log.info   (&quot;OS property has been set to : &quot; + os );</stringProp>
             <stringProp name="Argument.value">25 5</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
-          <elementProp name="mark59ServerMetricsWebUrl" elementType="Argument">
-            <stringProp name="Argument.name">mark59ServerMetricsWebUrl</stringProp>
-            <stringProp name="Argument.value">${__P(Mark59ServerMetricsWebUrl,http://localhost:8085/mark59-metrics)}</stringProp>
+          <elementProp name="mark59MetricsUrl" elementType="Argument">
+            <stringProp name="Argument.name">mark59MetricsUrl</stringProp>
+            <stringProp name="Argument.value">${__P(Mark59MetricsUrl,http://localhost:8085/mark59-metrics)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
             <stringProp name="Argument.desc">see ServerMetrics_localhost thread group</stringProp>
           </elementProp>

@@ -88,8 +88,8 @@ INSERT INTO SERVERPROFILES VALUES ('NewRelicTestProfile', 'GROOVY_SCRIPT', NULL,
 
 INSERT INTO COMMANDS VALUES ('DataHunterSeleniumDeployAndExecute','WMIC_WINDOWS','process call create ''cmd.exe /c 
  echo Running Directly From Server Metrics Web (cmd DataHunterSeleniumDeployAndExecute) & 
- echo  SERVER_METRICS_WEB_BASE_DIR: %SERVER_METRICS_WEB_BASE_DIR% & 
- cd /D %SERVER_METRICS_WEB_BASE_DIR% &  
+ echo  METRICS_BASE_DIR: %METRICS_BASE_DIR% & 
+ cd /D %METRICS_BASE_DIR% &  
  cd ..\mark59-datahunter-samples & 
  DEL C:\apache-jmeter\bin\mark59.properties & COPY .\mark59.properties C:\apache-jmeter\bin &
  DEL C:\apache-jmeter\bin\chromedriver.exe  & COPY .\chromedriver.exe  C:\apache-jmeter\bin &
@@ -110,7 +110,7 @@ INSERT INTO COMMANDS VALUES ('DataHunterSeleniumDeployAndExecute','WMIC_WINDOWS'
 
  echo Starting JMeter DataHunter test ... &  
 
- jmeter -n -X -f -t %SERVER_METRICS_WEB_BASE_DIR%\..\mark59-datahunter-samples\test-plans\DataHunterSeleniumTestPlan.jmx -l C:\Mark59_Runs\Jmeter_Results\DataHunter\DataHunterTestResults.csv -JForceTxnFailPercent=0 -JDataHunterUrl=http://localhost:8081/mark59-datahunter -JStartCdpListeners=false &
+ jmeter -n -X -f -t %METRICS_BASE_DIR%\..\mark59-datahunter-samples\test-plans\DataHunterSeleniumTestPlan.jmx -l C:\Mark59_Runs\Jmeter_Results\DataHunter\DataHunterTestResults.csv -JForceTxnFailPercent=0 -JDataHunterUrl=http://localhost:8081/mark59-datahunter -JStartCdpListeners=false &
  PAUSE
 ''
 ','N','refer DeployDataHunterTestArtifactsToJmeter.bat and DataHunterExecuteJmeterTest.bat in mark59-datahunter-samples ','');
@@ -137,7 +137,7 @@ echo starting from $PWD;
     echo Deploy was unsuccessful! 
 }','Y','refer bin/TestRunLINUX-DataHunter-Selenium-DeployAndExecute.sh','');
 INSERT INTO COMMANDS VALUES ('DataHunterSeleniumGenJmeterReport','WMIC_WINDOWS','process call create ''cmd.exe /c 
- cd /D %SERVER_METRICS_WEB_BASE_DIR% & 
+ cd /D %METRICS_BASE_DIR% & 
  cd../mark59-results-splitter & 
  CreateDataHunterJmeterReports.bat''
 ','N','','');
@@ -155,7 +155,7 @@ echo starting from $PWD;
 ','Y','refer bin/TestRunLINUX-DataHunter-Selenium-GenJmeterReport.sh','');
 INSERT INTO COMMANDS VALUES ('DataHunterSeleniumTrendsLoad','WMIC_WINDOWS','process call create ''cmd.exe /c 
  echo Load DataHunter Test Results into Mark59 Trends Analysis PG database. & 
- cd /D  %SERVER_METRICS_WEB_BASE_DIR% & 
+ cd /D  %METRICS_BASE_DIR% & 
  cd ../mark59-trends-load &  
  
  java -jar ./target/mark59-trends-load.jar -a DataHunter -i C:\Mark59_Runs\Jmeter_Results\DataHunter -d pg &

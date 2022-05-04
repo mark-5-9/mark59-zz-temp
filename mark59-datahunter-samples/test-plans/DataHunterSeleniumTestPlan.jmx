@@ -29,9 +29,9 @@
             <stringProp name="Argument.value">25 5</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
-          <elementProp name="mark59ServerMetricsWebUrl" elementType="Argument">
-            <stringProp name="Argument.name">mark59ServerMetricsWebUrl</stringProp>
-            <stringProp name="Argument.value">${__P(Mark59ServerMetricsWebUrl,http://localhost:8085/mark59-metrics)}</stringProp>
+          <elementProp name="mark59MetricsUrl" elementType="Argument">
+            <stringProp name="Argument.name">mark59MetricsUrl</stringProp>
+            <stringProp name="Argument.value">${__P(Mark59MetricsUrl,http://localhost:8085/mark59-metrics)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
             <stringProp name="Argument.desc">see ServerMetrics_localhost thread group</stringProp>
           </elementProp>
@@ -579,9 +579,9 @@ return 0;</stringProp>
         <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="localhost_via_web" enabled="true">
           <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="MARK59_SERVER_METRICS_WEB_URL" elementType="Argument">
-                <stringProp name="Argument.name">MARK59_SERVER_METRICS_WEB_URL</stringProp>
-                <stringProp name="Argument.value">${mark59ServerMetricsWebUrl}</stringProp>
+              <elementProp name="MARK59_METRICS_URL" elementType="Argument">
+                <stringProp name="Argument.name">MARK59_METRICS_URL</stringProp>
+                <stringProp name="Argument.value">${mark59MetricsUrl}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="SERVER_PROFILE_NAME" elementType="Argument">
@@ -626,7 +626,7 @@ return 0;</stringProp>
               </elementProp>
               <elementProp name="build information: " elementType="Argument">
                 <stringProp name="Argument.name">build information: </stringProp>
-                <stringProp name="Argument.value">mark59-metrics version 4.2</stringProp>
+                <stringProp name="Argument.value">mark59-metrics-api version 5.0</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>

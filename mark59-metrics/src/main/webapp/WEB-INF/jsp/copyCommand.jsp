@@ -61,7 +61,7 @@
 
      <tr>
       <td></td>
-      <td id="winOnlyPredefinedVars" style="color:grey;font-size:small;"><b>predefined (win only):&nbsp;&nbsp;</b>%SERVER_METRICS_WEB_BASE_DIR%</td>          
+      <td id="winOnlyPredefinedVars" style="color:grey;font-size:small;"><b>predefined (win only):&nbsp;&nbsp;</b>%METRICS_BASE_DIR%</td>          
      </tr>
 
      <tr>

@@ -31,7 +31,7 @@ public class AppConstantsServerMetricsWeb {
 
 	public static final String SERVER_PROFILE_NOT_FOUND  = "SERVER_PROFILE_NOT_FOUND";	
 	
-	public static final String SERVER_METRICS_WEB_BASE_DIR 	= "SERVER_METRICS_WEB_BASE_DIR"; 
+	public static final String METRICS_BASE_DIR 	= "METRICS_BASE_DIR"; 
 	
 	
 	public enum OS {

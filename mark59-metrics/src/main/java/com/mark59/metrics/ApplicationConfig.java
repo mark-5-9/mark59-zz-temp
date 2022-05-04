@@ -33,6 +33,7 @@ import com.mark59.metrics.data.servercommandlinks.dao.ServerCommandLinksDAOjdbcT
 import com.mark59.metrics.data.serverprofiles.dao.ServerProfilesDAO;
 import com.mark59.metrics.data.serverprofiles.dao.ServerProfilesDAOjdbcTemplateImpl;
 
+
 /**
  * Create  Spring bean(s) via program rather than XML configuration<br>
  * 
@@ -92,8 +93,5 @@ public class ApplicationConfig {
     public BaseDAO baseDAO() {
 	    return new BaseDAOjdbcTemplateImpl();
 	}     
-    
-    
-    
     
 }
