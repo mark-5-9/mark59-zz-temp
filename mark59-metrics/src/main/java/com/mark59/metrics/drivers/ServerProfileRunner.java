@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mark59.metrics.utils;
+package com.mark59.metrics.drivers;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -35,15 +35,16 @@ import com.mark59.metrics.data.commandparserlinks.dao.CommandParserLinksDAO;
 import com.mark59.metrics.data.commands.dao.CommandsDAO;
 import com.mark59.metrics.data.servercommandlinks.dao.ServerCommandLinksDAO;
 import com.mark59.metrics.data.serverprofiles.dao.ServerProfilesDAO;
-import com.mark59.metrics.drivers.CommandDriver;
 import com.mark59.metrics.pojos.CommandDriverResponse;
 import com.mark59.metrics.pojos.ParsedCommandResponse;
 import com.mark59.metrics.pojos.ParsedMetric;
 import com.mark59.metrics.pojos.WebServerMetricsResponsePojo;
+import com.mark59.metrics.utils.AppConstantsServerMetricsWeb;
+import com.mark59.metrics.utils.ServerMetricsWebUtils;
 import com.mark59.metrics.utils.AppConstantsServerMetricsWeb.CommandExecutorDatatypes;
 
 /**
- * Controls commands to be processed on the server profile target server.  
+ * Invokes the commands to be processed for a given Server Profile (Groovy script or on the server profile target server).  
  * 
  * @author Philip Webb
  * Written: Australian Autumn 2020 
@@ -57,8 +58,7 @@ public class ServerProfileRunner {
 	private static int parsingFailureCount;
 		
 	/**
-	 * Controls the driving and parsing of commands for a server profile executed on the target server, 
-	 * and formats the responses.   
+	 * Controls the driving and parsing of commands for a server profile and formats the responses.   
 	 * 
 	 * @param reqServerProfileName server profile
 	 * @param reqTestMode  running in test mode (eg via the web app)
@@ -98,16 +98,16 @@ public class ServerProfileRunner {
 			List<ParsedCommandResponse> parsedCommandResponses = new ArrayList<>();
 			List<ServerCommandLink> serverCommandLinks = serverCommandLinksDAO.findServerCommandLinksForServerProfile(serverProfile.getServerProfileName());  
 			
-			for (ServerCommandLink serverCommandLink : serverCommandLinks) {      		// loop thru each command linked to the server profile
+			for (ServerCommandLink serverCommandLink : serverCommandLinks) {  // loop thru and execute each command linked to the server profile
 			
 				Command command = commandsDAO.findCommand(serverCommandLink.getCommandName());
 			
 				CommandDriver driver =  CommandDriver.init(command.getExecutor(), serverProfile);	
-				CommandDriverResponse commandDriverResponse = driver.executeCommand(command);         // execute command 
+				CommandDriverResponse commandDriverResponse = driver.executeCommand(command); 
 	
 				logLines.add("<b><a href=./editCommand?&reqCommandName=" + command.getCommandName() + ">" + command.getCommandName() + "</a></b> command invoked");
 				
-				if (commandDriverResponse.isCommandFailure()){
+				if (commandDriverResponse.isCommandFailure()){                // on command failure on any type of driver, just log the error 
 					
 					String failureMsg  = "server profile " + reqServerProfileName +"<br> command " + command.getCommandName() + " has failed."
 							+ "<br> Command Log : "	+ commandDriverResponse.getCommandLog() + ".";
@@ -116,10 +116,11 @@ public class ServerProfileRunner {
 					logLines.add("<br><font color='red'><b>Execution has errored. </b></font> " );
 				
 				} else if  (CommandExecutorDatatypes.GROOVY_SCRIPT.getExecutorText().equalsIgnoreCase(command.getExecutor())){
+					// Groovy script command responses don't need to invoke a 'Parser'
 					
 					LOG.debug("ServerProfileRunner commandDriverResponse : " + commandDriverResponse   );
 					
-					ParsedCommandResponse parsedCommandResponse = new ParsedCommandResponse();    // only one command for a Script profile
+					ParsedCommandResponse parsedCommandResponse = new ParsedCommandResponse(); 
 					parsedCommandResponse.setCommandName(command.getCommandName());
 					parsedCommandResponse.setScriptName(command.getCommandName());
 					
@@ -137,14 +138,14 @@ public class ServerProfileRunner {
 						logLines.addAll(logParsedMetrics(parsedCommandResponse.getParsedMetrics()));
 					}					
 					parsedCommandResponses.add(parsedCommandResponse);
-					
-				} else {
+
+				} else {                                                      // invoke Parsers on a successful non-Groovy command response 
 				
 					logLines.add("<br>" + command.getCommand());
 					
 					List<CommandParserLink> commandParserLinks = commandParserLinksDAO.findCommandParserLinksForCommand(command.getCommandName());
 					
-					for (CommandParserLink commandParserLink : commandParserLinks) {		// run thru each parser linked to the executed command
+					for (CommandParserLink commandParserLink : commandParserLinks) {
 					
 						CommandResponseParser commandResponseParser = commandResponseParsersDAO.findCommandResponseParser(commandParserLink.getScriptName()); 
 						

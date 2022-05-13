@@ -1,24 +1,24 @@
-package com.mark59.metrics.test;
-
-import static org.junit.Assert.assertEquals;
+package com.mark59.metrics.drivers;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.testng.annotations.Test;
+
 import com.mark59.metrics.data.beans.ServerProfile;
-import com.mark59.metrics.drivers.ServerProfileRunnerTest;
 import com.mark59.metrics.pojos.ParsedMetric;
 import com.mark59.metrics.pojos.ScriptResponse;
 
-public class UtilsTest   {
-	
+import junit.framework.TestCase;
 
-    public void emptyTest()
-    {
-        System.out.println( "tesing not implemented");
-        
-		
-		System.out.println("************  running the test ***********************");
+/**
+ * May need to check 'JUnit4' is set as the Test Runner in Eclipse config 
+ */
+@Test
+public class ServerProfileRunnerTest extends TestCase {	
+	
+	@Test
+	public void testSimpleScriptResponseTest() {
 		
 		ScriptResponse scriptResponse = ServerProfileRunnerTest.runScript();
 	
@@ -48,7 +48,6 @@ public class UtilsTest   {
 		scriptResponse.setCommandLog(commandLogForDebugging);
 		scriptResponse.setParsedMetrics(parsedMetrics);
 		return scriptResponse;
-
 	}
-
+	
 }

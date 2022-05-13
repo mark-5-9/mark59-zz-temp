@@ -53,7 +53,7 @@ public class ApplicationConfig {
     private String springProfilesActive;	
 	
     @Bean
-    public String ccurrentDatabaseProfile() {
+    public String currentDatabaseProfile() {
         return springProfilesActive;
     }   
     

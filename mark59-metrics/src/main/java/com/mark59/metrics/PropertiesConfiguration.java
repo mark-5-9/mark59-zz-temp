@@ -3,10 +3,10 @@ package com.mark59.metrics;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * reference: 
- * https://www.theserverside.com/video/How-applicationproperties-simplifies-Spring-config 
- * Note: something like @ConfigurationProperties(prefix="mark59.user") as dots don't work nicely with shell. Also 
- * in Linux you need to execute from terminal (a GUI editor may not pick up env vars)    
+ * Reference: https://www.theserverside.com/video/How-applicationproperties-simplifies-Spring-config 
+ * Note: something like @ConfigurationProperties(prefix="mark59.metrics") as shown in reference 
+ * isn't used as dots don't work nicely with shell. Also in Linux you need to execute from terminal 
+ * (a GUI editor may not pick up env vars)    
  * 
  * @author Philip Webb
  * Written: Australian Autumn 2020    
@@ -17,6 +17,7 @@ public class PropertiesConfiguration {
 	private String mark59metricsid;
 	private String mark59metricspasswrd;
 	private String mark59metricshide;
+	private String mark59metricswmicdelay;
 	
 	public String getMark59metricsid() {
 		return mark59metricsid;
@@ -35,5 +36,11 @@ public class PropertiesConfiguration {
 	}
 	public void setMark59metricshide(String mark59metricshide) {
 		this.mark59metricshide = mark59metricshide;
+	}
+	public String getMark59metricswmicdelay() {
+		return mark59metricswmicdelay;
+	}
+	public void setMark59metricswmicdelay(String mark59metricswmicdelay) {
+		this.mark59metricswmicdelay = mark59metricswmicdelay;
 	}
 }
