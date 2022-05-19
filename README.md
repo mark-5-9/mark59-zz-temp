@@ -35,7 +35,7 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
 	    </li>
 	  </ul>  
 	</li>
-
+	<li>BUG fix : PERFLOG was outputting blank files in v4.2
   </ul>
 
   

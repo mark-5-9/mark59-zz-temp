@@ -18,7 +18,7 @@ package com.mark59.selenium.drivers;
 
 import java.io.File;
 import java.util.List;
-
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
@@ -51,13 +51,13 @@ public class ChromeDriverWrapper extends SeleniumDriverWrapper {
 
 		List<LogEntry> logs = this.getDriverPackage().manage().logs().get(LogType.PERFORMANCE).getAll();
 
-		StringBuilder compoundLogBuilder = new StringBuilder();
+		StringBuilder allEntriesLogBuilder = new StringBuilder();
 
 		for (LogEntry entry : logs) {
-			compoundLogBuilder.append(entry.toString()).append("\n");
+			allEntriesLogBuilder.append(entry.toString()).append("\n");
 		}
 
-		return compoundLogBuilder.toString();
+		return allEntriesLogBuilder.toString();
 	}
 
 	
@@ -74,19 +74,21 @@ public class ChromeDriverWrapper extends SeleniumDriverWrapper {
 	public void writeDriverLogs(String textFileName) {
 		if (LOG.isTraceEnabled())
 			LOG.trace(Thread.currentThread().getName() + " : writing driver log, (partial) name " + textFileName);
-
-		if (this.getDriverLogs() != null) {
-			ScreenshotLoggingHelper.writeScreenshotLog(
-					new File(ScreenshotLoggingHelper.buildFullyQualifiedImageName(textFileName, "txt")), this.getDriverLogs().getBytes());
-		}
+		
+		ScreenshotLoggingHelper.writeScreenshotLog(
+					new File(ScreenshotLoggingHelper.buildFullyQualifiedImageName(textFileName, "txt")), getDriverLogBytes());
 	}
 	
 	
 	@Override	
 	public void bufferDriverLogs(String textFileName) {
-		if (this.getDriverLogs() != null) {
-			bufferedArtifacts.put(ScreenshotLoggingHelper.buildFullyQualifiedImageName(textFileName, "txt"), this.getDriverLogs().getBytes() );
-		}
+		bufferedArtifacts.put(ScreenshotLoggingHelper.buildFullyQualifiedImageName(textFileName, "txt"), getDriverLogBytes());
 	}
 
+		
+	private byte[] getDriverLogBytes() {
+		String allEntriesLog = this.getDriverLogs();
+		return StringUtils.isNotBlank(allEntriesLog) ? allEntriesLog.getBytes() : null;
+	}
+	
 }
