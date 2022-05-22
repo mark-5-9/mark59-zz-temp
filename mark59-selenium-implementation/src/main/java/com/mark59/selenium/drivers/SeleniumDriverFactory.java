@@ -23,15 +23,20 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 
-import com.mark59.core.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.Proxy;
 
-import com.mark59.core.DriverWrapper;
+import com.mark59.core.Mark59Driver;
 import com.mark59.core.factories.DriverWrapperFactory;
+import com.mark59.core.utils.IpUtilities;
+import com.mark59.core.utils.Mark59Constants;
+import com.mark59.core.utils.Mark59Utils;
+import com.mark59.core.utils.PropertiesKeys;
+import com.mark59.core.utils.PropertiesReader;
+import com.mark59.core.utils.ScreenshotLoggingHelper;
 import com.mark59.selenium.corejmeterimpl.JmeterFunctionsForSeleniumScripts;
 
 /**
@@ -193,7 +198,7 @@ public class SeleniumDriverFactory implements DriverWrapperFactory {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends DriverWrapper<?>> T makeDriverWrapper(Map<String, String> arguments) {
+	public <T extends Mark59Driver<?>> T makeDriverWrapper(Map<String, String> arguments) {
 		if (LOG.isDebugEnabled()){LOG.debug("SeleniumDriverFactory : makeDriverWrapper : " + Mark59Utils.prettyPrintMap(arguments));}
 			
 		if (arguments.isEmpty())
@@ -273,7 +278,7 @@ public class SeleniumDriverFactory implements DriverWrapperFactory {
 		//TODO:  Maybe allow script argument to turn on or off more detailed driver performance logging (output seemed similar in test cases either way)
 		builder.setVerbosePerformanceLoggingLogging(false);
 		
-		return (T) builder.build(arguments);
+		return (T) ((ChromeDriverBuilder) builder).build(arguments);
 	}
 
 	

@@ -32,15 +32,15 @@ import com.mark59.core.utils.ScreenshotLoggingHelper;
  * @author Philip Webb
  * Written: Australian Winter 2019  
  */
-public class ChromeDriverWrapper extends SeleniumDriverWrapper {
+public class Mark59SeleniumChromeDriver extends Mark59SeleniumDriver {
 	
-	private static final Logger LOG = LogManager.getLogger(ChromeDriverWrapper.class);
+	private static final Logger LOG = LogManager.getLogger(Mark59SeleniumChromeDriver.class);
 
 	/**
-	 * @param dataPackage the WebDrive to be 'packaged'
+	 * @param webDriver the WebDriver to be 'packaged'
 	 */
-	public ChromeDriverWrapper(WebDriver dataPackage) {
-		super(dataPackage);
+	public Mark59SeleniumChromeDriver(WebDriver webDriver) {
+		super(webDriver);
 	}
 
 	

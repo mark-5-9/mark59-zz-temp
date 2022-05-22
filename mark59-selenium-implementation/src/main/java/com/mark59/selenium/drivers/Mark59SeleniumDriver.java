@@ -27,7 +27,7 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 
-import com.mark59.core.ScreenshotEnabledDriverWrapper;
+import com.mark59.core.Mark59Driver;
 import com.mark59.core.utils.ScreenshotLoggingHelper;
 
 /**
@@ -35,16 +35,16 @@ import com.mark59.core.utils.ScreenshotLoggingHelper;
  * @author Philip Webb
  * Written: Australian Winter 2019  
  */
-public abstract class SeleniumDriverWrapper extends ScreenshotEnabledDriverWrapper<WebDriver> {
+public abstract class Mark59SeleniumDriver extends Mark59Driver<WebDriver> {
 
-	private static final Logger LOG = LogManager.getLogger(SeleniumDriverWrapper.class);
+	private static final Logger LOG = LogManager.getLogger(Mark59SeleniumDriver.class);
 	
 
 	/**
-	 * @param dataPackage the WebDriver to package
+	 * @param webDriver the WebDriver to package
 	 */
-	public SeleniumDriverWrapper(WebDriver dataPackage) {
-		super(dataPackage);
+	public Mark59SeleniumDriver(WebDriver webDriver) {
+		super(webDriver);
 	}
 	
 

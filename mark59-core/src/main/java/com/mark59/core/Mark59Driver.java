@@ -31,31 +31,108 @@ import org.apache.logging.log4j.Logger;
 import com.mark59.core.utils.ScreenshotLoggingHelper;
 
 /**
- * Generic Wrapper class that can be used to pass the driver required by a particular test through the layers of mark59.
- * <p>This wrapper is to encapsulate a driver that knows how to take a screenshot accessible through: protected byte[] driverTakeScreenshot()
- *
- * @param <T> Concrete Driver to be wrapped. Driver is expected to have screenshot capability.
+ * Wrapper class used to encapsulate an arbitrary Driver object, where the
+ * Driver object knows how to perform an arbitrary set of functions necessary to
+ * execute the test.
  * 
+ * <p>A driver is also expect to knows how to take a screenshot accessible 
+ * through {@link #driverTakeScreenshot()} 
+ * 
+ * <p>For a selenium implementation of a driver, it would be expected to be a type of WebDriver  
+ * 
+ * @param <T> Concrete Driver to be wrapped
  * @author Michael Cohen
- * @author Philip Webb
- * Written: Australian Winter 2019 
+ * Written: Australian Winter 2019
  */
-public abstract class ScreenshotEnabledDriverWrapper<T> extends DriverWrapper<T> {
+public abstract class Mark59Driver<T> {
 
-	private static final Logger LOG = LogManager.getLogger(ScreenshotEnabledDriverWrapper.class);
-
+	private static final Logger LOG = LogManager.getLogger(Mark59Driver.class);
+	
+	private final String driverClass;
+	private final T driver;
+	
 	/**
 	 * map of captured screenshot as a byte array (keyed by name)
 	 */
 	protected Map<String, byte[]> bufferedArtifacts = new HashMap<>();
+	
 
+	@SuppressWarnings("unused")
+	private Mark59Driver() {
+		this.driver = null;
+		this.driverClass = null;
+	}
 
 	/**
-	 * @param driverPackage driverPackage (concrete Driver to be wrapped)
+	 * Constructor for the DriverWrapper.
+	 * 
+	 * @param driver Concrete Driver to be wrapped
 	 */
-	public ScreenshotEnabledDriverWrapper(T driverPackage) {
-		super(driverPackage);
+	public Mark59Driver(T driver) {
+		this.driver = driver;
+		this.driverClass = driver.getClass().getName();
 	}
+
+	/**
+	 * Returns the class name of the encapsulated Driver.
+	 * 
+	 * @return String
+	 */
+	public String getDriverClass() {
+		return driverClass;
+	}
+
+	/**
+	 * Returns the concrete arbitrary driver encapsulated by this
+	 * 
+	 * @return driverPackage.
+	 */
+	public T getDriverPackage() {
+		return driver;
+	}
+
+	/**
+	 * Handles any needed cleanup once the driver is finished with, if any cleanup is required.
+	 */
+	public abstract void driverDispose();
+	
+	/**
+	 * Used to return any logs captured by the Driver.
+	 * 
+	 * @return String
+	 */
+	public abstract String getDriverLogs();
+	
+	/**
+	 * Clears logs previously captured by the Driver.
+	 * <p>
+	 * Useful if the driver is capturing more logs than are needed (for instance,
+	 * only being interested in logs for the most recent event, in case of a
+	 * failure).
+	 * </p>
+	 */
+	public abstract void clearDriverLogs();
+	
+	
+	/**
+	 * log an exception state
+	 * Specifically intended for logging or similar actions.
+	 * 
+	 * @param e supplied exception
+	 */
+	public void documentExceptionState(Exception e) {
+		bufferScreenshot("EXCEPTION");
+		writeBufferedArtifacts();
+		
+		StringWriter sw = new StringWriter();
+		e.printStackTrace(new PrintWriter(sw));
+		String stackTrace = sw.toString(); 
+				
+		ScreenshotLoggingHelper.writeScreenshotLog(
+				new File(ScreenshotLoggingHelper.buildFullyQualifiedImageName("EXCEPTION", "txt")),
+				StringUtils.isNotBlank(stackTrace) ? stackTrace.getBytes() : null);
+	}
+	
 
 
 	/**
@@ -78,16 +155,15 @@ public abstract class ScreenshotEnabledDriverWrapper<T> extends DriverWrapper<T>
 
 
 	/**
-	 * Capture and immediately save screenshot. Use with caution! in a Performance
+	 * Capture and immediately save screenshot. Use with caution. in a Performance
 	 * and Volume context, misuse of this method may produce many more screenshots
-	 * than intended. Instead, we recommend using bufferScreenshot(String) and
-	 * writeBufferedScreenshots() for any threads with interesting behaviour, such
-	 * as an exception.
-	 * 
+	 * than intended. Instead, we recommend using {@link #bufferScreenshot(String)} and
+	 * {@link #writeBufferedArtifacts()} 
+	 *  
 	 * @param imageName filename to use for the screenshot
 	 * @return this
 	 */
-	public ScreenshotEnabledDriverWrapper<T> takeScreenshot(String imageName ) {
+	public Mark59Driver<T> takeScreenshot(String imageName ) {
 		if (LOG.isTraceEnabled()) LOG.trace(Thread.currentThread().getName() + " : taking screenshot with (partial) imageName = " + imageName);
 
 		ScreenshotLoggingHelper.writeScreenshotLog(new File(ScreenshotLoggingHelper.buildFullyQualifiedImageName(imageName)), takeScreenshot());
@@ -97,12 +173,12 @@ public abstract class ScreenshotEnabledDriverWrapper<T> extends DriverWrapper<T>
 	/**
 	 * Stores screenshot in memory, ready to be written to file later.
 	 * 
-	 * If you want to immediately write a screenshot to file, use takeScreenshot instead.
+	 * If you want to immediately write a screenshot to file, use {@link #takeScreenshot()} instead.
 	 * 
 	 * @param imageName filename to use for the screenshot
 	 * @return this (ScreenshotEnabledDriverWrapper)
 	 */
-	public ScreenshotEnabledDriverWrapper<T> bufferScreenshot(String imageName) {
+	public Mark59Driver<T> bufferScreenshot(String imageName) {
 		if (LOG.isDebugEnabled()) LOG.debug(MessageFormat.format("Buffering screenshot {0} for thread {1}", imageName,	Thread.currentThread().getName()));
 
 		bufferedArtifacts.put(ScreenshotLoggingHelper.buildFullyQualifiedImageName(imageName), takeScreenshot());
@@ -115,7 +191,7 @@ public abstract class ScreenshotEnabledDriverWrapper<T> extends DriverWrapper<T>
 	 * 
 	 * @return this (ScreenshotEnabledDriverWrapper)
 	 */
-	public ScreenshotEnabledDriverWrapper<T> writeBufferedArtifacts() {
+	public Mark59Driver<T> writeBufferedArtifacts() {
 		LOG.info(MessageFormat.format("Writing {0} buffered data to disk for thread {1}", bufferedArtifacts.size(), Thread.currentThread().getName()));
 
 		for (Entry<String, byte[]> bufferedArtifact : bufferedArtifacts.entrySet()) {
@@ -125,26 +201,6 @@ public abstract class ScreenshotEnabledDriverWrapper<T> extends DriverWrapper<T>
 		bufferedArtifacts.clear();
 		return this;
 	}
-
-
-	
-	/**
-	 * log an exception state
-	 */
-	@Override
-	public void documentExceptionState(Exception e) {
-		bufferScreenshot("EXCEPTION");
-		writeBufferedArtifacts();
-		
-		StringWriter sw = new StringWriter();
-		e.printStackTrace(new PrintWriter(sw));
-		String stackTrace = sw.toString(); 
-				
-		ScreenshotLoggingHelper.writeScreenshotLog(new File(ScreenshotLoggingHelper.buildFullyQualifiedImageName("EXCEPTION", "txt")),
-														StringUtils.isNotBlank(stackTrace) ? stackTrace.getBytes() : null);
-	}
-
-
 	
 	/**
 	 * @return a map of the buffered screenshots (keyed by name) 
@@ -153,4 +209,6 @@ public abstract class ScreenshotEnabledDriverWrapper<T> extends DriverWrapper<T>
 		return bufferedArtifacts;
 	}
 
+	
+	
 }

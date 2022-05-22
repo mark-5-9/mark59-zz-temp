@@ -18,20 +18,20 @@ package com.mark59.core.factories;
 
 import java.util.Map;
 
-import com.mark59.core.DriverWrapper;
+import com.mark59.core.Mark59Driver;
 
 /**
 * @author Michael Cohen
 * Written: Australian Winter 2019
 */
-public interface DriverBuilder<T extends DriverWrapper<?>>{
+public interface DriverBuilderZZ<T extends Mark59Driver<?>>{
 
 	/**
 	 * Creates a Selenium web driver, returning it in a 'wrapper'.
 	 * @param arguments an key value that my be need in the final creation of the selenium driver 
 	 * @return a class which extends com.mark59.core.DriverWrapper (eg a Selenium driver wrapper)
 	 * 
-	 * @see com.mark59.core.DriverWrapper
+	 * @see com.mark59.core.Mark59Driver
 	 */
     T build(Map<String, String> arguments);
 	

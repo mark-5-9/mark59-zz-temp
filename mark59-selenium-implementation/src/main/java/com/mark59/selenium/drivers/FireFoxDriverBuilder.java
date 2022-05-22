@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.PageLoadStrategy;
@@ -32,6 +32,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.firefox.GeckoDriverService;
+import org.openqa.selenium.remote.service.DriverService;
 
 import com.mark59.core.utils.Mark59Constants;
 import com.mark59.core.utils.ScreenshotLoggingHelper;
@@ -40,12 +41,16 @@ import com.mark59.core.utils.ScreenshotLoggingHelper;
  * @author Michael Cohen
  * Written: Australian Winter 2019  
  */
-public class FireFoxDriverBuilder extends SeleniumDriverBuilder<FirefoxOptions> {
+public class FireFoxDriverBuilder implements SeleniumDriverBuilder<FirefoxOptions> {
 
 	private static final Logger LOG = LogManager.getLogger(FireFoxDriverBuilder.class);
 	
 	private int width  = Mark59Constants.DEFAULT_BROWSER_WIDTH;
 	private int height = Mark59Constants.DEFAULT_BROWSER_HEIGHT;
+
+	private DriverService.Builder<GeckoDriverService, GeckoDriverService.Builder> serviceBuilder;
+	private FirefoxOptions options;	
+	
 
 	/**
 	 * creates the GeckoDriverService Builder and FirefoxOptions object to be built
@@ -56,69 +61,61 @@ public class FireFoxDriverBuilder extends SeleniumDriverBuilder<FirefoxOptions> 
 	}
 
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setDriverExecutable(Path driverPath) {
+	public SeleniumDriverBuilder<FirefoxOptions> setDriverExecutable(Path driverPath) {
 		serviceBuilder.usingDriverExecutable(driverPath.toFile());
-		return (T) this;
+		return this;
 	}
 
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setHeadless(boolean isHeadless) {
+	public SeleniumDriverBuilder<FirefoxOptions> setHeadless(boolean isHeadless) {
 		options.setHeadless(isHeadless);
-		return (T) this;
+		return this;
 	}
 
 		
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setPageLoadStrategy(PageLoadStrategy strategy) {
+	public SeleniumDriverBuilder<FirefoxOptions> setPageLoadStrategy(PageLoadStrategy strategy) {
 		options.setPageLoadStrategy(strategy);
-		return (T) this;
+		return this;
 	}
 	
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setPageLoadStrategyNone() {
+	public SeleniumDriverBuilder<FirefoxOptions> setPageLoadStrategyNone() {
 		return setPageLoadStrategy(PageLoadStrategy.NONE);
 	}
 
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setPageLoadStrategyNormal() {
+	public SeleniumDriverBuilder<FirefoxOptions> setPageLoadStrategyNormal() {
 		return setPageLoadStrategy(PageLoadStrategy.NORMAL);
 	}
 
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setSize(int width, int height) {
+	public SeleniumDriverBuilder<FirefoxOptions> setSize(int width, int height) {
 		this.width = width;
 		this.height = height;
-		return (T) this;
+		return this;
 	}
 
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setProxy(Proxy proxy) {
+	public SeleniumDriverBuilder<FirefoxOptions> setProxy(Proxy proxy) {
 		options.setProxy(proxy);
-		return (T) this;
+		return this;
 	}
 	
 	
-	@SuppressWarnings("unchecked")	
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setAdditionalOptions(List<String> arguments) {
+	public SeleniumDriverBuilder<FirefoxOptions> setAdditionalOptions(List<String> arguments) {
 		LOG.debug("Note: setAdditionalOptions for Firefox not currenlty supported (options will be ignored)");
-		return (T) this;
+		return this;
 	}
 	
 	
-	
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setWriteBrowserLogfile(boolean isWriteBrowserLogFile) {
+	public SeleniumDriverBuilder<FirefoxOptions> setWriteBrowserLogfile(boolean isWriteBrowserLogFile) {
 		
 		if ( isWriteBrowserLogFile && StringUtils.isNotBlank(ScreenshotLoggingHelper.getScreenshotDirectory())) {
 			
@@ -132,29 +129,26 @@ public class FireFoxDriverBuilder extends SeleniumDriverBuilder<FirefoxOptions> 
 			LOG.debug("Note: FireFox driver logging is being suppressed.");
 			System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE,"/dev/null");
 		}	
-		return (T) this;
+		return this;
 	}
 	
 	
-	
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setAlternateBrowser(Path browserExecutablePath) {
+	public SeleniumDriverBuilder<FirefoxOptions> setAlternateBrowser(Path browserExecutablePath) {
 		options.setBinary(browserExecutablePath);
-		return (T) this;
+		return this;
 	}
 
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setVerbosePerformanceLoggingLogging(boolean isVerbose) {
+	public SeleniumDriverBuilder<FirefoxOptions> setVerbosePerformanceLoggingLogging(boolean isVerbose) {
 		LOG.debug("Note: FireFox driver does not support Performance Logging");
-		return (T) this;
+		return this;
 	}
 	
 	
 	@Override
-	public SeleniumDriverWrapper build(Map<String, String> arguments) {
+	public Mark59SeleniumDriver build(Map<String, String> arguments) {
 
 		FirefoxProfile profile = new FirefoxProfile();
 		profile.setPreference("dom.disable_beforeunload", true);
@@ -171,8 +165,7 @@ public class FireFoxDriverBuilder extends SeleniumDriverBuilder<FirefoxOptions> 
 			LOG.debug("  moz profile          : " + caps.getCapability("moz:profile"));
 		}		
 				
-		return new FireFoxDriverWrapper(driver);
+		return new Mark59SeleniumFirefoxDriver(driver);
 	}
-
 
 }

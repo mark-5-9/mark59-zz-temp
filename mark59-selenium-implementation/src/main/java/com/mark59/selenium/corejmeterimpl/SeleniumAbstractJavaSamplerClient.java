@@ -54,7 +54,7 @@ import com.mark59.core.utils.Mark59Constants;
 import com.mark59.core.utils.Mark59Utils;
 import com.mark59.core.utils.SafeSleep;
 import com.mark59.selenium.drivers.SeleniumDriverFactory;
-import com.mark59.selenium.drivers.SeleniumDriverWrapper;
+import com.mark59.selenium.drivers.Mark59SeleniumDriver;
 
 import jodd.util.CsvUtil;
 
@@ -118,7 +118,7 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 	/**  the mark59 JmeterFunctionsForSeleniumScripts for the test  */		
 	protected JmeterFunctionsForSeleniumScripts jm;
 	/**  the Selenium driver 'Wrapper' for the test  */	
-	protected SeleniumDriverWrapper seleniumDriverWrapper; 
+	protected Mark59SeleniumDriver seleniumDriverWrapper; 
 	/**  the Selenium Web Driver for the test  */
 	protected WebDriver driver;
 

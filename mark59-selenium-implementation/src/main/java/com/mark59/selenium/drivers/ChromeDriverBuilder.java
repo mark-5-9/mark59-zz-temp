@@ -41,28 +41,36 @@ import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.Command;
 import org.openqa.selenium.remote.CommandExecutor;
+import org.openqa.selenium.remote.service.DriverService;
 
 import com.google.common.collect.ImmutableMap;
 import com.mark59.core.utils.Mark59Constants;
 import com.mark59.core.utils.Mark59Utils;
 
-
 /**
+ * <p>Creates a chromium Selenium driver to be used in the scriptc.
+ * <p> {@link ChromeDriverService.Builder} is created, selenium {@link ChromeOptions} chromeOptions' are set, which are used
+ * by the service builder during driver creation
+ * 
  * @author Michael Cohen
  * @author Philip Webb
  * Written: Australian Winter 2019  
  */
-public class ChromeDriverBuilder extends SeleniumDriverBuilder<ChromeOptions> {
+public class ChromeDriverBuilder implements SeleniumDriverBuilder<ChromeOptions> {
 
 	private static final Logger LOG = LogManager.getLogger(ChromeDriverBuilder.class);
 	
 	private int width  = Mark59Constants.DEFAULT_BROWSER_WIDTH;
 	private int height = Mark59Constants.DEFAULT_BROWSER_HEIGHT;
 
+	private DriverService.Builder<ChromeDriverService, ChromeDriverService.Builder> serviceBuilder;
+	private ChromeOptions options;
+	
 	/**
 	 * creates a ChromeDriverService Builder, and sets up ChromeOptions found necessary over time 
 	 */
 	public ChromeDriverBuilder() {
+		
 		//https://stackoverflow.com/questions/52975287/selenium-chromedriver-disable-logging-or-redirect-it-java
 		serviceBuilder = new ChromeDriverService.Builder().withSilent(true);
 		options = new ChromeOptions();
@@ -71,7 +79,7 @@ public class ChromeDriverBuilder extends SeleniumDriverBuilder<ChromeOptions> {
 		// https://stackoverflow.com/questions/48450594/selenium-timed-out-receiving-message-from-renderer
 		// + linux issue: "unknown error: DevToolsActivePort file doesn't exist" 
 		// https://stackoverflow.com/questions/50642308/webdriverexception-unknown-error-devtoolsactiveport-file-doesnt-exist-while-t
-		options.addArguments("--no-sandbox");
+		((ChromeOptions) options).addArguments("--no-sandbox");
 		options.addArguments("--disable-dev-shm-usage"); 		
 		options.addArguments("--disable-gpu");
 		options.addArguments("--disable-gpu-sandbox");	
@@ -84,101 +92,94 @@ public class ChromeDriverBuilder extends SeleniumDriverBuilder<ChromeOptions> {
 	}
 
 		
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setDriverExecutable(Path driverPath) {
+	public SeleniumDriverBuilder<ChromeOptions> setDriverExecutable(Path driverPath) {
 		serviceBuilder.usingDriverExecutable(driverPath.toFile());
-		return (T) this;
+		return this;
 	}
-		
 	
-	@SuppressWarnings("unchecked")
+	
+	
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setHeadless(boolean isHeadless) {
+	public SeleniumDriverBuilder<ChromeOptions> setHeadless(boolean isHeadless) {
 		options.setHeadless(isHeadless);
-		return (T) this;
+		return this;
 	}
 
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setPageLoadStrategy(PageLoadStrategy strategy) {
+	public SeleniumDriverBuilder<ChromeOptions> setPageLoadStrategy(PageLoadStrategy strategy) {
 		options.setPageLoadStrategy(strategy);
-		return (T) this;
+		return this;
 	}
 
+	
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setPageLoadStrategyNone() {
+	public SeleniumDriverBuilder<ChromeOptions> setPageLoadStrategyNone() {
 		return setPageLoadStrategy(PageLoadStrategy.NONE);
 	}
 
+	
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setPageLoadStrategyNormal() {
+	public SeleniumDriverBuilder<ChromeOptions> setPageLoadStrategyNormal() {
 		return setPageLoadStrategy(PageLoadStrategy.NORMAL);
 	}
+		
 	
-	
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setSize(int width, int height) {
+	public SeleniumDriverBuilder<ChromeOptions> setSize(int width, int height) {
 		this.width = width;
 		this.height = height;
-		return (T) this;
+		return this;
 	}
 	
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setProxy(Proxy proxy) {
+	public SeleniumDriverBuilder<ChromeOptions> setProxy(Proxy proxy) {
 		options.setProxy(proxy);
-		return (T) this;
+		return this;
 	}
 	
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setAdditionalOptions(List<String> arguments) {
+	public SeleniumDriverBuilder<ChromeOptions> setAdditionalOptions(List<String> arguments) {
 		options.addArguments(arguments);
-		return (T) this;
+		return this;
 	}
 	
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setWriteBrowserLogfile(boolean isWriteBrowserLogFile) {
+	public SeleniumDriverBuilder<ChromeOptions> setWriteBrowserLogfile(boolean isWriteBrowserLogFile) {
 		LOG.debug("Note: Browser Logfile not implemented for Chrome ");
-		return (T) this;
+		return this;
 	}	
 	
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setAlternateBrowser(Path browserExecutablePath) {
+	public SeleniumDriverBuilder<ChromeOptions> setAlternateBrowser(Path browserExecutablePath) {
 		options.setBinary(browserExecutablePath.toFile());
-		return (T) this;
+		return this;
 	}
 
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends SeleniumDriverBuilder<?>> T setVerbosePerformanceLoggingLogging(boolean isVerbose) {
+	public SeleniumDriverBuilder<ChromeOptions> setVerbosePerformanceLoggingLogging(boolean isVerbose) {
 		LoggingPreferences logPreferences = new LoggingPreferences();
 		logPreferences.enable(LogType.PERFORMANCE, Level.INFO);
 		options.setCapability(CapabilityType.LOGGING_PREFS, logPreferences);
-		return (T) this;
+		return this;
 	}
-
 
 	
 	/* 
 	 * Creates the Selenium Chrome driver, returning it in a 'wrapper'.
 	 * 
-	 * Note that the ChromeDriverService used is per instance of the driver. Experimentation showed this does not appear to be 
-	 * particularly inefficient (especially for longer running scripts).  Using a shared ChromDriverService also caused
-	 * test failures, as the ChromeDriverService becomes a single point of failure. 
+	 * Note that the ChromeDriverService used is per instance of the driver, rather than one service for entire JVM (ie, the entire 
+	 * test run in JMeter). Experimentation showed this does not appear to be particularly inefficient (especially for longer running scripts).  
+	 * Using a shared ChromDriverService also caused test failures, as the ChromeDriverService becomes a single point of failure. 
 	 */
 	@Override
-	public SeleniumDriverWrapper build(Map<String, String> arguments) { 
+	public Mark59SeleniumDriver build(Map<String, String> arguments) { 
 		ChromeDriver driver = null;
 		
 		if (LOG.isDebugEnabled()) LOG.debug("chrome options : " + Arrays.toString(options.asMap().entrySet().toArray()));	
@@ -237,7 +238,7 @@ public class ChromeDriverBuilder extends SeleniumDriverBuilder<ChromeOptions> {
 			if (driver != null) {driver.quit();}
 			throw new RuntimeException("An error has occurred during the creation of the ChromeDriver (throwing a RuntimeException" );
 		}
-		return new ChromeDriverWrapper(driver);
+		return new Mark59SeleniumChromeDriver(driver);
 	}
 
 }

@@ -17,50 +17,37 @@
 package com.mark59.selenium.drivers;
 
 import java.nio.file.Path;
+import java.util.Map;
 
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.Proxy;
-import org.openqa.selenium.remote.service.DriverService;
 
-import com.mark59.core.factories.DriverBuilder;
 import com.mark59.selenium.corejmeterimpl.SeleniumAbstractJavaSamplerClient;
 
 /**
  * Base builder class for configuring Selenium web drivers.
  * 
- * <p>
- * Specifies configurable capabilities that the SeleniumDriverFactory knows how
- * to use
- * </p>
+ * <p>Specifies configurable capabilities that the SeleniumDriverFactory knows how to use.
+ * <p>Eg, for chrome a 'service builder' is created, selenium 'options' are set, which are used
+ * by the service during driver creation
+ * 
+ * @see ChromeDriverBuilder  
+ * @see FireFoxDriverBuilder
+ *   
  * @author Michael Cohen
  * @author Philip Webb
- * Written: Australian Winter 2019  
+ * Written: Australian Winter 2019
  */
-public abstract class SeleniumDriverBuilder<O extends MutableCapabilities>
-		implements DriverBuilder<SeleniumDriverWrapper> {
-
-
-	/**
-	 * Web Driver builder (used to build FireFox and Chrome services)
-	 */
-	protected DriverService.Builder<?, ?> serviceBuilder;
-	
-	/**
-	 * Web Driver builder (used to build FireFox and Chrome options)
-	 */	
-	protected O options;
-
+public interface SeleniumDriverBuilder<O extends MutableCapabilities>	{
 	
 	/**
 	 * Sets the path to the WebDriver executable that is being configured.
 	 * 
-	 * @param <T> of T 
 	 * @param driverPath driver path to the WebDriver executable
 	 * @return this
 	 */
-	public abstract <T extends SeleniumDriverBuilder<?>> T setDriverExecutable(Path driverPath);
-	
+	public SeleniumDriverBuilder<?> setDriverExecutable(Path driverPath);
 	
 	/**
 	 * Sets whether or not the Selenium WebDriver will start in headless mode,
@@ -68,11 +55,10 @@ public abstract class SeleniumDriverBuilder<O extends MutableCapabilities>
 	 * 
 	 * <p>By default, headless mode will be set to 'true' by the factory. </p>
 	 * 
-	 * @param <T> of T
 	 * @param isHeadless indicates if the driver should start in headless mode
 	 * @return this
 	 */
-	public abstract <T extends SeleniumDriverBuilder<?>> T setHeadless(boolean isHeadless);
+	public SeleniumDriverBuilder<?> setHeadless(boolean isHeadless);
 
 	
 	/**
@@ -102,27 +88,24 @@ public abstract class SeleniumDriverBuilder<O extends MutableCapabilities>
 	 * </p>
 	 * 
 	 * @see PageLoadStrategy
-	 * @param <T> of T 
 	 * @param strategy type of wait strategy the WebDriver will adopt
 	 * @return this
 	 */
-	public abstract <T extends SeleniumDriverBuilder<?>> T setPageLoadStrategy(PageLoadStrategy strategy);
+	public SeleniumDriverBuilder<?> setPageLoadStrategy(PageLoadStrategy strategy);
 
 	/**
 	 * Sets the page load strategy used by the WebDriver to "none".
 	 * @see #setPageLoadStrategy 
-	 * @param <T> of T  
 	 * @return this
 	 */
-	public abstract <T extends SeleniumDriverBuilder<?>> T setPageLoadStrategyNone();
+	public SeleniumDriverBuilder<?> setPageLoadStrategyNone();
 
 	/**
 	 * Sets the page load strategy used by the WebDriver to "normal". (current default)
 	 * @see #setPageLoadStrategy
-	 * @param <T> of T 
 	 * @return this
 	 */
-	public abstract <T extends SeleniumDriverBuilder<?>> T setPageLoadStrategyNormal();
+	public SeleniumDriverBuilder<?> setPageLoadStrategyNormal();
 	
 	
 	/**
@@ -141,12 +124,11 @@ public abstract class SeleniumDriverBuilder<O extends MutableCapabilities>
 	 * @see SeleniumAbstractJavaSamplerClient
 	 * @see org.openqa.selenium.Dimension
 	 * 
-	 * @param <T> of T 
 	 * @param width of the browser
 	 * @param height of the browser
 	 * @return this
 	 */
-	public abstract <T extends SeleniumDriverBuilder<?>> T setSize(int width, int height); 
+	public SeleniumDriverBuilder<?> setSize(int width, int height); 
 	
 	
 	/**
@@ -165,7 +147,6 @@ public abstract class SeleniumDriverBuilder<O extends MutableCapabilities>
 	 * parameter</p>   
 	 * <p>Hint: To reset the value to blank in the Java Request PROXY option in Jmeter (ie, no proxy override), just type a space into the PROXY value field.</p>   
 	 *    
-	 * @param <T> of T 
 	 * @param proxy comma delimited list of proxy settings for WebDriver
 	 * 
 	 * @see org.openqa.selenium.Proxy
@@ -173,7 +154,7 @@ public abstract class SeleniumDriverBuilder<O extends MutableCapabilities>
 	 * @see SeleniumAbstractJavaSamplerClient
 	 * @return this 
 	 */
-	public abstract <T extends SeleniumDriverBuilder<?>> T setProxy(Proxy proxy);
+	public SeleniumDriverBuilder<?> setProxy(Proxy proxy);
 	
 	
 	/**
@@ -202,11 +183,10 @@ public abstract class SeleniumDriverBuilder<O extends MutableCapabilities>
 	 * @see org.openqa.selenium.chrome.ChromeOptions#addArguments(java.util.List)
 	 * @see SeleniumAbstractJavaSamplerClient
 	 * 
-	 * @param <T> of T 
 	 * @param arguments options
 	 * @return this
 	 */
-	public abstract <T extends SeleniumDriverBuilder<?>> T setAdditionalOptions(java.util.List<java.lang.String> arguments);
+	public SeleniumDriverBuilder<?> setAdditionalOptions(java.util.List<java.lang.String> arguments);
 	
 	
 	/**
@@ -218,11 +198,10 @@ public abstract class SeleniumDriverBuilder<O extends MutableCapabilities>
 	 * <li><b>true</b> : depending on log setting, logs may to written to the 
 	 * 'screenshot' log directory (for example as set via property mark59.screenshot.directory in the mark59.properties file).
 	 * </ul>
-	 * @param <T> of T 
 	 * @param isWriteBrowserLogFile see above
 	 * @return this
 	 */
-	public abstract <T extends SeleniumDriverBuilder<?>> T setWriteBrowserLogfile(boolean isWriteBrowserLogFile);
+	public SeleniumDriverBuilder<?> setWriteBrowserLogfile(boolean isWriteBrowserLogFile);
 
 
 	/**
@@ -237,11 +216,10 @@ public abstract class SeleniumDriverBuilder<O extends MutableCapabilities>
 	 * <p>If neither the  "BROWSER_EXECUTABLE" JMeter parameter or <code>mark59.browser.executable</code> property are
 	 * set, the default installation of the expected browser is assumed.      
 	 * 
-	 * @param <T> of T 
 	 * @param browserExecutablePath executable path to the browser executable to be used (java.nio.file.Path)
 	 * @return this
 	 */
-	public abstract <T extends SeleniumDriverBuilder<?>> T setAlternateBrowser(Path browserExecutablePath);
+	public SeleniumDriverBuilder<?> setAlternateBrowser(Path browserExecutablePath);
 	
 	
 	/**
@@ -249,11 +227,21 @@ public abstract class SeleniumDriverBuilder<O extends MutableCapabilities>
 	 * 
 	 * <p> By default, WebDriver performance logging is turned off. </p>
 	 * 
-	 * @param <T> of T
 	 * @param isVerbose indicates if more detailed Webdriver performance logs are
 	 *                  required, such as requests sent and received.
 	 * @return this
 	 */
-	public abstract <T extends SeleniumDriverBuilder<?>> T setVerbosePerformanceLoggingLogging(boolean isVerbose);
+	public SeleniumDriverBuilder<?>setVerbosePerformanceLoggingLogging(boolean isVerbose);
+	
+	
+	/**
+	 * Creates a Selenium web driver, returning it in a 'wrapper'.
+	 * @param arguments an key value that my be need in the final creation of the selenium driver 
+	 * @return a class which extends com.mark59.core.DriverWrapper (eg a Selenium driver wrapper)
+	 * 
+	 * @see com.mark59.core.Mark59Driver
+	 */
+    public Mark59SeleniumDriver build(Map<String, String> arguments);
+
 
 }

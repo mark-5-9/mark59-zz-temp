@@ -16,14 +16,14 @@
 
 package com.mark59.test.core;
 
-import com.mark59.core.ScreenshotEnabledDriverWrapper;
+import com.mark59.core.Mark59Driver;
 /**
 * @author Michael Cohen
 * Written: Australian Winter 2019 
 */
-public class MockScreenshotEnabledDriverWrapper extends ScreenshotEnabledDriverWrapper<MockDriver> {
+public class MockDriverWrapper extends Mark59Driver<MockDriver> {
 
-	public MockScreenshotEnabledDriverWrapper(MockDriver driverPackage) {
+	public MockDriverWrapper(MockDriver driverPackage) {
 		super(driverPackage);
 	}
 

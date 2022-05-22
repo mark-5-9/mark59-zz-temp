@@ -22,12 +22,12 @@ import org.openqa.selenium.WebDriver;
  * @author Michael Cohen
  * Written: Australian Winter 2019  
  */
-public class FireFoxDriverWrapper extends SeleniumDriverWrapper {
+public class Mark59SeleniumFirefoxDriver extends Mark59SeleniumDriver {
 
 	/**
 	 * @param dataPackage to FireFox WebDriver to be 'packaged'
 	 */
-	public FireFoxDriverWrapper(WebDriver dataPackage) {
+	public Mark59SeleniumFirefoxDriver(WebDriver dataPackage) {
 		super(dataPackage);
 	}
 

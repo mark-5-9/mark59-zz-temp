@@ -18,7 +18,7 @@ package com.mark59.core.factories;
 
 import java.util.Map;
 
-import com.mark59.core.DriverWrapper;
+import com.mark59.core.Mark59Driver;
 
 /**
 * @author Michael Cohen
@@ -35,6 +35,6 @@ public interface DriverWrapperFactory {
 	 * @param arguments map of key value pairs known to the implementation 
 	 * @return DriverWrapper
 	 */
-    <T extends DriverWrapper<?>> T makeDriverWrapper(Map<String, String> arguments);
+    <T extends Mark59Driver<?>> T makeDriverWrapper(Map<String, String> arguments);
 
 }

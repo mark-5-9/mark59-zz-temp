@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import com.mark59.core.ScreenshotEnabledDriverWrapper;
+import com.mark59.core.Mark59Driver;
 /**
 * @author Michael Cohen
 * Written: Australian Winter 2019 
@@ -33,7 +33,7 @@ public class ScreenshotEnabledDriverWrapperTest {
 	@Test
 	public final void bufferScreenshot_bufferAScreenshotWithASpecifiedName_screenshotBufferContainsScreenshot() {
 		String imageName = "bufferScreenshot";
-		ScreenshotEnabledDriverWrapper<?> w = new MockScreenshotEnabledDriverWrapper(mockDriver);
+		Mark59Driver<?> w = new MockDriverWrapper(mockDriver);
 		w.bufferScreenshot(imageName);
 		assert(!w.getBufferedScreenshots().isEmpty());
 		assert(w.getBufferedScreenshots().keySet().stream().anyMatch(v->v.contains(imageName)));
