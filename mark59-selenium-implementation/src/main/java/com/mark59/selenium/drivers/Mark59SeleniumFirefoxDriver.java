@@ -17,20 +17,38 @@
 package com.mark59.selenium.drivers;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+import com.mark59.selenium.interfaces.Mark59SeleniumDriver;
 
 /**
+ * Firefox implementation of a Mark59SeleniumDriver.  
+ * 
  * @author Michael Cohen
  * Written: Australian Winter 2019  
  */
-public class Mark59SeleniumFirefoxDriver extends Mark59SeleniumDriver {
+public class Mark59SeleniumFirefoxDriver implements Mark59SeleniumDriver<FirefoxDriver> {
 
+	WebDriver webDriver;
+	
 	/**
-	 * @param dataPackage to FireFox WebDriver to be 'packaged'
+	 * @param webDriver webDriver
 	 */
-	public Mark59SeleniumFirefoxDriver(WebDriver dataPackage) {
-		super(dataPackage);
+	public Mark59SeleniumFirefoxDriver(WebDriver webDriver) {
+		this.webDriver = webDriver;
 	}
-
+	
+	
+	@Override
+	public WebDriver getDriver() {
+		return webDriver;
+	}
+	
+	@Override
+	public String getDriverClass() {
+		return this.getDriver().getClass().getName();  
+	}
+	
 	@Override
 	public String getDriverLogs() {
 		// FireFox doesn't support Selenium logging
@@ -51,4 +69,19 @@ public class Mark59SeleniumFirefoxDriver extends Mark59SeleniumDriver {
 	public void bufferDriverLogs(String textFileName) {
 		// FireFox doesn't support Selenium logging
 	}
+
+	/**
+	 *  For a Firefox Selenium driver 'quit' will end the session.
+	 *  Wrapping it in a try/catch, as historical gekodrivers used 'close'
+	 *  (ie, just in case someone runs using an old gekodriver) 
+	 */
+	@Override
+	public void driverDispose() {
+		try {
+			this.getDriver().quit();
+		} catch (Exception e) {
+			LOG.debug("attempting driver quit() : " + e.getMessage());
+		}
+	}
+	
 }

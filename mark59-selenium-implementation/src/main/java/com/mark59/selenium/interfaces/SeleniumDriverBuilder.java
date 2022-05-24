@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.mark59.selenium.drivers;
+package com.mark59.selenium.interfaces;
 
 import java.nio.file.Path;
 import java.util.Map;
@@ -24,6 +23,8 @@ import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.Proxy;
 
 import com.mark59.selenium.corejmeterimpl.SeleniumAbstractJavaSamplerClient;
+import com.mark59.selenium.drivers.ChromeDriverBuilder;
+import com.mark59.selenium.drivers.FireFoxDriverBuilder;
 
 /**
  * Base builder class for configuring Selenium web drivers.
@@ -241,7 +242,7 @@ public interface SeleniumDriverBuilder<O extends MutableCapabilities>	{
 	 * 
 	 * @see com.mark59.core.Mark59Driver
 	 */
-    public Mark59SeleniumDriver build(Map<String, String> arguments);
+    public Mark59SeleniumDriver<?> build(Map<String, String> arguments);
 
 
 }

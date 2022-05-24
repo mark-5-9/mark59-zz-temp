@@ -54,7 +54,7 @@ import com.mark59.core.utils.Mark59Constants;
 import com.mark59.core.utils.Mark59Utils;
 import com.mark59.core.utils.SafeSleep;
 import com.mark59.selenium.drivers.SeleniumDriverFactory;
-import com.mark59.selenium.drivers.Mark59SeleniumDriver;
+import com.mark59.selenium.interfaces.Mark59SeleniumDriver;
 
 import jodd.util.CsvUtil;
 
@@ -71,22 +71,22 @@ import jodd.util.CsvUtil;
  *      
  * <p>Includes a number of standard parameters expected for a Selenium WebDriver.</p>
  *
- * @see SeleniumDriverFactory#makeDriverWrapper(Map)
+ * @see SeleniumDriverFactory#makeMark59SeleniumDriver(Map)
  * @see SeleniumDriverFactory#SeleniumDriverFactory()
  * @see com.mark59.selenium.drivers.SeleniumDriverFactory#HEADLESS_MODE 
- * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setHeadless(boolean)  
+ * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setHeadless(boolean)  
  * @see com.mark59.selenium.drivers.SeleniumDriverFactory#PAGE_LOAD_STRATEGY 
- * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setPageLoadStrategy(PageLoadStrategy) 
+ * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setPageLoadStrategy(PageLoadStrategy) 
  * @see com.mark59.selenium.drivers.SeleniumDriverFactory#BROWSER_DIMENSIONS 
- * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setSize(int width, int height) 
+ * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setSize(int width, int height) 
  * @see com.mark59.selenium.drivers.SeleniumDriverFactory#PROXY 
- * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setProxy(org.openqa.selenium.Proxy) 
+ * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setProxy(org.openqa.selenium.Proxy) 
  * @see com.mark59.selenium.drivers.SeleniumDriverFactory#ADDITIONAL_OPTIONS 
- * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setAdditionalOptions(java.util.List) 
+ * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setAdditionalOptions(java.util.List) 
  * @see com.mark59.selenium.drivers.SeleniumDriverFactory#WRITE_FFOX_BROWSER_LOGFILE 
- * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setWriteBrowserLogfile(boolean)
+ * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setWriteBrowserLogfile(boolean)
  * @see com.mark59.selenium.drivers.SeleniumDriverFactory#BROWSER_EXECUTABLE  
- * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setAlternateBrowser(java.nio.file.Path) 
+ * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setAlternateBrowser(java.nio.file.Path) 
  * @see com.mark59.selenium.drivers.SeleniumDriverFactory#EMULATE_NETWORK_CONDITIONS 
  * @see IpUtilities#localIPisNotOnListOfIPaddresses(String)   
  * @see JmeterFunctionsForSeleniumScripts
@@ -117,8 +117,8 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 		
 	/**  the mark59 JmeterFunctionsForSeleniumScripts for the test  */		
 	protected JmeterFunctionsForSeleniumScripts jm;
-	/**  the Selenium driver 'Wrapper' for the test  */	
-	protected Mark59SeleniumDriver seleniumDriverWrapper; 
+	/**  the Selenium driver 'Wrapper' for the test, with additional functions around logging and exception handling */	
+	protected Mark59SeleniumDriver<WebDriver> mark59SeleniumDriver; 
 	/**  the Selenium Web Driver for the test  */
 	protected WebDriver driver;
 
@@ -191,7 +191,7 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 	 *  'Mark59' framework for whatever customization is required for your test, or for the Webdriver implementation.</p>
 	 * <p>Please see link(s) below for more detail.  
 	 * 
-	 * @see SeleniumDriverFactory#makeDriverWrapper(Map)
+	 * @see SeleniumDriverFactory#makeMark59SeleniumDriver(Map)
 	 * @see SeleniumDriverFactory#SeleniumDriverFactory()
 	 * @see com.mark59.selenium.drivers.SeleniumDriverFactory#HEADLESS_MODE
 	 * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setHeadless(boolean)  
@@ -243,7 +243,7 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 		Map<String,String> jmeterRuntimeArgumentsMap = convertJmeterArgumentsToMap(context);
 
 		try {
-			seleniumDriverWrapper = new SeleniumDriverFactory().makeDriverWrapper(jmeterRuntimeArgumentsMap) ;
+			mark59SeleniumDriver = new SeleniumDriverFactory().makeMark59SeleniumDriver(jmeterRuntimeArgumentsMap) ;
 		} catch (Exception e) {
 			LOG.error("ERROR : " + this.getClass() + ". Fatal error has occured for Thread Group " + tgName
 					+ " while attempting to initiate the selenium Driver!" );
@@ -252,8 +252,8 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 			return null;
 		}
 
-		driver = seleniumDriverWrapper.getDriverPackage();
-		jm = new JmeterFunctionsForSeleniumScripts(Thread.currentThread().getName(), seleniumDriverWrapper, jmeterRuntimeArgumentsMap);   	
+		driver = mark59SeleniumDriver.getDriver();
+		jm = new JmeterFunctionsForSeleniumScripts(Thread.currentThread().getName(), mark59SeleniumDriver, jmeterRuntimeArgumentsMap);   	
 		
 		try {
 			
@@ -271,7 +271,7 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 		
 		} finally {
 			if (! keepBrowserOpen.equals(KeepBrowserOpen.ALWAYS )     ) { 
-				seleniumDriverWrapper.driverDispose();
+				mark59SeleniumDriver.driverDispose();
 			}
 		}
 		return jm.getMainResult();
@@ -295,7 +295,7 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 		LOG.error("["+ thread + "]  ERROR : " + this.getClass() + ". See screenshot directory for details. Stack trace: \n  " + sw.toString());
 
 		try {
-			seleniumDriverWrapper.documentExceptionState(new Exception(e));
+			mark59SeleniumDriver.documentExceptionState(new Exception(e));
 		} catch (Exception ex) {
 			LOG.error("["+ thread + "]  ERROR : " + this.getClass() + ".  An exception occured during scriptExceptionHandling (documentExceptionState) " 
 					+  ex.getClass().getName() +  " thrown",  e);

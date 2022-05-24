@@ -28,9 +28,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.Proxy;
+import org.openqa.selenium.WebDriver;
 
-import com.mark59.core.Mark59Driver;
-import com.mark59.core.factories.DriverWrapperFactory;
 import com.mark59.core.utils.IpUtilities;
 import com.mark59.core.utils.Mark59Constants;
 import com.mark59.core.utils.Mark59Utils;
@@ -38,6 +37,8 @@ import com.mark59.core.utils.PropertiesKeys;
 import com.mark59.core.utils.PropertiesReader;
 import com.mark59.core.utils.ScreenshotLoggingHelper;
 import com.mark59.selenium.corejmeterimpl.JmeterFunctionsForSeleniumScripts;
+import com.mark59.selenium.interfaces.Mark59SeleniumDriver;
+import com.mark59.selenium.interfaces.SeleniumDriverBuilder;
 
 /**
  * @author Michael Cohen
@@ -47,22 +48,22 @@ import com.mark59.selenium.corejmeterimpl.JmeterFunctionsForSeleniumScripts;
  * <p>Defines and controls the matching of many of the parameters used in the creation of a Selenium Webdriver, 
  * from an implementation of SeleniumAbstractJavaSamplerClient.
  *
- * @see SeleniumDriverFactory#makeDriverWrapper(Map)
- * @see SeleniumDriverFactory#getDriverBuilderOfType  
+ * @see SeleniumDriverFactory#makeMark59SeleniumDriver(Map)
+ * @see SeleniumDriverFactory#SeleniumDriverFactory()
  * @see com.mark59.selenium.drivers.SeleniumDriverFactory#HEADLESS_MODE 
- * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setHeadless(boolean)  
+ * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setHeadless(boolean)  
  * @see com.mark59.selenium.drivers.SeleniumDriverFactory#PAGE_LOAD_STRATEGY 
- * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setPageLoadStrategy(PageLoadStrategy) 
+ * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setPageLoadStrategy(PageLoadStrategy) 
  * @see com.mark59.selenium.drivers.SeleniumDriverFactory#BROWSER_DIMENSIONS 
- * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setSize(int width, int height) 
+ * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setSize(int width, int height) 
  * @see com.mark59.selenium.drivers.SeleniumDriverFactory#PROXY 
- * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setProxy(org.openqa.selenium.Proxy) 
+ * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setProxy(org.openqa.selenium.Proxy) 
  * @see com.mark59.selenium.drivers.SeleniumDriverFactory#ADDITIONAL_OPTIONS 
- * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setAdditionalOptions(java.util.List) 
+ * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setAdditionalOptions(java.util.List) 
  * @see com.mark59.selenium.drivers.SeleniumDriverFactory#WRITE_FFOX_BROWSER_LOGFILE 
- * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setWriteBrowserLogfile(boolean)
+ * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setWriteBrowserLogfile(boolean)
  * @see com.mark59.selenium.drivers.SeleniumDriverFactory#BROWSER_EXECUTABLE  
- * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setAlternateBrowser(java.nio.file.Path) 
+ * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setAlternateBrowser(java.nio.file.Path) 
  * @see com.mark59.selenium.drivers.SeleniumDriverFactory#EMULATE_NETWORK_CONDITIONS 
  * @see IpUtilities#localIPisNotOnListOfIPaddresses(String)   
  * @see JmeterFunctionsForSeleniumScripts
@@ -71,7 +72,7 @@ import com.mark59.selenium.corejmeterimpl.JmeterFunctionsForSeleniumScripts;
  * Written: Australian Winter 2019  
  * 
  */
-public class SeleniumDriverFactory implements DriverWrapperFactory {
+public class SeleniumDriverFactory {	
 
 	private static final Logger LOG = LogManager.getLogger(SeleniumDriverFactory.class);
 
@@ -83,7 +84,7 @@ public class SeleniumDriverFactory implements DriverWrapperFactory {
 	
 	/**
 	 * "HEADLESS_MODE" - 'true' or 'false', default 'true' 
-	 * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setHeadless(boolean)   
+	 * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setHeadless(boolean)   
 	 */
 	public static final String HEADLESS_MODE = "HEADLESS_MODE";
 	
@@ -92,40 +93,40 @@ public class SeleniumDriverFactory implements DriverWrapperFactory {
 	 * Will over-ride the mark59 property <code>mark59.browser.executable</code> (if set). 
 	 * If neither the "BROWSER_EXECUTABLE" JMeter parameter or <code>mark59.browser.executable</code> property 
 	 * are set, the default installation of the expected browser is assumed. 
-	 * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setAlternateBrowser
+	 * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setAlternateBrowser
 	 */
 	public static final String BROWSER_EXECUTABLE = "BROWSER_EXECUTABLE";
 	
 	/**
 	 * "PAGE_LOAD_STRATEGY" - PageLoadStrategy.NONE ('NONE') / PageLoadStrategy.NORMAL ('NORMAL').
 	 * Default is 'NORMAL'.
-	 * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setPageLoadStrategy(PageLoadStrategy)
+	 * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setPageLoadStrategy(PageLoadStrategy)
 	 */
 	public static final String PAGE_LOAD_STRATEGY = "PAGE_LOAD_STRATEGY";
 	
 	/**
 	 * "WRITE_FFOX_BROWSER_LOGFILE" - Only implemented for Firefox.  Primary purpose is to redirect 
 	 * gekodriver's copious error logging off the console.  Set to 'true' or 'false', default is 'false'.
-	 * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setWriteBrowserLogfile(boolean)
+	 * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setWriteBrowserLogfile(boolean)
 	 */
 	public static final String WRITE_FFOX_BROWSER_LOGFILE = "WRITE_FFOX_BROWSER_LOGFILE";
 	
 	/**
 	 * "PROXY"- used to set the proxy (refer to the 'see also' below for format) 
-	 * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setProxy(org.openqa.selenium.Proxy) 
+	 * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setProxy(org.openqa.selenium.Proxy) 
 	 */
 	public static final String PROXY = "PROXY";
 	
 	/**
-	 * "BROWSER_DIMENSIONS") - sets the browser size (eg "800,600") default is 1920 (w) x 1080 (h)
-	 * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setSize(int width, int height) 
+	 * "BROWSER_DIMENSIONS" - sets the browser size. Eg "1920,1080" (the default) means 1920 (w) x 1080 (h)
+	 * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setSize(int width, int height) 
 	 */
 	public static final String BROWSER_DIMENSIONS = "BROWSER_DIMENSIONS";
 	
 	/**
 	 * "ADDITIONAL_OPTIONS" - a comma delimited list used to set of any of the many
 	 *  additional driver options. Refer to the 'see also' below for details. 
-	 *  @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setAdditionalOptions(java.util.List)
+	 *  @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setAdditionalOptions(java.util.List)
 	 */
 	public static final String ADDITIONAL_OPTIONS = "ADDITIONAL_OPTIONS";	
 
@@ -178,7 +179,7 @@ public class SeleniumDriverFactory implements DriverWrapperFactory {
 
 	
 	/**
-	 *  Controls the matching of parameters from an implementation of SeleniumAbstractJavaSamplerClient.
+	 *  Controls the matching of driver related parameters from an implementation of SeleniumAbstractJavaSamplerClient.
 	 *  These are the parameters that are either required as part of the framework by default, or can be
 	 *  entered / overridden by a script       
 	 *  
@@ -197,8 +198,7 @@ public class SeleniumDriverFactory implements DriverWrapperFactory {
 	 *    
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
-	public <T extends Mark59Driver<?>> T makeDriverWrapper(Map<String, String> arguments) {
+	public <T extends Mark59SeleniumDriver<WebDriver>> T makeMark59SeleniumDriver(Map<String, String> arguments) {
 		if (LOG.isDebugEnabled()){LOG.debug("SeleniumDriverFactory : makeDriverWrapper : " + Mark59Utils.prettyPrintMap(arguments));}
 			
 		if (arguments.isEmpty())
@@ -278,7 +278,7 @@ public class SeleniumDriverFactory implements DriverWrapperFactory {
 		//TODO:  Maybe allow script argument to turn on or off more detailed driver performance logging (output seemed similar in test cases either way)
 		builder.setVerbosePerformanceLoggingLogging(false);
 		
-		return (T) ((ChromeDriverBuilder) builder).build(arguments);
+		return (T) builder.build(arguments);
 	}
 
 	

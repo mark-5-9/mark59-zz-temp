@@ -208,7 +208,7 @@ public abstract class SeleniumIteratorAbstractJavaSamplerClient  extends  Seleni
 		Map<String,String> jmeterRuntimeArgumentsMap = convertJmeterArgumentsToMap(context);
 
 		try {
-			seleniumDriverWrapper = new SeleniumDriverFactory().makeDriverWrapper(jmeterRuntimeArgumentsMap) ;
+			mark59SeleniumDriver = new SeleniumDriverFactory().makeMark59SeleniumDriver(jmeterRuntimeArgumentsMap) ;
 		} catch (Exception e) {
 			LOG.error("ERROR : " + this.getClass() + ". Fatal error has occured for Thread Group " + tgName
 					+ " while attempting to initiate the selenium Driver. The Thread is stopping !" );
@@ -218,8 +218,8 @@ public abstract class SeleniumIteratorAbstractJavaSamplerClient  extends  Seleni
 			return null;
 		}
 		
-		driver = seleniumDriverWrapper.getDriverPackage();
-		jm = new JmeterFunctionsForSeleniumScripts(Thread.currentThread().getName(), seleniumDriverWrapper, jmeterRuntimeArgumentsMap);   	
+		driver = mark59SeleniumDriver.getDriver();
+		jm = new JmeterFunctionsForSeleniumScripts(Thread.currentThread().getName(), mark59SeleniumDriver, jmeterRuntimeArgumentsMap);   	
 				
 		try {
 			LOG.debug(">> initiateSeleniumTest");			
@@ -279,7 +279,7 @@ public abstract class SeleniumIteratorAbstractJavaSamplerClient  extends  Seleni
 			
 		} finally {
 			if (! this.getKeepBrowserOpen().equals(KeepBrowserOpen.ALWAYS )     ) { 
-				seleniumDriverWrapper.driverDispose();
+				mark59SeleniumDriver.driverDispose();
 			}
 		}
 		return jm.getMainResult();

@@ -46,6 +46,8 @@ import org.openqa.selenium.remote.service.DriverService;
 import com.google.common.collect.ImmutableMap;
 import com.mark59.core.utils.Mark59Constants;
 import com.mark59.core.utils.Mark59Utils;
+import com.mark59.selenium.interfaces.Mark59SeleniumDriver;
+import com.mark59.selenium.interfaces.SeleniumDriverBuilder;
 
 /**
  * <p>Creates a chromium Selenium driver to be used in the scriptc.
@@ -172,14 +174,14 @@ public class ChromeDriverBuilder implements SeleniumDriverBuilder<ChromeOptions>
 
 	
 	/* 
-	 * Creates the Selenium Chrome driver, returning it in a 'wrapper'.
+	 * Creates a Selenium WebDriver, 'wrapping' it as a class variable in a Mark59SeleniumDriver implementation.
 	 * 
 	 * Note that the ChromeDriverService used is per instance of the driver, rather than one service for entire JVM (ie, the entire 
 	 * test run in JMeter). Experimentation showed this does not appear to be particularly inefficient (especially for longer running scripts).  
 	 * Using a shared ChromDriverService also caused test failures, as the ChromeDriverService becomes a single point of failure. 
 	 */
 	@Override
-	public Mark59SeleniumDriver build(Map<String, String> arguments) { 
+	public Mark59SeleniumDriver<ChromeDriver> build(Map<String, String> arguments) { 
 		ChromeDriver driver = null;
 		
 		if (LOG.isDebugEnabled()) LOG.debug("chrome options : " + Arrays.toString(options.asMap().entrySet().toArray()));	

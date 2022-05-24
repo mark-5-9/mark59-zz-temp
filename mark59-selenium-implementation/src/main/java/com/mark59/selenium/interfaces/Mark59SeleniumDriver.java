@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mark59.selenium.drivers;
+package com.mark59.selenium.interfaces;
 
 import java.io.File;
 
@@ -29,32 +29,63 @@ import org.openqa.selenium.WebDriver;
 
 import com.mark59.core.Mark59Driver;
 import com.mark59.core.utils.ScreenshotLoggingHelper;
+import com.mark59.selenium.corejmeterimpl.JmeterFunctionsForSeleniumScripts;
+import com.mark59.selenium.drivers.Mark59SeleniumChromeDriver;
+import com.mark59.selenium.drivers.Mark59SeleniumFirefoxDriver;
 
 /**
+ * Encapsulates the WebDriver to be used in a Mark59 script. Currently can be a Firefox or Chom(ium) driver.  
+ * 
+ * <p>The WebDriver is available vai the {@link #getDriver()} method.  
+ * 
+ * <p>As well as the WebDriver itself, additional functionality around screenshots, logging and exception 
+ * handling are included.  This class is intended as an internal class within the Mark59 framework, with its     
+ * functionality accessible for a script via {@link JmeterFunctionsForSeleniumScripts}
+ * 
+ * <p>Note: Ending a Selenium connection is slightly different between FireFox and Chrom(ium), so 
+ * {@link #driverDispose()} methods have been written in the implementation of those Mark59 drivers 
+ * 
+ * @see Mark59SeleniumChromeDriver
+ * @see Mark59SeleniumFirefoxDriver
+ *  
  * @author Michael Cohen
  * @author Philip Webb
  * Written: Australian Winter 2019  
  */
-public abstract class Mark59SeleniumDriver extends Mark59Driver<WebDriver> {
+public interface Mark59SeleniumDriver<O extends WebDriver> extends Mark59Driver<WebDriver> {
 
-	private static final Logger LOG = LogManager.getLogger(Mark59SeleniumDriver.class);
+	static final Logger LOG = LogManager.getLogger(Mark59SeleniumDriver.class);
+
 	
-
 	/**
-	 * @param webDriver the WebDriver to package
+	 * @param textFileName name of log file to write
+	 */	
+	public void writeDriverLogs(String textFileName);
+		
+	/**
+	 * @param textFileName name of log file to buffered
 	 */
-	public Mark59SeleniumDriver(WebDriver webDriver) {
-		super(webDriver);
+	public void bufferDriverLogs(String textFileName);	
+	
+	
+	
+	@Override
+	public default void documentExceptionState(Exception e) {
+		bufferScreenshot("EXCEPTION");
+		writeBufferedArtifacts();
+		ScreenshotLoggingHelper.writeExceptionLog(e);
+		writeDriverLogs("PERFLOG");
+		writePageSource("source_at_EXCEPTION");
 	}
 	
-
+	
 	@Override
-	public byte[] driverTakeScreenshot() {
+	public default byte[] driverTakeScreenshot() {
 		
 		byte[] screenshot;
 		
 		try {
-			screenshot = Base64.decodeBase64(((TakesScreenshot) this.getDriverPackage()).getScreenshotAs(OutputType.BASE64));
+			screenshot = Base64.decodeBase64(((TakesScreenshot) this.getDriver()).getScreenshotAs(OutputType.BASE64));
 		} catch (Exception e) {
 			LOG.debug("Screenshot failure ("  + e.getClass().getName() + ")  Message : " + e.getMessage()); 
 			LOG.warn("Screenshot failure ("  + e.getClass().getName() + ")  Message  Message starts: " + StringUtils.abbreviate(e.getMessage(), 100)); 
@@ -62,38 +93,15 @@ public abstract class Mark59SeleniumDriver extends Mark59Driver<WebDriver> {
 		} 
 		return screenshot;
 	}
-
-	@Override
-	public void driverDispose() {
-		// adding close() before quit() appears to help chromeDriver cleanup its temp directories
-		// https://stackoverflow.com/questions/43289035/chromedriver-not-deleting-scoped-dir-in-temp-folder-after-test-is-complete/
-		// However, close() closes the driver connection in Firefox, so wrapping the quit() in a try-catch to bypass Firefox SoSuchSessionException.  
+	
 		
-		this.getDriverPackage().close();
-
-		try {
-			this.getDriverPackage().quit();
-		} catch (Exception e) {
-			LOG.debug("attempting driver quit() : " + e.getMessage());
-		}
-	}
-	
-	
-	@Override
-	public void documentExceptionState(Exception e) {
-		super.documentExceptionState(e);
-		writeDriverLogs("PERFLOG");
-		writePageSource("source_at_EXCEPTION");
-	}
-	
-	
 	/**
 	 * @param htmlFileName name of file contain the html page source to write
 	 */
-	public void writePageSource(String htmlFileName) {
+	public default void writePageSource(String htmlFileName) {
 		if (LOG.isTraceEnabled()) LOG.trace(Thread.currentThread().getName() + " : writing html source, (partial) filename " + htmlFileName );		
 		
-		String sourceWithUrlComment = getCurrentUrlAndtHtmlPageSource(this.getDriverPackage());		
+		String sourceWithUrlComment = getCurrentUrlAndtHtmlPageSource(this.getDriver());		
 		ScreenshotLoggingHelper.writeScreenshotLog(new File(ScreenshotLoggingHelper.buildFullyQualifiedImageName(htmlFileName, "html")), sourceWithUrlComment.getBytes());
 	}
 
@@ -101,13 +109,13 @@ public abstract class Mark59SeleniumDriver extends Mark59Driver<WebDriver> {
 	/**
 	 * @param htmlFileName name of file contain the html page source to buffer
 	 */
-	public void bufferPageSource(String htmlFileName){
-		String sourceWithUrlComment = getCurrentUrlAndtHtmlPageSource(this.getDriverPackage());				
+	public default void bufferPageSource(String htmlFileName){
+		String sourceWithUrlComment = getCurrentUrlAndtHtmlPageSource(this.getDriver());				
 		bufferedArtifacts.put(ScreenshotLoggingHelper.buildFullyQualifiedImageName(htmlFileName, "html"), sourceWithUrlComment.getBytes() );
 	}
 
 
-	private String getCurrentUrlAndtHtmlPageSource(WebDriver driver) {
+	static String getCurrentUrlAndtHtmlPageSource(WebDriver driver) {
 		String currentURL;
 		try {
 			currentURL = driver.getCurrentUrl();
@@ -129,15 +137,4 @@ public abstract class Mark59SeleniumDriver extends Mark59Driver<WebDriver> {
 		return "<!--  Driver CurrentUrl : " + currentURL + " --> \n" +  pageSource;
 	}
 
-	
-	/**
-	 * @param textFileName name of log file to write
-	 */	
-	public abstract void writeDriverLogs(String textFileName);
-		
-	/**
-	 * @param textFileName name of log file to buffered
-	 */
-	public abstract void bufferDriverLogs(String textFileName);	
-	
 }

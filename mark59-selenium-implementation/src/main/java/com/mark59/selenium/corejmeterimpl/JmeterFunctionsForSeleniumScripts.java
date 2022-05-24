@@ -28,7 +28,7 @@ import org.openqa.selenium.WebDriver;
 import com.mark59.core.JmeterFunctionsImpl;
 import com.mark59.core.Outcome;
 import com.mark59.core.utils.Mark59Constants.JMeterFileDatatypes;
-import com.mark59.selenium.drivers.Mark59SeleniumDriver;
+import com.mark59.selenium.interfaces.Mark59SeleniumDriver;
 
 /**
  * Selenium flavored extension of the Mark59 class {@link JmeterFunctionsImpl} ( whose primary purpose to to handle transaction results, implemented in mark59 by the use 

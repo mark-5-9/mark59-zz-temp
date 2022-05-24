@@ -22,34 +22,54 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
 
 import com.mark59.core.utils.ScreenshotLoggingHelper;
+import com.mark59.selenium.interfaces.Mark59SeleniumDriver;
 
 /**
+ * 
+ * Chrom(ium) implementation of a Mark59SeleniumDriver.  
+ * 
  * @author Michael Cohen
  * @author Philip Webb
  * Written: Australian Winter 2019  
  */
-public class Mark59SeleniumChromeDriver extends Mark59SeleniumDriver {
+public class Mark59SeleniumChromeDriver implements Mark59SeleniumDriver<ChromeDriver>  {
 	
 	private static final Logger LOG = LogManager.getLogger(Mark59SeleniumChromeDriver.class);
 
-	/**
-	 * @param webDriver the WebDriver to be 'packaged'
-	 */
-	public Mark59SeleniumChromeDriver(WebDriver webDriver) {
-		super(webDriver);
-	}
+	WebDriver webDriver;
 
 	
+	/**
+	 * @param webDriver the WebDriver to package
+	 */
+	public Mark59SeleniumChromeDriver(WebDriver webDriver) {
+		this.webDriver = webDriver;
+	}
+	
+	
+	@Override
+	public WebDriver getDriver() {
+		return webDriver;
+	}
+	
+	
+	@Override
+	public String getDriverClass() {
+		return this.getDriver().getClass().getName();  
+	}
+	
+
 	@Override
 	public String getDriverLogs() {
-		if (!this.getDriverPackage().manage().logs().getAvailableLogTypes().contains(LogType.PERFORMANCE))
+		if (!this.getDriver().manage().logs().getAvailableLogTypes().contains(LogType.PERFORMANCE))
 			return null;
 
-		List<LogEntry> logs = this.getDriverPackage().manage().logs().get(LogType.PERFORMANCE).getAll();
+		List<LogEntry> logs = this.getDriver().manage().logs().get(LogType.PERFORMANCE).getAll();
 
 		StringBuilder allEntriesLogBuilder = new StringBuilder();
 
@@ -63,10 +83,10 @@ public class Mark59SeleniumChromeDriver extends Mark59SeleniumDriver {
 	
 	@Override
 	public void clearDriverLogs() {
-		if (!this.getDriverPackage().manage().logs().getAvailableLogTypes().contains(LogType.PERFORMANCE))
+		if (!this.getDriver().manage().logs().getAvailableLogTypes().contains(LogType.PERFORMANCE))
 			return;
 
-		this.getDriverPackage().manage().logs().get(LogType.PERFORMANCE).getAll();
+		this.getDriver().manage().logs().get(LogType.PERFORMANCE).getAll();
 	}
 
 	
@@ -89,6 +109,22 @@ public class Mark59SeleniumChromeDriver extends Mark59SeleniumDriver {
 	private byte[] getDriverLogBytes() {
 		String allEntriesLog = this.getDriverLogs();
 		return StringUtils.isNotBlank(allEntriesLog) ? allEntriesLog.getBytes() : null;
+	}
+	
+	
+	/**
+	 * Doing a close() before quit() appears to help chromeDriver cleanup its temp directories
+	 * https://stackoverflow.com/questions/43289035/chromedriver-not-deleting-scoped-dir-in-temp-folder-after-test-is-complete/
+	 */
+	@Override
+	public void driverDispose() {
+		try {
+			this.getDriver().close();
+			this.getDriver().quit();
+		} catch (Exception e) {
+			LOG.info("unexpected error trying to close the chomeDriver" + e.getMessage() );
+			System.out.println("unexpected error trying to close the chomeDriver" + e.getMessage() );
+		}
 	}
 	
 }

@@ -16,20 +16,38 @@
 
 package com.mark59.test.core;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.mark59.core.Mark59Driver;
+
 /**
 * @author Michael Cohen
 * Written: Australian Winter 2019 
 */
-public class MockDriverWrapper extends Mark59Driver<MockDriver> {
+public class Mark59MockDriver implements Mark59Driver<MockDriver> {
 
-	public MockDriverWrapper(MockDriver driverPackage) {
-		super(driverPackage);
+	private static final Logger LOG = LogManager.getLogger(Mark59MockDriver.class);
+	
+	
+	MockDriver mockbDriver;
+	
+	/**
+	 * @param webDriver the WebDriver to package
+	 */
+	public Mark59MockDriver(MockDriver mockbDriver) {
+		this.mockbDriver = mockbDriver;
+	}
+	
+	
+	@Override
+	public MockDriver getDriver() {
+		return this.mockbDriver;
 	}
 
 
 	@Override
-	protected byte[] driverTakeScreenshot() {
+	public byte[] driverTakeScreenshot() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -50,6 +68,19 @@ public class MockDriverWrapper extends Mark59Driver<MockDriver> {
 	public void clearDriverLogs() {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	@Override
+	public String getDriverClass() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void documentExceptionState(Exception e) {
+		// TODO Auto-generated method stub
 	}
 
 }

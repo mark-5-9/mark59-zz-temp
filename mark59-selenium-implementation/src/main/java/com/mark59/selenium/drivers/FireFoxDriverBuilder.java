@@ -36,6 +36,8 @@ import org.openqa.selenium.remote.service.DriverService;
 
 import com.mark59.core.utils.Mark59Constants;
 import com.mark59.core.utils.ScreenshotLoggingHelper;
+import com.mark59.selenium.interfaces.Mark59SeleniumDriver;
+import com.mark59.selenium.interfaces.SeleniumDriverBuilder;
 
 /**
  * @author Michael Cohen
@@ -148,7 +150,7 @@ public class FireFoxDriverBuilder implements SeleniumDriverBuilder<FirefoxOption
 	
 	
 	@Override
-	public Mark59SeleniumDriver build(Map<String, String> arguments) {
+	public Mark59SeleniumDriver<FirefoxDriver> build(Map<String, String> arguments) {
 
 		FirefoxProfile profile = new FirefoxProfile();
 		profile.setPreference("dom.disable_beforeunload", true);
