@@ -44,7 +44,7 @@ import com.mark59.datahunter.samples.dsl.helpers.UpdateUseState;
 import com.mark59.selenium.corejmeterimpl.JmeterFunctionsForSeleniumScripts;
 import com.mark59.selenium.corejmeterimpl.KeepBrowserOpen;
 import com.mark59.selenium.corejmeterimpl.SeleniumAbstractJavaSamplerClient;
-import com.mark59.selenium.drivers.SeleniumDriverFactory;
+import com.mark59.selenium.driversimpl.SeleniumDriverFactory;
 
 /**
  * A script to check run thru and check each item action on the DataHunter pages (except the asyn processing - 

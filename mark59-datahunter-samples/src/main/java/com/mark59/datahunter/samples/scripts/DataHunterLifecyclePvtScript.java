@@ -58,7 +58,7 @@ import com.mark59.dsl.samples.seleniumDSL.pageElements.HtmlTableRow;
 import com.mark59.selenium.corejmeterimpl.JmeterFunctionsForSeleniumScripts;
 import com.mark59.selenium.corejmeterimpl.KeepBrowserOpen;
 import com.mark59.selenium.corejmeterimpl.SeleniumAbstractJavaSamplerClient;
-import com.mark59.selenium.drivers.SeleniumDriverFactory;
+import com.mark59.selenium.driversimpl.SeleniumDriverFactory;
 
 
 /**

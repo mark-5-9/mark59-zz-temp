@@ -19,7 +19,7 @@ import com.mark59.core.utils.*;
 import com.mark59.dsl.samples.seleniumDSL.core._GenericPage;
 import com.mark59.dsl.samples.seleniumDSL.pageElements.*;
 import com.mark59.selenium.corejmeterimpl.*;
-import com.mark59.selenium.drivers.SeleniumDriverFactory;
+import com.mark59.selenium.driversimpl.SeleniumDriverFactory;
 
 
 // >> --------- COMMENT OUT THE NEXT TWO LINES ---------  

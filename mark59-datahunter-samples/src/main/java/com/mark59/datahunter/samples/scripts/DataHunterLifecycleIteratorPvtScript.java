@@ -49,7 +49,7 @@ import com.mark59.datahunter.samples.dsl.helpers.DslConstants;
 import com.mark59.selenium.corejmeterimpl.JmeterFunctionsForSeleniumScripts;
 import com.mark59.selenium.corejmeterimpl.KeepBrowserOpen;
 import com.mark59.selenium.corejmeterimpl.SeleniumIteratorAbstractJavaSamplerClient;
-import com.mark59.selenium.drivers.SeleniumDriverFactory;
+import com.mark59.selenium.driversimpl.SeleniumDriverFactory;
 
 /**
  * Similar test to DataHunterLifecyclePvtScript, except this test iterates via the  

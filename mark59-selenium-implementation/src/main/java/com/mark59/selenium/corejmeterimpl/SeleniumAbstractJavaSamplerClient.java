@@ -51,10 +51,11 @@ import com.mark59.core.Outcome;
 import com.mark59.core.utils.IpUtilities;
 import com.mark59.core.utils.Log4jConfigurationHelper;
 import com.mark59.core.utils.Mark59Constants;
+import com.mark59.core.utils.Mark59LogLevels;
 import com.mark59.core.utils.Mark59Utils;
 import com.mark59.core.utils.SafeSleep;
-import com.mark59.selenium.drivers.SeleniumDriverFactory;
-import com.mark59.selenium.interfaces.Mark59SeleniumDriver;
+import com.mark59.selenium.driversimpl.SeleniumDriverFactory;
+import com.mark59.selenium.interfaces.DriverFunctionsSelenium;
 
 import jodd.util.CsvUtil;
 
@@ -73,21 +74,21 @@ import jodd.util.CsvUtil;
  *
  * @see SeleniumDriverFactory#makeMark59SeleniumDriver(Map)
  * @see SeleniumDriverFactory#SeleniumDriverFactory()
- * @see com.mark59.selenium.drivers.SeleniumDriverFactory#HEADLESS_MODE 
- * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setHeadless(boolean)  
- * @see com.mark59.selenium.drivers.SeleniumDriverFactory#PAGE_LOAD_STRATEGY 
- * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setPageLoadStrategy(PageLoadStrategy) 
- * @see com.mark59.selenium.drivers.SeleniumDriverFactory#BROWSER_DIMENSIONS 
- * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setSize(int width, int height) 
- * @see com.mark59.selenium.drivers.SeleniumDriverFactory#PROXY 
- * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setProxy(org.openqa.selenium.Proxy) 
- * @see com.mark59.selenium.drivers.SeleniumDriverFactory#ADDITIONAL_OPTIONS 
- * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setAdditionalOptions(java.util.List) 
- * @see com.mark59.selenium.drivers.SeleniumDriverFactory#WRITE_FFOX_BROWSER_LOGFILE 
- * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setWriteBrowserLogfile(boolean)
- * @see com.mark59.selenium.drivers.SeleniumDriverFactory#BROWSER_EXECUTABLE  
- * @see com.mark59.selenium.interfaces.SeleniumDriverBuilder#setAlternateBrowser(java.nio.file.Path) 
- * @see com.mark59.selenium.drivers.SeleniumDriverFactory#EMULATE_NETWORK_CONDITIONS 
+ * @see com.mark59.selenium.driversimpl.SeleniumDriverFactory#HEADLESS_MODE 
+ * @see com.mark59.selenium.interfaces.DriverFunctionsSeleniumBuilder#setHeadless(boolean)  
+ * @see com.mark59.selenium.driversimpl.SeleniumDriverFactory#PAGE_LOAD_STRATEGY 
+ * @see com.mark59.selenium.interfaces.DriverFunctionsSeleniumBuilder#setPageLoadStrategy(PageLoadStrategy) 
+ * @see com.mark59.selenium.driversimpl.SeleniumDriverFactory#BROWSER_DIMENSIONS 
+ * @see com.mark59.selenium.interfaces.DriverFunctionsSeleniumBuilder#setSize(int width, int height) 
+ * @see com.mark59.selenium.driversimpl.SeleniumDriverFactory#PROXY 
+ * @see com.mark59.selenium.interfaces.DriverFunctionsSeleniumBuilder#setProxy(org.openqa.selenium.Proxy) 
+ * @see com.mark59.selenium.driversimpl.SeleniumDriverFactory#ADDITIONAL_OPTIONS 
+ * @see com.mark59.selenium.interfaces.DriverFunctionsSeleniumBuilder#setAdditionalOptions(java.util.List) 
+ * @see com.mark59.selenium.driversimpl.SeleniumDriverFactory#WRITE_FFOX_BROWSER_LOGFILE 
+ * @see com.mark59.selenium.interfaces.DriverFunctionsSeleniumBuilder#setWriteBrowserLogfile(boolean)
+ * @see com.mark59.selenium.driversimpl.SeleniumDriverFactory#BROWSER_EXECUTABLE  
+ * @see com.mark59.selenium.interfaces.DriverFunctionsSeleniumBuilder#setAlternateBrowser(java.nio.file.Path) 
+ * @see com.mark59.selenium.driversimpl.SeleniumDriverFactory#EMULATE_NETWORK_CONDITIONS 
  * @see IpUtilities#localIPisNotOnListOfIPaddresses(String)   
  * @see JmeterFunctionsForSeleniumScripts
  *
@@ -118,7 +119,7 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 	/**  the mark59 JmeterFunctionsForSeleniumScripts for the test  */		
 	protected JmeterFunctionsForSeleniumScripts jm;
 	/**  the Selenium driver 'Wrapper' for the test, with additional functions around logging and exception handling */	
-	protected Mark59SeleniumDriver<WebDriver> mark59SeleniumDriver; 
+	protected DriverFunctionsSelenium<WebDriver> mark59SeleniumDriver; 
 	/**  the Selenium Web Driver for the test  */
 	protected WebDriver driver;
 
@@ -193,21 +194,21 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 	 * 
 	 * @see SeleniumDriverFactory#makeMark59SeleniumDriver(Map)
 	 * @see SeleniumDriverFactory#SeleniumDriverFactory()
-	 * @see com.mark59.selenium.drivers.SeleniumDriverFactory#HEADLESS_MODE
-	 * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setHeadless(boolean)  
-	 * @see com.mark59.selenium.drivers.SeleniumDriverFactory#PAGE_LOAD_STRATEGY 
-	 * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setPageLoadStrategy(PageLoadStrategy) 
-	 * @see com.mark59.selenium.drivers.SeleniumDriverFactory#BROWSER_DIMENSIONS 
-	 * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setSize(int width, int height) 
-	 * @see com.mark59.selenium.drivers.SeleniumDriverFactory#PROXY 
-	 * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setProxy(org.openqa.selenium.Proxy) 
-	 * @see com.mark59.selenium.drivers.SeleniumDriverFactory#ADDITIONAL_OPTIONS 
-	 * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setAdditionalOptions(java.util.List) 
-	 * @see com.mark59.selenium.drivers.SeleniumDriverFactory#WRITE_FFOX_BROWSER_LOGFILE 
-	 * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setWriteBrowserLogfile(boolean)
-	 * @see com.mark59.selenium.drivers.SeleniumDriverFactory#BROWSER_EXECUTABLE  
-	 * @see com.mark59.selenium.drivers.SeleniumDriverBuilder#setAlternateBrowser(java.nio.file.Path) 
-	 * @see com.mark59.selenium.drivers.SeleniumDriverFactory#EMULATE_NETWORK_CONDITIONS 
+	 * @see com.mark59.selenium.driversimpl.SeleniumDriverFactory#HEADLESS_MODE
+	 * @see com.mark59.selenium.interfaces.DriverFunctionsSeleniumBuilder#setHeadless(boolean)  
+	 * @see com.mark59.selenium.driversimpl.SeleniumDriverFactory#PAGE_LOAD_STRATEGY 
+	 * @see com.mark59.selenium.interfaces.DriverFunctionsSeleniumBuilder#setPageLoadStrategy(PageLoadStrategy) 
+	 * @see com.mark59.selenium.driversimpl.SeleniumDriverFactory#BROWSER_DIMENSIONS 
+	 * @see com.mark59.selenium.interfaces.DriverFunctionsSeleniumBuilder#setSize(int width, int height) 
+	 * @see com.mark59.selenium.driversimpl.SeleniumDriverFactory#PROXY 
+	 * @see com.mark59.selenium.interfaces.DriverFunctionsSeleniumBuilder#setProxy(org.openqa.selenium.Proxy) 
+	 * @see com.mark59.selenium.driversimpl.SeleniumDriverFactory#ADDITIONAL_OPTIONS 
+	 * @see com.mark59.selenium.interfaces.DriverFunctionsSeleniumBuilder#setAdditionalOptions(java.util.List) 
+	 * @see com.mark59.selenium.driversimpl.SeleniumDriverFactory#WRITE_FFOX_BROWSER_LOGFILE 
+	 * @see com.mark59.selenium.interfaces.DriverFunctionsSeleniumBuilder#setWriteBrowserLogfile(boolean)
+	 * @see com.mark59.selenium.driversimpl.SeleniumDriverFactory#BROWSER_EXECUTABLE  
+	 * @see com.mark59.selenium.interfaces.DriverFunctionsSeleniumBuilder#setAlternateBrowser(java.nio.file.Path) 
+	 * @see com.mark59.selenium.driversimpl.SeleniumDriverFactory#EMULATE_NETWORK_CONDITIONS 
 	 * @see IpUtilities#localIPisNotOnListOfIPaddresses(String)   
 	 * @see JmeterFunctionsForSeleniumScripts
 	 * 
@@ -253,7 +254,7 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 		}
 
 		driver = mark59SeleniumDriver.getDriver();
-		jm = new JmeterFunctionsForSeleniumScripts(Thread.currentThread().getName(), mark59SeleniumDriver, jmeterRuntimeArgumentsMap);   	
+		jm = new JmeterFunctionsForSeleniumScripts(Thread.currentThread().getName(), context, mark59SeleniumDriver, jmeterRuntimeArgumentsMap);   	
 		
 		try {
 			
@@ -291,8 +292,8 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 		StringWriter sw = new StringWriter();
 		e.printStackTrace(new PrintWriter(sw));
 		
-		System.err.println("["+ thread + "]  ERROR : " + this.getClass() + ". See screenshot directory for details. Stack trace: \n  " + sw.toString());
-		LOG.error("["+ thread + "]  ERROR : " + this.getClass() + ". See screenshot directory for details. Stack trace: \n  " + sw.toString());
+		System.err.println("["+ thread + "]  ERROR : " + this.getClass() + ". See Mark59 log directory for details. Stack trace: \n  " + sw.toString());
+		LOG.error("["+ thread + "]  ERROR : " + this.getClass() + ". See Mark59 log directory for details. Stack trace: \n  " + sw.toString());
 
 		try {
 			mark59SeleniumDriver.documentExceptionState(new Exception(e));

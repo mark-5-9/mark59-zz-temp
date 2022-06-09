@@ -17,6 +17,7 @@
 package com.mark59.core;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -26,13 +27,15 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.samplers.SampleResult;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import com.mark59.core.interfaces.DriverFunctions;
 import com.mark59.core.interfaces.JmeterFunctions;
 import com.mark59.core.utils.Mark59Constants;
-import com.mark59.core.utils.Mark59Utils;
 import com.mark59.core.utils.Mark59Constants.JMeterFileDatatypes;
+import com.mark59.core.utils.Mark59Utils;
+import com.mark59.core.utils.Mark59LoggingConfig;
 
 
 
@@ -61,20 +64,25 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 
 	private static final Logger LOG = LogManager.getLogger(JmeterFunctionsImpl.class);
 	
+	protected static Mark59LoggingConfig loggingConfig;	
+
 	/**
 	 * the JMeter main sample result for the script
 	 */
 	protected SampleResult mainResult = new SampleResult();
+	
 	/**
 	 * the executed and in-flight transactions   
 	 */
 	protected Map<String, SampleResult> transactionMap = new ConcurrentHashMap<>();
+	
 	/**
 	 * holds most Recent Transaction Started  (used in the sample script by the DevTools DSL)
 	 */
 	protected String mostRecentTransactionStarted;
+	
 	/**
-	 * holds thread Name
+	 * holds current thread Name 
 	 */
 	protected String threadName;
 
@@ -82,11 +90,21 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	 * used to the the result of a test as a failure
 	 */
 	protected boolean isForcedFail;
+
+	/**
+	 * map of captured logs as a byte array 
+	 * (key would usually be expected to be filename for most implementations)
+	 */
+	protected Map<String, byte[]> bufferedArtifacts = new HashMap<>();
+	
 	
 	/**
-	 * @param threadName  thread name (eg, obtained via<code>Thread.currentThread().getName()</code> )
+	 * @param threadName thread name (eg, obtained via<code>Thread.currentThread().getName()</code> )
 	 */
 	public JmeterFunctionsImpl(String threadName) {
+		
+		loggingConfig = Mark59LoggingConfig.getInstance();
+		
 		this.threadName = threadName;
 		mainResult.sampleStart();
 	}
@@ -362,7 +380,7 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	 * @return SampleResult
 	 */
 	@Override
-	public SampleResult setTransaction(String transactionLabel, JMeterFileDatatypes jMeterFileDatatypes, long transactionTime, boolean success, String responseCode) {
+	public SampleResult setTransaction(String transactionLabel, JMeterFileDatatypes jMeterFileDatatypes, long transactionTime, boolean success, String responseCode){
 		return createSubResult(transactionLabel, transactionTime, success ? Outcome.PASS : Outcome.FAIL, jMeterFileDatatypes, responseCode );		
 	}
 	
@@ -381,7 +399,7 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	 */ 
 	@Override
 	public SampleResult userDatatypeEntry(String dataPointName, long dataPointValue,  JMeterFileDatatypes jMeterFileDatatypes) {
-		if (LOG.isDebugEnabled()) LOG.debug(" userDatatypeEntry Name:Value [ " + dataPointName + ":" + dataPointValue + ":" +  jMeterFileDatatypes.getDatatypeText() + "]");
+		if (LOG.isDebugEnabled())LOG.debug(" userDatatypeEntry [" + dataPointName + ":" + dataPointValue + ":" + jMeterFileDatatypes.getDatatypeText() + "]");
 		return createSubResult(dataPointName, dataPointValue, Outcome.PASS, jMeterFileDatatypes, null);		
 	}
 	
@@ -404,7 +422,7 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	}
 	
 	
-	private SampleResult createSubResult(String dataPointName, long dataPointValue, Outcome result, JMeterFileDatatypes jmeterFileDatatypes, String responseCode) {
+	private SampleResult createSubResult(String dataPointName, long dataPointValue, Outcome result, JMeterFileDatatypes jmeterFileDatatypes, String responseCode){
 		if (StringUtils.isBlank(dataPointName))
 			throw new IllegalArgumentException("dataPointName cannot be null or empty");
 		if (StringUtils.isBlank(responseCode)) 
@@ -511,4 +529,53 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	public void failTest() {
 		isForcedFail = true;
 	}
+
+	
+	
+	/**
+	 * @return a map of the buffered logs (keyed by name) 
+	 */
+	@Override	
+	public Map<String, byte[]> getBufferedLogs() {
+		return bufferedArtifacts;
+	}
+	
+	
+	/**
+	 * Capture and immediately output a 'screenshot' log. Use with caution in a 
+	 * Performance and Volume test as misuse of this method may produce many more screenshots
+	 * than intended. 
+	 * <p>Instead, you could use {@link #bufferScreenshot(String)} and {@link #writeBufferedArtifacts()}.
+	 * <p>Can be implemented by extending this class and combining with a 
+	 * {@link DriverFunctions} implementation that is capable of taking logs/screenshots    
+	 * 
+	 * @param imageName filename to use for the screenshot
+	 */
+	@Override	
+	public void writeScreenshot(String imageName){
+		System.out.println("writeScreenshot not implemented!" );
+	} 
+
+	
+	/**
+	 * Stores a 'screenshot' log in memory, ready to be written to file later.
+	 * <p>Can be implemented by extending this class and combining with a 
+	 * {@link DriverFunctions} implementation that is capable of taking logs/screenshots     
+	 */
+	@Override	
+	public void bufferScreenshot(String imageName){
+		System.out.println("bufferScreenshot not implemented!" );
+	} 
+
+		
+	/**
+	 * Writes all buffered screenshots/logs to disk 
+	 * <p>Can be implemented by extending this class and combining with a 
+	 * {@link DriverFunctions} implementation that is capable of taking logs/screenshots  
+	 */
+	@Override	
+	public void writeBufferedArtifacts(){
+		System.out.println("writeBufferedArtifacts not implemented!" );
+	} 
+	
 }

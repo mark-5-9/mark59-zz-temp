@@ -16,6 +16,8 @@
 
 package com.mark59.core.interfaces;
 
+import java.util.Map;
+
 import org.apache.jmeter.samplers.SampleResult;
 
 import com.mark59.core.utils.Mark59Constants.JMeterFileDatatypes;
@@ -158,5 +160,43 @@ public interface JmeterFunctions {
 	 * @return org.apache.jmeter.samplers.SampleResult
 	 */	
 	SampleResult getMainResult();
+
+	
+	/**
+	 * @return the Map of the buffered screenshots
+	 */
+	public Map<String, byte[]> getBufferedLogs(); 
+	
+	
+	/**
+	 * Capture and immediately output a screenshot/log. Use with caution in a 
+	 * Performance and Volume test as misuse of this method may produce many more screenshots
+	 * than intended. 
+	 * <p>Instead, you could use {@link #bufferScreenshot(String)} and {@link #writeBufferedArtifacts()}.
+	 * <p>Can be implemented by extending this class and combining with a 
+	 * {@link DriverFunctions} implementation can is capable of taking logs/screenshots    
+	 * 
+	 * @param imageName filename to use for the screenshot (without suffix)
+	 */
+	public void writeScreenshot(String imageName); 
+	
+	
+	/**
+	 * Stores a screenshot/log in memory, ready to be written to file later.
+	 * <p>Can be implemented by extending this class and combining with a 
+	 * {@link DriverFunctions} implementation can is capable of taking logs/screenshots
+	 *      
+	 * @param imageName filename to use for the screenshot (without suffix)
+	 */
+	public void bufferScreenshot(String imageName);
+
+		
+	/**
+	 * Writes all buffered screenshots/logs to disk (ie, all transaction-level logging
+	 * performed using a Mark59LogLevels of "BUFFER")
+	 * <p>Can be implemented by extending this class and combining with a 
+	 * {@link DriverFunctions} implementation can is capable of taking logs/screenshots  
+	 */
+	public void writeBufferedArtifacts();
 
 }

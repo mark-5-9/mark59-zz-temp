@@ -22,17 +22,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.nio.file.Path;
 import java.text.MessageFormat;
-import java.time.LocalDate;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Static properties file reader, loading the properties file into memory just once per run to reduce disk I/O.
+ * Static utility helper class for log file creation.
  * 
  * @author Michael Cohen
  * @author Philip Webb
@@ -41,57 +38,17 @@ import org.apache.logging.log4j.Logger;
 public class ScreenshotLoggingHelper {
 	private static final Logger LOG = LogManager.getLogger(ScreenshotLoggingHelper.class);	
 	
-	/**
-	 * incremented counter used as part of the screenshot name
-	 */
 	protected static final String SCREENSHOT_COUNTER = "SCREENSHOT_COUNTER";
 	
-	private static ScreenshotLoggingHelper instance;
 	
-	private static Path screenshotDirectory = null;
-	
-	
-
-	/**
-	 * private constructor to ensure deleteDirectory can only be executed in this class (to prevent multiple calls to deleteDirectory)
-	 */
-	private  ScreenshotLoggingHelper() throws IOException {
-		String directory;
-		try {
-			directory = PropertiesReader.getInstance().getProperty(PropertiesKeys.MARK59_PROP_SCREENSHOT_DIRECTORY);
-		} catch (IOException e) {
-			LOG.info("Failed to obtain screenshot directory from config (property " + PropertiesKeys.MARK59_PROP_SCREENSHOT_DIRECTORY + " not set");
-			return;
-		}
-		
-		if (directory != null ) {
-			directory += File.separator + LocalDate.now();
-			screenshotDirectory = new File(directory).toPath();
-			LOG.info( "Clearing any existing data from Screenshots Directory " + screenshotDirectory);
-			FileUtils.deleteDirectory(screenshotDirectory.toFile());
-		} else {
-			LOG.warn("   As no screenshot directory has been set, attempts to write screenshots or performance logs will fail." );
-		}
-	}
+	protected  ScreenshotLoggingHelper(){	}
 
 	
 	/**
-	 * Returns a fully qualified name for the image, including assigning the .jpg file extension
+	 * Returns a fully qualified File name for the image.
 	 * 
-	 * <p>Returned names take the pattern {ThreadName}_{Image Number}_{imageName}.jpg</p>
-	 * 
-	 * @param imageName filename to use for the screenshot
-	 * @return fully qualified image name
-	 */
-	public static String buildFullyQualifiedImageName(String imageName) {
-		return buildFullyQualifiedImageName(imageName, "jpg");
-	}
-
-	
-	/**
-	 * Returns a fully qualified name for the image, including assigning an arbitrary file extension.
-	 * 
-	 * <p>Returned names take the pattern {Directory}/{ThreadName}_{Image Number}_{imageName}.{extension}</p>
+	 * <p>Returned names take the pattern:<br>
+	 *  {Directory}/{As defined by {@link PropertiesKeys#MARK59_PROP_LOGNAME_FORMAT}_{Image Number}_{imageName}.{extension}</p>
 	 * 
 	 * @param fileNameEnding filename to use for the screenshot
 	 * @param extension file extension
@@ -100,7 +57,7 @@ public class ScreenshotLoggingHelper {
 	public static String buildFullyQualifiedImageName(String fileNameEnding, String extension) {
 		
 		String fullyQualifiedImageName = MessageFormat.format("{0}{1}{2}_{3}_{4}.{5}", 
-											getScreenshotDirectory(),
+											"this dier", //getScreenshotDirectory(),
 											File.separator, 
 											Thread.currentThread().getName(), 
 											String.format("%03d", StaticCounter.readCount(SCREENSHOT_COUNTER)),
@@ -124,7 +81,6 @@ public class ScreenshotLoggingHelper {
 	 */
 	public static void writeScreenshotLog(File screenshotLogFilename, byte[] screenshotLogFileData) {
 
-		//noinspection ResultOfMethodCallIgnored
 		new File(screenshotLogFilename.getParent()).mkdirs();
 
 		LOG.info(MessageFormat.format("Writing image to disk: {0}", screenshotLogFilename));
@@ -147,52 +103,10 @@ public class ScreenshotLoggingHelper {
 		StringWriter sw = new StringWriter();
 		e.printStackTrace(new PrintWriter(sw));
 		String stackTrace = sw.toString(); 
-				
+		
 		ScreenshotLoggingHelper.writeScreenshotLog(
 				new File(ScreenshotLoggingHelper.buildFullyQualifiedImageName("EXCEPTION", "txt")),
 				StringUtils.isNotBlank(stackTrace) ? stackTrace.getBytes() : null);
-	}
-	
-	
-	
-	
-	
-	/**
-	 * @return path of screenshotDirectory
-	 */
-	public static String getScreenshotDirectory() {
-		if (screenshotDirectory == null)
-			return null;
-		return screenshotDirectory.toString();
-	}
-
-			
-	/**
-	 * @return an existing or otherwise new ScreenshotLoggingHelper
-	 * @throws IOException when trying to read the properties file
-	 */
-	public static synchronized ScreenshotLoggingHelper initialiseDirectory() throws IOException {
-		if (instance == null) {
-			instance = new ScreenshotLoggingHelper();
-		}
-		return instance;
-	}
-	
-	
-	/**
-	 * Deprecated.  Please use {@link #initialiseDirectory()} <br>
-	 * Left for compatibility with mark59 v4.1 and earlier
-	 * 
-	 * @param pr PropertiesReader
-	 * @return an existing or otherwise new ScreenshotLoggingHelper
-	 * @throws IOException when trying to read the properties file
-	 */
-	@Deprecated
-	public static synchronized ScreenshotLoggingHelper initialiseDirectory(PropertiesReader pr) throws IOException {
-		if(instance == null) {
-			instance = new ScreenshotLoggingHelper();
-		}
-		return instance;
 	}
 	
 }

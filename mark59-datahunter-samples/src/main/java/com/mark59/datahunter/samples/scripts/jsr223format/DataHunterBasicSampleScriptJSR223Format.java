@@ -12,7 +12,7 @@ import org.openqa.selenium.support.ui.Select;
 
 import com.mark59.core.utils.*;
 import com.mark59.selenium.corejmeterimpl.*;
-import com.mark59.selenium.drivers.SeleniumDriverFactory;
+import com.mark59.selenium.driversimpl.SeleniumDriverFactory;
 
 
 // >> --------- COMMENT OUT THE NEXT TWO LINES ---------  

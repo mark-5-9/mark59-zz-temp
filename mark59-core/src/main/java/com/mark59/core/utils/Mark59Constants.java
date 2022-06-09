@@ -17,12 +17,25 @@
 package com.mark59.core.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * @author Michael Cohen
  * @author Philip Webb
  * Written: Australian Winter 2019  
+ */
+/**
+ * @author s62991
+ *
+ */
+/**
+ * @author s62991
+ *
+ */
+/**
+ * @author s62991
+ *
  */
 public class Mark59Constants {
 	
@@ -70,7 +83,13 @@ public class Mark59Constants {
 	 * Browser default dimensions (width by height) 
 	 */
 	public static final String DEFAULT_BROWSER_DIMENSIONS ="1920,1080";
-    
+
+	/**
+	 * Valid values for {@link PropertiesKeys#MARK59_PROP_LOG_DIRECTORY_SUFFIX } 
+	 */
+	public static final String DATE ="date";
+	public static final String DATE_TIME ="datetime";
+		
 	/**
 	 * REFERENCE
 	 */
@@ -96,6 +115,22 @@ public class Mark59Constants {
      * a H2 database acting as a 'client' server (useful in Docker for communication a H2 database over Docker instances) 
      */
     public static final String H2TCPCLIENT	= "h2tcpclient";
+    
+    
+    public static final String THREAD_NAME	 = "THEADNAME";    
+    public static final String THREAD_GROUP  = "THREADGROUP";    
+    public static final String SAMPLER		 = "SAMPLER";    
+    public static final String LABEL		 = "LABEL";    				// 'Label' in JMeter output file
+    public static final String LOG_COUNTER	 = "SCREENSHOTCOUNTER";    
+    
+    /**
+     * The (ordered) allowable value(s) used to define the format of log names in a Mark59 screenshot directory.
+     * Done via setting the via setting the values in a comma delimited list in property 
+     * {@link PropertiesKeys#MARK59_PROP_LOGNAME_FORMAT}.
+     * <p>Allowed value options are:  <code> ThreadName, ThreadGroup, Sampler, Transaction, ScreenshotCounter </code><br>
+     * (case insensitive)  
+     */
+    public static final List<String> LOGNAME_FORMAT_OPTIONS = Arrays.asList(THREAD_NAME, THREAD_GROUP, SAMPLER, LABEL, LOG_COUNTER); 
     
     /**
      * Defines an enumeration of values used in the Mark59 framework that are used in to populate the JMeter
@@ -224,7 +259,7 @@ public class Mark59Constants {
 		}
 	}
 
-
+  
 	private Mark59Constants() {
 	}    
 }

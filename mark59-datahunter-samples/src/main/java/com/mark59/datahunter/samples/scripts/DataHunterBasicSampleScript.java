@@ -39,7 +39,7 @@ import com.mark59.datahunter.samples.dsl.helpers.DslConstants;
 import com.mark59.selenium.corejmeterimpl.JmeterFunctionsForSeleniumScripts;
 import com.mark59.selenium.corejmeterimpl.KeepBrowserOpen;
 import com.mark59.selenium.corejmeterimpl.SeleniumAbstractJavaSamplerClient;
-import com.mark59.selenium.drivers.SeleniumDriverFactory;
+import com.mark59.selenium.driversimpl.SeleniumDriverFactory;
 
 /**
  * This selenium test provides a basic example of the Mark59 framework usage. It contains no 'DSL' classes etc, so that you can see the basics within the script.
@@ -48,7 +48,7 @@ import com.mark59.selenium.drivers.SeleniumDriverFactory;
  * 
  * <p>This script performs a sub-set of the actions in performed by DataHunterLifecyclePvtScript:
  * <ul>
- * <li>deletes 'DataHunter' rows for application 'DATAHUNTER_PV_TEST_BASIC', which have a 'lifecycle' based on the thread name) </li>
+ * <li>deletes 'DataHunter' rows for application 'DATAHUNTER_PV_TEST_BASIC', which have a 'lifecycle' based on the thread name</li>
  * <li>adds a single Policy for application 'DATAHUNTER_PV_TEST_BASIC' </li>
  * <li>creates a DataPoint </li>   
  * </ul> 
@@ -70,8 +70,7 @@ public class DataHunterBasicSampleScript  extends SeleniumAbstractJavaSamplerCli
 		jmeterAdditionalParameters.put("DATAHUNTER_URL",			"http://localhost:8081/mark59-datahunter");
 		jmeterAdditionalParameters.put("DATAHUNTER_APPLICATION_ID", "DATAHUNTER_PV_TEST_BASIC");
 		jmeterAdditionalParameters.put("USER", 	 "default_user");		
-		jmeterAdditionalParameters.put(SeleniumDriverFactory.DRIVER, Mark59Constants.CHROME);
-//		jmeterAdditionalParameters.put(SeleniumDriverFactory.DRIVER, Mark59Constants.FIREFOX);
+		jmeterAdditionalParameters.put(SeleniumDriverFactory.DRIVER, Mark59Constants.CHROME);   // FIREFOX
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.HEADLESS_MODE, String.valueOf(false));
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.PAGE_LOAD_STRATEGY, PageLoadStrategy.NORMAL.toString());
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.PROXY, "");
@@ -100,8 +99,8 @@ public class DataHunterBasicSampleScript  extends SeleniumAbstractJavaSamplerCli
 //		System.out.println("Thread " + thread + " is running with LOG level " + LOG.getLevel());
 		
 		// Start browser to cater for initial launch time 
-/////		driver.get("chrome://version/");
-/////		SafeSleep.sleep(1000);
+		driver.get("chrome://version/");
+		SafeSleep.sleep(1000);
 		
 		String dataHunterUrl 	= context.getParameter("DATAHUNTER_URL");
 		String application 		= context.getParameter("DATAHUNTER_APPLICATION_ID");
@@ -117,11 +116,6 @@ public class DataHunterBasicSampleScript  extends SeleniumAbstractJavaSamplerCli
 		
 		jm.startTransaction("DH_lifecycle_0100_deleteMultiplePolicies");
 		driver.findElement(By.id("submit")).submit();
-		
-//ff		
-		SafeSleep.sleep(1000);
-		
-		
 		checkSqlOk(driver.findElement(By.id("sqlResult")));
 		jm.endTransaction("DH_lifecycle_0100_deleteMultiplePolicies");	
 	
@@ -140,12 +134,6 @@ public class DataHunterBasicSampleScript  extends SeleniumAbstractJavaSamplerCli
 		
 		jm.startTransaction("DH_lifecycle_0200_addPolicy");
 		driver.findElement(By.id("submit")).submit();
-		
-		
-//ff
-		SafeSleep.sleep(1000);
-		
-		
 		checkSqlOk(driver.findElement(By.id("sqlResult")));
 		jm.endTransaction("DH_lifecycle_0200_addPolicy");
 		
@@ -163,7 +151,6 @@ public class DataHunterBasicSampleScript  extends SeleniumAbstractJavaSamplerCli
 	private void checkSqlOk(WebElement sqlResultWebElement) {
 		String sqlResultText = sqlResultWebElement.getText();
 		if ( !"PASS".equals(sqlResultText) ) {
-//		if ( !"junk".equals(sqlResultText) ) {
 			throw new RuntimeException("SQL issue (" + sqlResultText + ")");   
 		}
 	}

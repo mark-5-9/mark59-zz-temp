@@ -19,7 +19,9 @@ package com.mark59.core.utils;
 /**
  * The current list of properties used by the Mark59 framework are defined here.
  * <p>
- * <b>mark59.screenshot.directory</b> : value defines the directory where transaction-level logging will occur
+ * <b>mark59.screenshot.directory</b> : depricated use mark59.log.directory instead
+ * <b>mark59.log.directory</b> : value defines the directory where transaction-level/error logging will occur
+ * <b>mark59.log.directory.suffix</b> : log directory suffix, may be a local 'date' or 'datetime'
  * <b>mark59.selenium.driver.path.chrome</b> : location of the chrome driver executable
  * <b>mark59.selenium.driver.path.firefox</b> :  location of the geokodriver executable 
  * <b>mark59.server.profiles.excel.file.path</b> :  location of a excel file to be used for server metrics capture 
@@ -38,19 +40,42 @@ public class PropertiesKeys {
 	/**
 	 *  mark59.screenshot.directory
 	 */
+	@Deprecated
 	public static final String MARK59_PROP_SCREENSHOT_DIRECTORY 			= "mark59.screenshot.directory";
+	
+	/**
+	 *  mark59.log.directory
+	 */
+	public static final String MARK59_PROP_LOG_DIRECTORY  					= "mark59.log.directory";
+
+	/**
+	 *  mark59.log.directory.suffix.  Valid values as listed :  {@link Mark59Constants#DATE} or {@link Mark59Constants#DATE_TIME} 	
+	 */
+	public static final String MARK59_PROP_LOG_DIRECTORY_SUFFIX 			= "mark59.log.directory.suffix";
+
+
+	/**
+	 *  format for the log names output to the screenshot directory. A comma delimited list of values as described {@link Mark59Constants#LOGNAME_FORMAT_OPTIONS}	
+	 *  <p>Default is <code>"ThreadName,Label"</code>
+	 */
+	public static final String MARK59_PROP_LOGNAME_FORMAT			 		= "mark59.logname.format";
+	
+	
 	/**
 	 * mark59.selenium.driver.path.chrome
 	 */
 	public static final String MARK59_PROP_DRIVER_CHROME					= "mark59.selenium.driver.path.chrome";
+
 	/**
 	 * mark59.selenium.driver.path.firefox
 	 */
 	public static final String MARK59_PROP_DRIVER_FIREFOX					= "mark59.selenium.driver.path.firefox";
+
 	/**
 	 * mark59.server.profiles.excel.file.path
 	 */
 	public static final String MARK59_PROP_SERVER_PROFILES_EXCEL_FILE_PATH	= "mark59.server.profiles.excel.file.path";
+
 	/**
 	 * mark59.browser.executable  (this property can be over-ridden at script level by setting the "BROWSER_EXECUTABLE" argument) 
 	 */
@@ -60,9 +85,13 @@ public class PropertiesKeys {
 	 * list of valid Mark59 property keys 
 	 */
 	public static final String[] MARK59_PROPERTY_KEYS =  { 
-								MARK59_PROP_SCREENSHOT_DIRECTORY, 
+								MARK59_PROP_SCREENSHOT_DIRECTORY,
+								MARK59_PROP_LOG_DIRECTORY,
+								MARK59_PROP_LOG_DIRECTORY_SUFFIX,
+								MARK59_PROP_LOGNAME_FORMAT,
 								MARK59_PROP_DRIVER_CHROME, 
 								MARK59_PROP_DRIVER_FIREFOX,
 								MARK59_PROP_SERVER_PROFILES_EXCEL_FILE_PATH,
 								MARK59_PROP_BROWSER_EXECUTABLE};
+
 }

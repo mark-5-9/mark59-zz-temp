@@ -32,7 +32,7 @@ import org.openqa.selenium.WebDriver;
 
 import com.mark59.core.utils.IpUtilities;
 import com.mark59.core.utils.Mark59Utils;
-import com.mark59.selenium.drivers.SeleniumDriverFactory;
+import com.mark59.selenium.driversimpl.SeleniumDriverFactory;
 
 
 /**
@@ -219,7 +219,7 @@ public abstract class SeleniumIteratorAbstractJavaSamplerClient  extends  Seleni
 		}
 		
 		driver = mark59SeleniumDriver.getDriver();
-		jm = new JmeterFunctionsForSeleniumScripts(Thread.currentThread().getName(), mark59SeleniumDriver, jmeterRuntimeArgumentsMap);   	
+		jm = new JmeterFunctionsForSeleniumScripts(Thread.currentThread().getName(), context, mark59SeleniumDriver, jmeterRuntimeArgumentsMap);   	
 				
 		try {
 			LOG.debug(">> initiateSeleniumTest");			
