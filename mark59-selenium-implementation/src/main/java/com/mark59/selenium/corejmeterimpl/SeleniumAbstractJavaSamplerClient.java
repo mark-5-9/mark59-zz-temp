@@ -54,6 +54,7 @@ import com.mark59.core.utils.Mark59Constants;
 import com.mark59.core.utils.Mark59LogLevels;
 import com.mark59.core.utils.Mark59Utils;
 import com.mark59.core.utils.SafeSleep;
+import com.mark59.core.utils.ScreenshotLoggingHelper;
 import com.mark59.selenium.driversimpl.SeleniumDriverFactory;
 import com.mark59.selenium.interfaces.DriverFunctionsSelenium;
 
@@ -295,8 +296,28 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 		System.err.println("["+ thread + "]  ERROR : " + this.getClass() + ". See Mark59 log directory for details. Stack trace: \n  " + sw.toString());
 		LOG.error("["+ thread + "]  ERROR : " + this.getClass() + ". See Mark59 log directory for details. Stack trace: \n  " + sw.toString());
 
+		String lastTxnStarted = jm.getMostRecentTransactionStarted();
+		if (StringUtils.isBlank(lastTxnStarted)){
+			lastTxnStarted =  "noTxn";
+		} 
+
+		
 		try {
-			mark59SeleniumDriver.documentExceptionState(new Exception(e));
+//===	 	mark59SeleniumDriver.documentExceptionState(new Exception(e));
+////		captureAndBufferScreenshot("EXCEPTION");
+////		writeBufferedArtifacts();
+////		ScreenshotLoggingHelper.writeExceptionLog(e);
+////		writeDriverLogs("PERFLOG");
+////		writePageSource("source_at_EXCEPTION");
+			
+			jm.bufferScreenshot(lastTxnStarted + "_EXCEPTION");	
+			jm.writeBufferedArtifacts();
+			//////////////// ScreenshotLoggingHelper.writeExceptionLog(e);
+			jm.writeDriverPerfLogs(lastTxnStarted + "_EXCEPTION_PERFLOG");
+			jm.writePageSource(lastTxnStarted + "_EXCEPTION" );
+			
+			
+			
 		} catch (Exception ex) {
 			LOG.error("["+ thread + "]  ERROR : " + this.getClass() + ".  An exception occured during scriptExceptionHandling (documentExceptionState) " 
 					+  ex.getClass().getName() +  " thrown",  e);

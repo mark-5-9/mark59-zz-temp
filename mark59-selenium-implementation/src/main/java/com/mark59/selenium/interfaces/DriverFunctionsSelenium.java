@@ -114,9 +114,15 @@ public abstract class DriverFunctionsSelenium<O extends WebDriver> implements Dr
 	
 	@Override
 	public void documentExceptionState(Exception e) {  // ?????????????????????????????????????
+		
+		System.out.println(" >> !!!!!! "  );		
+		System.out.println(" dont come here please !!!!!! "  );
+		System.out.println(" << !!!!!! "  );				
+		
+		
 ////		captureAndBufferScreenshot("EXCEPTION");
 /////		writeBufferedArtifacts();
-		ScreenshotLoggingHelper.writeExceptionLog(e);
+/////		ScreenshotLoggingHelper.writeExceptionLog(e);
 ////		writeDriverLogs("PERFLOG");
 ////		writePageSource("source_at_EXCEPTION");
 	}

@@ -54,59 +54,59 @@ public class ScreenshotLoggingHelper {
 	 * @param extension file extension
 	 * @return fully qualified image name
 	 */
-	public static String buildFullyQualifiedImageName(String fileNameEnding, String extension) {
-		
-		String fullyQualifiedImageName = MessageFormat.format("{0}{1}{2}_{3}_{4}.{5}", 
-											"this dier", //getScreenshotDirectory(),
-											File.separator, 
-											Thread.currentThread().getName(), 
-											String.format("%03d", StaticCounter.readCount(SCREENSHOT_COUNTER)),
-											fileNameEnding, 
-											extension);
-
-		if (LOG.isTraceEnabled()) LOG.trace(Thread.currentThread().getName() + " : fullyQualifiedImageName = " + fullyQualifiedImageName);
-		
-		// increment counter ready for next image
-		StaticCounter.incrementCount(SCREENSHOT_COUNTER);
-		
-		return fullyQualifiedImageName;
-	}
-	
-	
-	/**
-	 * Save the byte[] to the specified file name, creating the parent directory if  missing (ie initial directory creation)
-	 * 
-	 * @param screenshotLogFilename filename to use for the screenshot
-	 * @param screenshotLogFileData the screenshot data 
-	 */
-	public static void writeScreenshotLog(File screenshotLogFilename, byte[] screenshotLogFileData) {
-
-		new File(screenshotLogFilename.getParent()).mkdirs();
-
-		LOG.info(MessageFormat.format("Writing image to disk: {0}", screenshotLogFilename));
-		System.out.println("[" + Thread.currentThread().getName() + "]  Writing image to disk:" + screenshotLogFilename);
-
-		if (screenshotLogFileData == null ) {
-			screenshotLogFileData = "(null)".getBytes();
-		}
-		
-		try (OutputStream stream = new FileOutputStream(screenshotLogFilename)) {
-			stream.write(screenshotLogFileData);
-
-		} catch (IOException e) {
-			LOG.error("Caught " + e.getClass().getName() + " with message: " + e.getMessage());
-		}
-	}
-	
-	
-	public static void writeExceptionLog(Exception e) {
-		StringWriter sw = new StringWriter();
-		e.printStackTrace(new PrintWriter(sw));
-		String stackTrace = sw.toString(); 
-		
-		ScreenshotLoggingHelper.writeScreenshotLog(
-				new File(ScreenshotLoggingHelper.buildFullyQualifiedImageName("EXCEPTION", "txt")),
-				StringUtils.isNotBlank(stackTrace) ? stackTrace.getBytes() : null);
-	}
+//	public static String buildFullyQualifiedImageName(String fileNameEnding, String extension) {
+//		
+//		String fullyQualifiedImageName = MessageFormat.format("{0}{1}{2}_{3}_{4}.{5}", 
+//											"this dier", //getScreenshotDirectory(),
+//											File.separator, 
+//											Thread.currentThread().getName(), 
+//											String.format("%03d", StaticCounter.readCount(SCREENSHOT_COUNTER)),
+//											fileNameEnding, 
+//											extension);
+//
+//		if (LOG.isTraceEnabled()) LOG.trace(Thread.currentThread().getName() + " : fullyQualifiedImageName = " + fullyQualifiedImageName);
+//		
+//		// increment counter ready for next image
+//		StaticCounter.incrementCount(SCREENSHOT_COUNTER);
+//		
+//		return fullyQualifiedImageName;
+//	}
+//	
+//	
+//	/**
+//	 * Save the byte[] to the specified file name, creating the parent directory if  missing (ie initial directory creation)
+//	 * 
+//	 * @param screenshotLogFilename filename to use for the screenshot
+//	 * @param screenshotLogFileData the screenshot data 
+//	 */
+//	public static void writeScreenshotLog(File screenshotLogFilename, byte[] screenshotLogFileData) {
+//
+//		new File(screenshotLogFilename.getParent()).mkdirs();
+//
+//		LOG.info(MessageFormat.format("Writing image to disk: {0}", screenshotLogFilename));
+//		System.out.println("[" + Thread.currentThread().getName() + "]  Writing image to disk:" + screenshotLogFilename);
+//
+//		if (screenshotLogFileData == null ) {
+//			screenshotLogFileData = "(null)".getBytes();
+//		}
+//		
+//		try (OutputStream stream = new FileOutputStream(screenshotLogFilename)) {
+//			stream.write(screenshotLogFileData);
+//
+//		} catch (IOException e) {
+//			LOG.error("Caught " + e.getClass().getName() + " with message: " + e.getMessage());
+//		}
+//	}
+//	
+//	
+//	public static void writeExceptionLog(Exception e) {
+//		StringWriter sw = new StringWriter();
+//		e.printStackTrace(new PrintWriter(sw));
+//		String stackTrace = sw.toString(); 
+//		
+//		ScreenshotLoggingHelper.writeScreenshotLog(
+//				new File(ScreenshotLoggingHelper.buildFullyQualifiedImageName("EXCEPTION", "txt")),
+//				StringUtils.isNotBlank(stackTrace) ? stackTrace.getBytes() : null);
+//	}
 	
 }

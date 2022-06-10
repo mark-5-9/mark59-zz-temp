@@ -128,6 +128,9 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 		super(threadName);
 		this.mark59SeleniumDriver = mark59SeleniumDriver;
 		leadingPartOfLogNames = formLeadingPartOfLogNames(loggingConfig.getLogNamesFormat(), context);
+		
+		System.out.println("************ leadingPartOfLogNames = " + leadingPartOfLogNames  );
+		
 		setDefaultTxnLoggingBehaviourBasedOnLog4j();
 		overrideTxnLoggingBehaviourUsingJmeterParameters(jmeterRuntimeArgumentsMap);
 	}
@@ -144,7 +147,7 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 		String leadingPartOfLogNames = null;
 		
 		if (loggingConfig.getLogDirectory() != null) {
-			leadingPartOfLogNames = StringUtils.removeEnd(loggingConfig.getLogDirectory().getName(),File.separator) + File.separator;
+			leadingPartOfLogNames = loggingConfig.getLogDirectory().getPath() + File.separator;
 		
 			if (logNamesFormat.contains(Mark59Constants.THREAD_NAME)){
 				leadingPartOfLogNames += threadName + "_"; 	
@@ -637,7 +640,6 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 				writePerformanceLogAtEndOfTransactions = true;	
 			} 
 		}
-
 	}
 	
 	
@@ -678,11 +680,6 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 		logScreenshotsAtStartOfTransactions(cofigLogLevel);
 		logPageSourceAtStartOfTransactions(cofigLogLevel);
 	}	
-
-	
-	
-	
-	
 	
 	
 	/**
@@ -709,8 +706,6 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 		if (loggingConfig.getLogDirectory() != null) {
 			bufferedArtifacts.put(buildFullyQualifiedLogName(imageName,"jpg"), mark59SeleniumDriver.captureScreenshot());
 		}		
-		
-		//mark59SeleniumDriver.captureAndBufferScreenshot(imageName);
 	}
 
 	
@@ -725,8 +720,6 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 			writeLog(new File(buildFullyQualifiedLogName(imageName, "html")),
 					mark59SeleniumDriver.captureCurrentUrlAndtHtmlPageSource().getBytes());
 		}
-		
-		//	public void writePageSource(String htmlFileName) {
 	}	
 	
 	/**
@@ -734,18 +727,13 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	 * If you want to immediately write a screenshot to file, use {@link #writeScreenshot(String)}  instead.
 	 * @param imageName last part of the log filename (excluding extension)   
 	 */
-
 	public void bufferPageSource(String imageName) {
 		if (loggingConfig.getLogDirectory() != null) {
 			bufferedArtifacts.put(buildFullyQualifiedLogName(imageName,"html"), 
 					mark59SeleniumDriver.captureCurrentUrlAndtHtmlPageSource().getBytes());
 		}	
-		
-		// public void bufferPageSource(String htmlFileName){
 	}
 
-	
-	
 	
 	//@Override
 	public void writeDriverPerfLogs(String textFileName) {
@@ -753,8 +741,6 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 			writeLog(new File(buildFullyQualifiedLogName(textFileName, "txt")),
 					mark59SeleniumDriver.captureDriverPerfLogs());
 		}
-		
-		// public void writeDriverLogs(String textFileName) {
 	}
 	
 	
@@ -764,13 +750,7 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 			writeLog(new File(buildFullyQualifiedLogName(textFileName, "txt")),
 					mark59SeleniumDriver.captureDriverPerfLogs());
 		}
-
-		
-		// public void bufferDriverLogs(String textFileName) {	
 	}
-
-	
-	
 	
 	
 	/**
@@ -786,14 +766,8 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 			writeLog(new File(bufferedArtifact.getKey()) , bufferedArtifact.getValue());
 		}
 		bufferedArtifacts.clear();
-		
-		//	public DriverFunctions<WebDriver> writeBufferedArtifacts() {
 	}
 
-	
-	
-	
-	
 	
 	private String buildFullyQualifiedLogName(String imageName, String suffix) {
 		String fullLogname = leadingPartOfLogNames;
@@ -824,22 +798,26 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	 */
 	private void writeLog(File logFilename, byte[] logFileBytes) {
 
-		new File(logFilename.getParent()).mkdirs();
-
 		LOG.info(MessageFormat.format("Writing image to disk: {0}", logFilename));
-		System.out.println("[" + Thread.currentThread().getName() + "]  Writing image to disk:" + logFilename);
-
-		if (logFileBytes == null ) {
-			logFileBytes = "(null)".getBytes();
-		}
+		System.out.println("[" + Thread.currentThread().getName() + "]  Writing image to disk:" + logFilename);		
 		
-		try (OutputStream stream = new FileOutputStream(logFilename)) {
-			stream.write(logFileBytes);
-
-		} catch (IOException e) {
-			LOG.error("Caught " + e.getClass().getName() + " with message: " + e.getMessage());
-		}
+		
+		
+//		new File(logFilename.getParent()).mkdirs();
+//
+//		LOG.info(MessageFormat.format("Writing image to disk: {0}", logFilename));
+//		System.out.println("[" + Thread.currentThread().getName() + "]  Writing image to disk:" + logFilename);
+//
+//		if (logFileBytes == null ) {
+//			logFileBytes = "(null)".getBytes();
+//		}
+//		
+//		try (OutputStream stream = new FileOutputStream(logFilename)) {
+//			stream.write(logFileBytes);
+//
+//		} catch (IOException e) {
+//			LOG.error("Caught " + e.getClass().getName() + " with message: " + e.getMessage());
+//		}
 	}
-
 	
 }

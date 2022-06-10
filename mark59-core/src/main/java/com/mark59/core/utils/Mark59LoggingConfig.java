@@ -78,18 +78,18 @@ public class Mark59LoggingConfig {
 	@SuppressWarnings("deprecation")
 	private File initialiseLogDirectory() throws IOException {
 		File logDirectory = null;
-		String directory;
+		String logDirectoryPathname;
 		try {
-			directory = PropertiesReader.getInstance().getProperty(PropertiesKeys.MARK59_PROP_SCREENSHOT_DIRECTORY);
+			logDirectoryPathname = PropertiesReader.getInstance().getProperty(PropertiesKeys.MARK59_PROP_LOG_DIRECTORY);
 			
-			if (StringUtils.isNotBlank(directory)){
-				LOG.warn(PropertiesKeys.MARK59_PROP_SCREENSHOT_DIRECTORY + 	
-						" is depricated and will be removed in a future release. Please use "
-						+ PropertiesKeys.MARK59_PROP_LOG_DIRECTORY + " instead.");
-			} else {
-				directory = PropertiesReader.getInstance().getProperty(PropertiesKeys.MARK59_PROP_LOG_DIRECTORY);
-			}
-			
+			if (StringUtils.isBlank(logDirectoryPathname)){
+				
+				logDirectoryPathname = PropertiesReader.getInstance().getProperty(PropertiesKeys.MARK59_PROP_SCREENSHOT_DIRECTORY);
+				if (StringUtils.isNotBlank(logDirectoryPathname)){
+					LOG.warn(PropertiesKeys.MARK59_PROP_SCREENSHOT_DIRECTORY + " is depricated and will be removed in a future release."
+							+ " Please use "	+ PropertiesKeys.MARK59_PROP_LOG_DIRECTORY + " instead.");
+				}
+			} 
 			
 		} catch (IOException e) {
 			LOG.warn("Failed to read Mark59.properties while trying to obtain screenshot directory from config "
@@ -97,28 +97,28 @@ public class Mark59LoggingConfig {
 			return null;
 		}
 
-		if (directory != null) {
+		if (StringUtils.isNotBlank(logDirectoryPathname)) {
 
 			String directorySuffixFormat = PropertiesReader.getInstance()
 					.getProperty(PropertiesKeys.MARK59_PROP_LOG_DIRECTORY_SUFFIX);
 
-			if (directorySuffixFormat == null) {
+			if (StringUtils.isNotBlank(directorySuffixFormat)) {
 				LOG.info("Property " + PropertiesKeys.MARK59_PROP_LOG_DIRECTORY_SUFFIX + " not set. '"
 						+ Mark59Constants.DATE + "' will be assumed.");
-				directory += File.separator + LocalDate.now();
+				logDirectoryPathname += File.separator + LocalDate.now();
 			} else if (Mark59Constants.DATE_TIME.equalsIgnoreCase(directorySuffixFormat.trim())) {
-				directory += File.separator	+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-mm-dd-HHmmss"));
+				logDirectoryPathname += File.separator	+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-mm-dd-HHmmss"));
 			} else if (Mark59Constants.DATE.equalsIgnoreCase(directorySuffixFormat.trim())) {
-				directory += File.separator + LocalDate.now();
+				logDirectoryPathname += File.separator + LocalDate.now();
 			} else {
 				LOG.warn("Property " + PropertiesKeys.MARK59_PROP_LOG_DIRECTORY_SUFFIX
 						+ " shoud be set as either " + Mark59Constants.DATE + " or " + Mark59Constants.DATE_TIME
 						+ " (was " + directorySuffixFormat + "). '" + Mark59Constants.DATE + "' will be assumed.");
-				directory += File.separator + LocalDate.now();
+				logDirectoryPathname += File.separator + LocalDate.now();
 			}
 
-			logDirectory = new File(directory);
-			LOG.info("Clearing any existing data from Mark59 log directory " + logDirectory);
+			logDirectory = new File(logDirectoryPathname);
+			LOG.info("Clearing any existing data from Mark59 log directory " + logDirectory.getPath());
 			FileUtils.deleteDirectory(logDirectory);
 		} else {
 			LOG.warn(
@@ -131,8 +131,7 @@ public class Mark59LoggingConfig {
 	private void configureLogNamesFormatter() {
 		String mark59PropLognameFormat = null;
 		try {
-			mark59PropLognameFormat = PropertiesReader.getInstance()
-					.getProperty(PropertiesKeys.MARK59_PROP_LOGNAME_FORMAT);
+			mark59PropLognameFormat = PropertiesReader.getInstance().getProperty(PropertiesKeys.MARK59_PROP_LOGNAME_FORMAT);
 		} catch (IOException e) {
 			LOG.warn("Failed to read Mark59.properties while trying to obtain log name formatter from config "
 					+ "(property " + PropertiesKeys.MARK59_PROP_LOGNAME_FORMAT + " was not set. '"
