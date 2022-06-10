@@ -576,6 +576,11 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	@Override	
 	public void writeBufferedArtifacts(){
 		System.out.println("writeBufferedArtifacts not implemented!" );
+	}
+
+	@Override
+	public void writeStackTrace(String stackTraceName, Throwable e) {
+		System.out.println("writeBufferedArtifacts not implemented!" );		
 	} 
 	
 }

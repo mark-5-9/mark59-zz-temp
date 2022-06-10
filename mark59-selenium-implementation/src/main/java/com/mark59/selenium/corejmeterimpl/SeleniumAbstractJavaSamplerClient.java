@@ -226,6 +226,7 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 	 */
 	@Override
 	public SampleResult runTest(JavaSamplerContext context) {
+		System.out.println("*********************** this.getClass().getName() = " + this.getClass().getName()  );
 		if (LOG.isDebugEnabled()) LOG.debug(this.getClass().getName() +  " : exectuing runTest" );
 		
 		AbstractThreadGroup tg = null;
@@ -300,23 +301,13 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 		if (StringUtils.isBlank(lastTxnStarted)){
 			lastTxnStarted =  "noTxn";
 		} 
-
 		
 		try {
-//===	 	mark59SeleniumDriver.documentExceptionState(new Exception(e));
-////		captureAndBufferScreenshot("EXCEPTION");
-////		writeBufferedArtifacts();
-////		ScreenshotLoggingHelper.writeExceptionLog(e);
-////		writeDriverLogs("PERFLOG");
-////		writePageSource("source_at_EXCEPTION");
-			
-			jm.bufferScreenshot(lastTxnStarted + "_EXCEPTION");	
 			jm.writeBufferedArtifacts();
-			//////////////// ScreenshotLoggingHelper.writeExceptionLog(e);
-			jm.writeDriverPerfLogs(lastTxnStarted + "_EXCEPTION_PERFLOG");
+			jm.writeScreenshot(lastTxnStarted + "_EXCEPTION");	
 			jm.writePageSource(lastTxnStarted + "_EXCEPTION" );
-			
-			
+			jm.writeDriverPerfLogs(lastTxnStarted + "_EXCEPTION_PERFLOG");
+			jm.writeStackTrace(lastTxnStarted + "_EXCEPTION_STACKTRACE", e);
 			
 		} catch (Exception ex) {
 			LOG.error("["+ thread + "]  ERROR : " + this.getClass() + ".  An exception occured during scriptExceptionHandling (documentExceptionState) " 

@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -35,8 +37,8 @@ import org.openqa.selenium.WebDriver;
 import com.mark59.core.JmeterFunctionsImpl;
 import com.mark59.core.Outcome;
 import com.mark59.core.utils.Mark59Constants;
-import com.mark59.core.utils.Mark59LogLevels;
 import com.mark59.core.utils.Mark59Constants.JMeterFileDatatypes;
+import com.mark59.core.utils.Mark59LogLevels;
 import com.mark59.core.utils.StaticCounter;
 import com.mark59.selenium.interfaces.DriverFunctionsSelenium;
 
@@ -769,6 +771,22 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 		bufferedArtifacts.clear();
 	}
 
+	
+
+	@Override		
+	public void writeStackTrace(String stackTraceName, Throwable e) {
+		StringWriter sw = new StringWriter();
+		e.printStackTrace(new PrintWriter(sw));
+		String stackTrace = sw.toString(); 
+		if (loggingConfig.getLogDirectory() != null) {
+			writeLog(new File(buildFullyQualifiedLogName(stackTraceName, "txt")),
+					StringUtils.isNotBlank(stackTrace) ? stackTrace.getBytes() : null);
+		} else {
+//			 sysout??
+		}
+	}
+
+	
 	
 	private String buildFullyQualifiedLogName(String imageName, String suffix) {
 		String fullLogname = leadingPartOfLogNames;

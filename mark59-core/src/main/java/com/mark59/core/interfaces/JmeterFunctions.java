@@ -29,6 +29,10 @@ import com.mark59.core.utils.Mark59Constants.JMeterFileDatatypes;
  * @author Michael Cohen
  * Written: Australian Winter 2019  
  */
+/**
+ * @author s62991
+ *
+ */
 public interface JmeterFunctions {
 
 	/**
@@ -198,5 +202,15 @@ public interface JmeterFunctions {
 	 * {@link DriverFunctions} implementation can is capable of taking logs/screenshots  
 	 */
 	public void writeBufferedArtifacts();
+
+
+	/**
+	 * Capture and immediately write a stack track log for the passed Exception.
+	 * <p>(There's no 'Buffer' option for exceptions as it's assumed the script will not continue)
+	 * @see Mark59LogLevels
+	 * @param stackTraceName filename to use for the log (without suffix)
+	 * @param e Throwable (Exception) being loggoed
+	 */
+	public void writeStackTrace(String stackTraceName, Throwable e); 
 
 }
