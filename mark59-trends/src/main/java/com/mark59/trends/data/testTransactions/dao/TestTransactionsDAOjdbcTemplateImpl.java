@@ -32,7 +32,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.mark59.core.utils.Mark59Constants;
 import com.mark59.trends.application.AppConstantsMetrics;
-import com.mark59.trends.application.UtilsMetrics;
+import com.mark59.trends.application.UtilsTrends;
 import com.mark59.trends.data.beans.DateRangeBean;
 import com.mark59.trends.data.beans.EventMapping;
 import com.mark59.trends.data.beans.Run;
@@ -484,7 +484,7 @@ public class TestTransactionsDAOjdbcTemplateImpl implements TestTransactionsDAO
 		
 		//form the transaction id for the system metric by removing from the JMeter file label any unwanted characters using the event mapping left and right boundaries.
 		
-		String eventTxnId = UtilsMetrics.deriveEventTxnIdUsingEventMappingBoundaryRules(txnId, eventMapping);
+		String eventTxnId = UtilsTrends.deriveEventTxnIdUsingEventMappingBoundaryRules(txnId, eventMapping);
 		
 				
 		//average

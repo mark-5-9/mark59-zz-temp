@@ -31,7 +31,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import com.mark59.trends.application.AppConstantsMetrics;
-import com.mark59.trends.application.UtilsMetrics;
+import com.mark59.trends.application.UtilsTrends;
 import com.mark59.trends.data.application.dao.ApplicationDAO;
 import com.mark59.trends.data.beans.Application;
 import com.mark59.trends.data.beans.Run;
@@ -336,17 +336,17 @@ public class RunDAOjdbcTemplateImpl implements RunDAO
 		String runDatesToGraphList;
 		
 		if (isManuallySelectRuns){  //user may of typed in dates out-of-order   
-			String[] sortedChosenRunTimesArray = UtilsMetrics.commaDelimStringToSortedStringArray(chosenRuns, Collections.reverseOrder());  
+			String[] sortedChosenRunTimesArray = UtilsTrends.commaDelimStringToSortedStringArray(chosenRuns, Collections.reverseOrder());  
 			ArrayList<String> sortedChosenRunTimesList = new ArrayList<>(Arrays.asList(sortedChosenRunTimesArray));
 			// dud run typed in - remove it ...
 			sortedChosenRunTimesList.removeIf(runtime -> findRun(application, runtime) == null);
-			runDatesToGraphList = UtilsMetrics.stringListToCommaDelimString(sortedChosenRunTimesList);
+			runDatesToGraphList = UtilsTrends.stringListToCommaDelimString(sortedChosenRunTimesList);
 			
 		} else {
 
 			List<String> runDates = findRunDatesWhenRunsNotManuallyChosen(application, sqlSelectRunLike, reqSqlSelectRunNotLike, 
 					integerValueOfMaxRun(maxRun), integerValueOfMaxBaselineRun(maxBaselineRun), isUseRawRunSQL, rawRunTimeSelectionSQL );
-			runDatesToGraphList = UtilsMetrics.stringListToCommaDelimString(runDates);
+			runDatesToGraphList = UtilsTrends.stringListToCommaDelimString(runDates);
 		}
 		return runDatesToGraphList;
 	}

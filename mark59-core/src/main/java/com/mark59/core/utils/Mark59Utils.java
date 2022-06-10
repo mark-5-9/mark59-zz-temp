@@ -207,9 +207,8 @@ public class Mark59Utils {
 	 */
 	public static List<String> commaDelimStringToStringList(String commaDelimitedString) {
 		List<String> listOfStrings = new ArrayList<>();
-		// when an empty string is passed to the split, it creates a empty first element ... not what we want .. 
-		if ( ! (commaDelimitedString == null || commaDelimitedString.isEmpty() )){
-			listOfStrings = Arrays.asList(commaDelimitedString.split("\\s*,\\s*"));
+		if ( StringUtils.isNotBlank(commaDelimitedString)){
+			listOfStrings =  Arrays.asList(StringUtils.stripAll(StringUtils.split(commaDelimitedString, ",")));
 		} 
 		return listOfStrings;
 	}
@@ -220,9 +219,8 @@ public class Mark59Utils {
 	 */
 	public static List<String> pipeDelimStringToStringList(String pipeDelimitedString) {
 		List<String> listOfStrings = new ArrayList<>();
-		// when an empty string is passed to the split, it creates a empty first element ... not what we want .. 
-		if ( ! (pipeDelimitedString == null || pipeDelimitedString.isEmpty() )){
-			listOfStrings = Arrays.asList(pipeDelimitedString.split("\\s*\\|\\s*"));
+		if ( StringUtils.isNotBlank(pipeDelimitedString)){
+			listOfStrings =  Arrays.asList(StringUtils.stripAll(StringUtils.split(pipeDelimitedString, "|")));
 		} 
 		return listOfStrings;
 	}

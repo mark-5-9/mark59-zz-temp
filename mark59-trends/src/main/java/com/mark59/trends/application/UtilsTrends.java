@@ -37,7 +37,7 @@ import com.mark59.trends.data.beans.Transaction;
  * @author Philip Webb
  * Written: Australian Winter 2019  
  */
-public class UtilsMetrics  {
+public class UtilsTrends  {
 
 
 	public static String stringListToCommaDelimString(List<String> listOfStrings) {
@@ -56,9 +56,8 @@ public class UtilsMetrics  {
 
 	public static List<String> commaDelimStringToStringList(String commaDelimitedString) {
 		List<String> listOfStrings = new ArrayList<>();
-		// when an empty string is passed to the split, it creates a empty first element ... not what we want .. 
-		if ( ! (commaDelimitedString == null || commaDelimitedString.isEmpty() )){
-			listOfStrings = Arrays.asList(commaDelimitedString.split("\\s*,\\s*"));
+		if (StringUtils.isNotBlank(commaDelimitedString)){
+			listOfStrings =  Arrays.asList(StringUtils.stripAll(StringUtils.split(commaDelimitedString, ",")));
 		} 
 		return listOfStrings;
 	}
@@ -66,8 +65,8 @@ public class UtilsMetrics  {
 	
 	public static String[] commaDelimStringToSortedStringArray(String commaDelimitedString, Comparator<Object> comparator) {
 		// when an empty string is passed to the split, it creates a empty first element ... not what we want .. 
-		if ( ! (commaDelimitedString == null || commaDelimitedString.isEmpty() )){
-			String[] strings = commaDelimitedString.split("\\s*,\\s*");
+		if (StringUtils.isNotBlank(commaDelimitedString)){
+			String[] strings = StringUtils.stripAll(StringUtils.split(commaDelimitedString, ","));
 			Arrays.sort(strings, comparator);
 			return strings;
 		} else {

@@ -152,7 +152,7 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 			if (logNamesFormat.contains(Mark59Constants.THREAD_NAME)){
 				leadingPartOfLogNames += threadName + "_"; 	
 			}
-			if (logNamesFormat.contains(Mark59Constants.THREAD_NAME)){
+			if (logNamesFormat.contains(Mark59Constants.THREAD_GROUP)){
 				if (context.getJMeterContext() != null  && context.getJMeterContext().getThreadGroup() != null){
 					leadingPartOfLogNames += context.getJMeterContext().getThreadGroup().getName() + "_" ;
 				} else {

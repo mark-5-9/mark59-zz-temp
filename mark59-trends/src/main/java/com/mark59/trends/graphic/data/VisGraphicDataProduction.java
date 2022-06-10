@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.mark59.trends.application.UtilsMetrics;
+import com.mark59.trends.application.UtilsTrends;
 import com.mark59.trends.data.beans.Datapoint;
 import com.mark59.trends.data.beans.GraphMapping;
 import com.mark59.trends.data.transaction.dao.TransactionDAO;
@@ -96,9 +96,9 @@ public class VisGraphicDataProduction  implements VisGraphicDataProductionInterf
 			List<String> listOfCdpTaggedTransactionNamesToGraph) {
 
 		ArrayList<String> masterRunsList = new ArrayList<String>(
-				UtilsMetrics.commaDelimStringToStringList(runDatesToGraph));
+				UtilsTrends.commaDelimStringToStringList(runDatesToGraph));
 		ArrayList<String> missingRunsList = new ArrayList<String>(
-				UtilsMetrics.commaDelimStringToStringList(runDatesToGraph));
+				UtilsTrends.commaDelimStringToStringList(runDatesToGraph));
 
 		ArrayList<Datapoint> datapoints = new ArrayList<Datapoint>();
 

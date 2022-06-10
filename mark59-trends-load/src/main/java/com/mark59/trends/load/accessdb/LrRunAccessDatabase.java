@@ -40,7 +40,7 @@ import com.healthmarketscience.jackcess.Row;
 import com.healthmarketscience.jackcess.Table;
 import com.mark59.core.utils.Mark59Constants;
 import com.mark59.trends.application.AppConstantsMetrics;
-import com.mark59.trends.application.UtilsMetrics;
+import com.mark59.trends.application.UtilsTrends;
 import com.mark59.trends.data.beans.DateRangeBean;
 import com.mark59.trends.data.beans.EventMapping;
 import com.mark59.trends.data.beans.Run;
@@ -335,7 +335,7 @@ public class LrRunAccessDatabase {
 	
 			
 			if ( lrEventNameMatchFound ){
-				txnId = UtilsMetrics.deriveEventTxnIdUsingEventMappingBoundaryRules(mdbEventName, mark59EventMapping);
+				txnId = UtilsTrends.deriveEventTxnIdUsingEventMappingBoundaryRules(mdbEventName, mark59EventMapping);
 			}
 		
 			if ( StringUtils.isNotBlank(txnId)){

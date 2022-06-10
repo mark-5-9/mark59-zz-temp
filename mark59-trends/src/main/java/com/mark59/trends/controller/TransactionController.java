@@ -32,7 +32,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.mark59.core.utils.Mark59Constants;
-import com.mark59.trends.application.UtilsMetrics;
+import com.mark59.trends.application.UtilsTrends;
 import com.mark59.trends.data.beans.MetricSla;
 import com.mark59.trends.data.beans.Sla;
 import com.mark59.trends.data.beans.Transaction;
@@ -133,7 +133,7 @@ public class TransactionController {
 					   														+ " AND TXN_TYPE = '" + transactionRenameForm.getTxnType() + "'" 
 							   												+ " AND IS_CDP_TXN = '" + transactionRenameForm.getFromIsCdpTxn()+ "'" 					   														
 					   														+ " AND TXN_ID = '" + transactionRenameForm.getToTxnId() + "') "; 			
-			String encodedClashSql = UtilsMetrics.encodeBase64urlParam(clashSql);
+			String encodedClashSql = UtilsTrends.encodeBase64urlParam(clashSql);
 
 			if (   Mark59Constants.DatabaseTxnTypes.TRANSACTION.name().equals(transactionRenameForm.getTxnType())){
 				String clashLink = baseUrl + "/trending?reqApp=" + transactionRenameForm.getApplication() + 
