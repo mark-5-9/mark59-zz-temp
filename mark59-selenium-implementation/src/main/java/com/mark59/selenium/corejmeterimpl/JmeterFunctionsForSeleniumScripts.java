@@ -123,8 +123,8 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	 * @param mark59SeleniumDriver  see SeleniumDriverWrapper
 	 * @param jmeterRuntimeArgumentsMap used to override default state of mark59 log output
 	 */
-	public JmeterFunctionsForSeleniumScripts(String threadName, JavaSamplerContext context,	DriverFunctionsSelenium<WebDriver> mark59SeleniumDriver, 
-			Map<String, String> jmeterRuntimeArgumentsMap) {		
+	public JmeterFunctionsForSeleniumScripts(String threadName, JavaSamplerContext context,
+			DriverFunctionsSelenium<WebDriver> mark59SeleniumDriver, Map<String, String> jmeterRuntimeArgumentsMap) {		
 		super(threadName);
 		this.mark59SeleniumDriver = mark59SeleniumDriver;
 		leadingPartOfLogNames = formLeadingPartOfLogNames(loggingConfig.getLogNamesFormat(), context);
@@ -205,7 +205,8 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
   	 * <p>You can override these (and defaut) settings for script transactional level logging at the start, or any other point, of the
   	 * runSeleniumTest method in the script as well.  For example: <br><br>
   	 * <code>
-  	 *		&emsp;protected void runSeleniumTest(JavaSamplerContext context, JmeterFunctionsForSeleniumScripts jm,  WebDriver driver) {  <br><br>
+  	 *		&emsp;protected void runSeleniumTest(JavaSamplerContext context, JmeterFunctionsForSeleniumScripts jm,  WebDriver driver) { 
+  	 *		<br><br>
   	 *		&emsp;&emsp;jm.logScreenshotsAtStartOfTransactions(Mark59LogLevels.WRITE);<br>
   	 *		&emsp;&emsp;jm.logScreenshotsAtEndOfTransactions(Mark59LogLevels.WRITE);<br>
 	 *		&emsp;&emsp;jm.logPageSourceAtStartOfTransactions(Mark59LogLevels.WRITE);<br>	
@@ -279,7 +280,7 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	 * off all screenshot writing or buffering for the start of this transaction, regardless of the current {@link Mark59LogLevels} settings  
 	 * 
 	 * @param transactionLabel ('label' in JMeter terminology) for the transaction
-	 * @param jMeterFileDatatypes a {@link JMeterFileDatatypes} (it's text value will be written in the data type field of the JMeter results file)
+	 * @param jMeterFileDatatypes a {@link JMeterFileDatatypes} (text value will be written in the data type field of the JMeter results file)
 	 * @param includeInStartOfTransactionLogs boolean option to switch on/off logs for transaction starts (an override for this txn) 
 	 */
 	public void startTransaction(String transactionLabel, JMeterFileDatatypes jMeterFileDatatypes, boolean includeInStartOfTransactionLogs){
@@ -455,7 +456,7 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	 * @param includeInEndOfTransactionLogs boolean option to switch on/off logs for transaction ends (for this txn) 
 	 * @return SampleResult
 	 */
-	public SampleResult setTransaction(String transactionLabel, long transactionTime, boolean success, boolean includeInEndOfTransactionLogs) {
+	public SampleResult setTransaction(String transactionLabel, long transactionTime, boolean success, boolean includeInEndOfTransactionLogs){
 		return setTransaction(transactionLabel, JMeterFileDatatypes.TRANSACTION, transactionTime, success, null, includeInEndOfTransactionLogs);
 	}
 	
@@ -468,7 +469,7 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	 * @param includeInEndOfTransactionLogs boolean option to switch on/off logs for transaction ends (for this txn)  
 	 * @return SampleResult
 	 */
-	public SampleResult setCdpTransaction(String transactionLabel, long transactionTime, boolean success, boolean includeInEndOfTransactionLogs) {
+	public SampleResult setCdpTransaction(String transactionLabel, long transactionTime, boolean success, boolean includeInEndOfTransactionLogs){
 		return setTransaction(transactionLabel, JMeterFileDatatypes.CDP, transactionTime, success, null, includeInEndOfTransactionLogs);
 	}
 	
@@ -500,7 +501,7 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	 * field of the JMeter results file
 	 * 
 	 * @param transactionLabel ('label' in JMeter terminology) for the transaction
-	 * @param jMeterFileDatatypes  a {@link JMeterFileDatatypes} (it's text value will be written in the data type field of the JMeter results file) 
+	 * @param jMeterFileDatatypes  a {@link JMeterFileDatatypes} (text value will be written in the data type field of the JMeter results file) 
 	 * @param transactionTime  transaction time (ms)
 	 * @param success   pass or fail transaction
 	 * @param responseCode  text response code
@@ -791,33 +792,29 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 
 
 	/**
-	 * Save the byte[] to the specified file name, creating the parent directory if  missing (ie initial directory creation)
+	 * Save the byte[] to the specified file name, creating the parent directory if missing 
+	 * (ie initial directory creation)
 	 * 
-	 * @param logFilename the full filename to use for the screenshot
+	 * @param mark59Log the full filename to use for the screenshot
 	 * @param logFileBytes the screenshot/log data 
 	 */
-	private void writeLog(File logFilename, byte[] logFileBytes) {
+	private void writeLog(File mark59Log, byte[] logFileBytes) {
+		
+		new File(mark59Log.getParent()).mkdirs();
 
-		LOG.info(MessageFormat.format("Writing image to disk: {0}", logFilename));
-		System.out.println("[" + Thread.currentThread().getName() + "]  Writing image to disk:" + logFilename);		
+		LOG.info(MessageFormat.format("Writing image to disk: {0}", mark59Log));
+		System.out.println("[" + Thread.currentThread().getName() + "]  Writing image to disk:" + mark59Log);
+
+		if (logFileBytes == null ) {
+			logFileBytes = "(null)".getBytes();
+		}
 		
-		
-		
-//		new File(logFilename.getParent()).mkdirs();
-//
-//		LOG.info(MessageFormat.format("Writing image to disk: {0}", logFilename));
-//		System.out.println("[" + Thread.currentThread().getName() + "]  Writing image to disk:" + logFilename);
-//
-//		if (logFileBytes == null ) {
-//			logFileBytes = "(null)".getBytes();
-//		}
-//		
-//		try (OutputStream stream = new FileOutputStream(logFilename)) {
-//			stream.write(logFileBytes);
-//
-//		} catch (IOException e) {
-//			LOG.error("Caught " + e.getClass().getName() + " with message: " + e.getMessage());
-//		}
+		try (OutputStream stream = new FileOutputStream(mark59Log)) {
+			stream.write(logFileBytes);
+
+		} catch (IOException e) {
+			LOG.error("Caught " + e.getClass().getName() + " with message: " + e.getMessage());
+		}
 	}
 	
 }
