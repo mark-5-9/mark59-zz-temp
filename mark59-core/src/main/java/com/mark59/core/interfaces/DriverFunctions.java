@@ -38,6 +38,7 @@ public interface DriverFunctions<T> {
 
 	public static final Logger LOG = LogManager.getLogger(DriverFunctions.class);
 
+	
 	/**
 	 * Returns the concrete driver encapsulated by this class
 	 * @return driver
@@ -62,16 +63,5 @@ public interface DriverFunctions<T> {
 	 * @return byte[] captured screenshot as a byte array (abstract)
 	 */
 	public byte[] captureScreenshot();
-
-	
-	/** ?????????????
-	 * Actions for logging an exception.  As a minimum you would expect something like: <br><code>
-	 *  bufferScreenshot("EXCEPTION");<br>
-	 *	writeBufferedArtifacts();<br>
-	 *	writeExceptionLog(e);</code>
-	 * 
-	 * @param e supplied exception
-	 */
-	public void documentExceptionState(Exception e);
 	
 }

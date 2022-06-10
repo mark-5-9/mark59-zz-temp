@@ -17,17 +17,9 @@
 package com.mark59.selenium.corejmeterimpl;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.text.MessageFormat;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.logging.log4j.LogManager;
@@ -36,10 +28,8 @@ import org.openqa.selenium.WebDriver;
 
 import com.mark59.core.JmeterFunctionsImpl;
 import com.mark59.core.Outcome;
-import com.mark59.core.utils.Mark59Constants;
 import com.mark59.core.utils.Mark59Constants.JMeterFileDatatypes;
 import com.mark59.core.utils.Mark59LogLevels;
-import com.mark59.core.utils.StaticCounter;
 import com.mark59.selenium.interfaces.DriverFunctionsSelenium;
 
 /**
@@ -116,7 +106,6 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	private boolean writePerformanceLogAtEndOfTransactions = false; 		
 	private boolean bufferPerformanceLogAtEndOfTransactions = false; 			
 	
-	private String leadingPartOfLogNames;
 	private DriverFunctionsSelenium<WebDriver> mark59SeleniumDriver;
 	
 	/**
@@ -127,50 +116,11 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	 */
 	public JmeterFunctionsForSeleniumScripts(String threadName, JavaSamplerContext context,
 			DriverFunctionsSelenium<WebDriver> mark59SeleniumDriver, Map<String, String> jmeterRuntimeArgumentsMap) {		
-		super(threadName);
+		super(threadName, context);
 		this.mark59SeleniumDriver = mark59SeleniumDriver;
-		leadingPartOfLogNames = formLeadingPartOfLogNames(loggingConfig.getLogNamesFormat(), context);
-		
-		System.out.println("************ leadingPartOfLogNames = " + leadingPartOfLogNames  );
 		
 		setDefaultTxnLoggingBehaviourBasedOnLog4j();
 		overrideTxnLoggingBehaviourUsingJmeterParameters(jmeterRuntimeArgumentsMap);
-	}
-
-
-	/**
-	 * The leading components a for log name of a given Selenium script are constant, so can be set during 
-	 * creation of this JMeter functions class for a script   
-	 * 
-	 * @param logNamesFormat
-	 * @param context
-	 */
-	private String formLeadingPartOfLogNames(String logNamesFormat, JavaSamplerContext context) {
-		String leadingPartOfLogNames = null;
-		
-		if (loggingConfig.getLogDirectory() != null) {
-			leadingPartOfLogNames = loggingConfig.getLogDirectory().getPath() + File.separator;
-		
-			if (logNamesFormat.contains(Mark59Constants.THREAD_NAME)){
-				leadingPartOfLogNames += threadName + "_"; 	
-			}
-			if (logNamesFormat.contains(Mark59Constants.THREAD_GROUP)){
-				if (context.getJMeterContext() != null  && context.getJMeterContext().getThreadGroup() != null){
-					leadingPartOfLogNames += context.getJMeterContext().getThreadGroup().getName() + "_" ;
-				} else {
-					leadingPartOfLogNames += "noTG_"; 
-				}
-			}	
-			if (logNamesFormat.contains(Mark59Constants.SAMPLER)){
-				if (context.getJMeterContext() != null  && context.getJMeterContext().getCurrentSampler() != null){
-					leadingPartOfLogNames += context.getJMeterContext().getCurrentSampler().getName() + "_" ;
-				} else {
-					leadingPartOfLogNames += "noSampler_"; 
-				}
-			}
-		
-		}
-		return StringUtils.removeEnd(leadingPartOfLogNames, "_");
 	}
 
 
@@ -752,86 +702,6 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 		if (loggingConfig.getLogDirectory() != null) {
 			writeLog(new File(buildFullyQualifiedLogName(textFileName, "txt")),
 					mark59SeleniumDriver.captureDriverPerfLogs());
-		}
-	}
-	
-	
-	/**
-	 * Writes all buffered screenshots/logs to disk (eg, all transaction-level logging performed using
-	 * a Mark59LogLevels of "BUFFER")
-	 * @see Mark59LogLevels
-	 */
-	@Override		
-	public void writeBufferedArtifacts() {
-		LOG.debug("Writing " + bufferedArtifacts.size() + " buffered logs to disk");
-
-		for (Entry<String, byte[]> bufferedArtifact : bufferedArtifacts.entrySet()) {
-			writeLog(new File(bufferedArtifact.getKey()) , bufferedArtifact.getValue());
-		}
-		bufferedArtifacts.clear();
-	}
-
-	
-
-	@Override		
-	public void writeStackTrace(String stackTraceName, Throwable e) {
-		StringWriter sw = new StringWriter();
-		e.printStackTrace(new PrintWriter(sw));
-		String stackTrace = sw.toString(); 
-		if (loggingConfig.getLogDirectory() != null) {
-			writeLog(new File(buildFullyQualifiedLogName(stackTraceName, "txt")),
-					StringUtils.isNotBlank(stackTrace) ? stackTrace.getBytes() : null);
-		} else {
-//			 sysout??
-		}
-	}
-
-	
-	
-	private String buildFullyQualifiedLogName(String imageName, String suffix) {
-		String fullLogname = leadingPartOfLogNames;
-		
-		if (loggingConfig.getLogNamesFormat().contains(Mark59Constants.LABEL)) {
-			if (StringUtils.isNotBlank(super.mostRecentTransactionStarted)){
-				fullLogname +=  "_" + super.mostRecentTransactionStarted;
-			} else {
-				fullLogname += "_noTxn";
-			}
-		}
-
-		if (loggingConfig.getLogNamesFormat().contains(Mark59Constants.LOG_COUNTER)) {
-			fullLogname +=  "_" + String.format("%04d", StaticCounter.readCount(Mark59Constants.LOG_COUNTER));
-			// increment counter ready for next image
-			StaticCounter.incrementCount(Mark59Constants.LOG_COUNTER);			
-		}
-
-		return fullLogname + "_" + imageName +"." + suffix;
-	}
-
-
-	/**
-	 * Save the byte[] to the specified file name, creating the parent directory if missing 
-	 * (ie initial directory creation)
-	 * 
-	 * @param mark59Log the full filename to use for the screenshot
-	 * @param logFileBytes the screenshot/log data 
-	 */
-	private void writeLog(File mark59Log, byte[] logFileBytes) {
-		
-		new File(mark59Log.getParent()).mkdirs();
-
-		LOG.info(MessageFormat.format("Writing image to disk: {0}", mark59Log));
-		System.out.println("[" + Thread.currentThread().getName() + "]  Writing image to disk:" + mark59Log);
-
-		if (logFileBytes == null ) {
-			logFileBytes = "(null)".getBytes();
-		}
-		
-		try (OutputStream stream = new FileOutputStream(mark59Log)) {
-			stream.write(logFileBytes);
-
-		} catch (IOException e) {
-			LOG.error("Caught " + e.getClass().getName() + " with message: " + e.getMessage());
 		}
 	}
 	

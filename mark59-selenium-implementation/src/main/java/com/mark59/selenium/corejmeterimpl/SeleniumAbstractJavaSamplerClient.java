@@ -54,7 +54,6 @@ import com.mark59.core.utils.Mark59Constants;
 import com.mark59.core.utils.Mark59LogLevels;
 import com.mark59.core.utils.Mark59Utils;
 import com.mark59.core.utils.SafeSleep;
-import com.mark59.core.utils.ScreenshotLoggingHelper;
 import com.mark59.selenium.driversimpl.SeleniumDriverFactory;
 import com.mark59.selenium.interfaces.DriverFunctionsSelenium;
 

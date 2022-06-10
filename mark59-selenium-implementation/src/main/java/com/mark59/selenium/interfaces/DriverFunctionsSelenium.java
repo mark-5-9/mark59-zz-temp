@@ -26,7 +26,6 @@ import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 
 import com.mark59.core.interfaces.DriverFunctions;
-import com.mark59.core.utils.ScreenshotLoggingHelper;
 import com.mark59.selenium.corejmeterimpl.JmeterFunctionsForSeleniumScripts;
 import com.mark59.selenium.driversimpl.DriverFunctionsSeleniumChrome;
 import com.mark59.selenium.driversimpl.DriverFunctionsSeleniumFirefox;
@@ -110,23 +109,6 @@ public abstract class DriverFunctionsSelenium<O extends WebDriver> implements Dr
 
 		return "<!--  Driver CurrentUrl : " + currentURL + " --> \n" +  pageSource;
 	}
-
-	
-	@Override
-	public void documentExceptionState(Exception e) {  // ?????????????????????????????????????
-		
-		System.out.println(" >> !!!!!! "  );		
-		System.out.println(" dont come here please !!!!!! "  );
-		System.out.println(" << !!!!!! "  );				
-		
-		
-////		captureAndBufferScreenshot("EXCEPTION");
-/////		writeBufferedArtifacts();
-/////		ScreenshotLoggingHelper.writeExceptionLog(e);
-////		writeDriverLogs("PERFLOG");
-////		writePageSource("source_at_EXCEPTION");
-	}
-
 	
 }
 

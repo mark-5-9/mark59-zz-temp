@@ -16,6 +16,13 @@
 
 package com.mark59.core;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,8 +41,10 @@ import org.apache.logging.log4j.Logger;
 import com.mark59.core.interfaces.DriverFunctions;
 import com.mark59.core.interfaces.JmeterFunctions;
 import com.mark59.core.utils.Mark59Constants;
+import com.mark59.core.utils.Mark59LogLevels;
 import com.mark59.core.utils.Mark59Constants.JMeterFileDatatypes;
 import com.mark59.core.utils.Mark59Utils;
+import com.mark59.core.utils.StaticCounter;
 import com.mark59.core.utils.Mark59LoggingConfig;
 
 
@@ -97,81 +107,63 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	 */
 	protected Map<String, byte[]> bufferedArtifacts = new HashMap<>();
 	
+	/**
+	 * the 'constant' bit of all mark59 log names for a particular script 
+	 */
+	protected String leadingPartOfLogNames;
+
 	
 	/**
 	 * @param threadName thread name (eg, obtained via<code>Thread.currentThread().getName()</code> )
+	 * @param context the JavaSamplerContext
 	 */
-	public JmeterFunctionsImpl(String threadName) {
-		
+	public JmeterFunctionsImpl(String threadName, JavaSamplerContext context) {
+		this.threadName = threadName;
 		loggingConfig = Mark59LoggingConfig.getInstance();
 		
-		this.threadName = threadName;
+		leadingPartOfLogNames = formLeadingPartOfLogNames(loggingConfig.getLogNamesFormat(), context);
+		System.out.println("************ leadingPartOfLogNames = " + leadingPartOfLogNames  );	
+		
 		mainResult.sampleStart();
 	}
 
+	
 	/**
-	 * Called upon completion of the test run.
+	 * The leading components a for log name of a given Selenium script are constant, so can be set during 
+	 * creation of this JMeter functions class for a script   
 	 * 
-	 * <p>Traverses the internal created transactionMap, looking for any transactions that had been
-	 * started but not completed. If incomplete transactions are encountered then they are ended and flagged as
-	 * "failed".</p>
-	 * 
-	 * <p>If a test execution contains one or more failed transactions, the entire script
-	 * run is flagged as a failed test.</p>
-	 * 
-	 * <p>Once any outstanding transactions are completed, the SampleResult object is
-	 * finalised (its status is set as PASS or FAIL).</p>
-	 * 
-	 * <p>
-	 * this.tearDown() is called as part of the framework, so an end user should not need to call this method
-	 * themselves unless they're using a custom implementation of AbstractJmeterTestRunner.runTest(JavaSamplerContext)
-	 * </p>
+	 * @param logNamesFormat
+	 * @param context
 	 */
-	@Override
-	public void tearDown() {	
+	private String formLeadingPartOfLogNames(String logNamesFormat, JavaSamplerContext context) {
+		String leadingPartOfLogNames = null;
 		
-		for (Entry<String, SampleResult> subResultEntry : transactionMap.entrySet()) {
-			if (StringUtils.isBlank(subResultEntry.getValue().getResponseMessage())){
-				endTransaction(subResultEntry.getValue().getSampleLabel(), Outcome.FAIL);
+		if (loggingConfig.getLogDirectory() != null) {
+			leadingPartOfLogNames = loggingConfig.getLogDirectory().getPath() + File.separator;
+		
+			if (logNamesFormat.contains(Mark59Constants.THREAD_NAME)){
+				leadingPartOfLogNames += threadName + "_"; 	
 			}
-		}
-
-		if (allSamplesPassed() && !isForcedFail){
-			tearDownMainResult(Outcome.PASS);
-		} else {
-			tearDownMainResult(Outcome.FAIL);
-		}
+			if (logNamesFormat.contains(Mark59Constants.THREAD_GROUP)){
+				if (context.getJMeterContext() != null  && context.getJMeterContext().getThreadGroup() != null){
+					leadingPartOfLogNames += context.getJMeterContext().getThreadGroup().getName() + "_" ;
+				} else {
+					leadingPartOfLogNames += "noTG_"; 
+				}
+			}	
+			if (logNamesFormat.contains(Mark59Constants.SAMPLER)){
+				if (context.getJMeterContext() != null  && context.getJMeterContext().getCurrentSampler() != null){
+					leadingPartOfLogNames += context.getJMeterContext().getCurrentSampler().getName() + "_" ;
+				} else {
+					leadingPartOfLogNames += "noSampler_"; 
+				}
+			}
 		
-		logThreadTransactionResults();
-	}
-	
-	
-	private boolean allSamplesPassed() {
-		return Arrays.stream(mainResult.getSubResults()).allMatch(SampleResult::isSuccessful);
+		}
+		return StringUtils.removeEnd(leadingPartOfLogNames, "_");
 	}
 
-	
-	/**
-	 * Completes the test main transaction - expected to be invoked at end of test script run.
-	 * Note from JMeter 5.0 a call to set the end time of the main transaction is called as each  
-	 * sub-result ends, so a call to the sampleEnd() method only needs to be made if no subResult 
-	 * has already set the main transaction end time 
-	 * 
-	 * A data type of 'PARENT' is used to indicate this is a main result (normally expected to have sub-results)
-	 * produced using the mark59 framework is set.  This is useful to to separate results from sub-results, particularly
-	 * for JMeter result files in CSV format, as a CSV has a flat structure.  
-	 * 
-	 */
-	private void tearDownMainResult(Outcome outcome) {
-		if (mainResult.getEndTime() == 0) {
-			mainResult.sampleEnd(); // stop stopwatch
-		}
-		mainResult.setSuccessful(outcome.isOutcomeSuccess());
-		mainResult.setResponseMessage(outcome.getOutcomeText());
-		mainResult.setResponseCode(outcome.getOutcomeResponseCode()); // 200 code
-		
-		mainResult.setDataType(JMeterFileDatatypes.PARENT.getDatatypeText() );
-	}
+
 	
 
 	/**
@@ -441,9 +433,6 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	}			
 	
 	
-	
-	
-	
 	/**
 	 *  Return results from running the test.  Specifically for the Mark59 implementation,
 	 *  it can be used to access the transaction results in a running script by 
@@ -457,14 +446,213 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	
 	/**
 	 * Returns the transaction id of the last (most recent) transaction started. 
-	 * Excludes SET transactions and DataPoints.
+	 * This implementation excludes SET transactions and DataPoints.
 	 * 
 	 * @return mostRecentTransactionStarted (txnId)
 	 */
+	@Override
 	public String getMostRecentTransactionStarted() {
 		return mostRecentTransactionStarted;
 	}
 	
+
+	
+	/**
+	 * Called upon completion of the test run.
+	 * 
+	 * <p>Traverses the internal created transactionMap, looking for any transactions that had been
+	 * started but not completed. If incomplete transactions are encountered then they are ended and flagged as
+	 * "failed".</p>
+	 * 
+	 * <p>If a test execution contains one or more failed transactions, the entire script
+	 * run is flagged as a failed test.</p>
+	 * 
+	 * <p>Once any outstanding transactions are completed, the SampleResult object is
+	 * finalised (its status is set as PASS or FAIL).</p>
+	 * 
+	 * <p>
+	 * this.tearDown() is called as part of the framework, so an end user should not need to call this method
+	 * themselves unless they're using a custom implementation of AbstractJmeterTestRunner.runTest(JavaSamplerContext)
+	 * </p>
+	 */
+	@Override
+	public void tearDown() {	
+		
+		for (Entry<String, SampleResult> subResultEntry : transactionMap.entrySet()) {
+			if (StringUtils.isBlank(subResultEntry.getValue().getResponseMessage())){
+				endTransaction(subResultEntry.getValue().getSampleLabel(), Outcome.FAIL);
+			}
+		}
+
+		if (allSamplesPassed() && !isForcedFail){
+			tearDownMainResult(Outcome.PASS);
+		} else {
+			tearDownMainResult(Outcome.FAIL);
+		}
+		
+		logThreadTransactionResults();
+	}
+	
+	
+	private boolean allSamplesPassed() {
+		return Arrays.stream(mainResult.getSubResults()).allMatch(SampleResult::isSuccessful);
+	}
+
+	
+	/**
+	 * Completes the test main transaction - expected to be invoked at end of test script run.
+	 * Note from JMeter 5.0 a call to set the end time of the main transaction is called as each  
+	 * sub-result ends, so a call to the sampleEnd() method only needs to be made if no subResult 
+	 * has already set the main transaction end time 
+	 * 
+	 * A data type of 'PARENT' is used to indicate this is a main result (normally expected to have sub-results)
+	 * produced using the mark59 framework is set.  This is useful to to separate results from sub-results, particularly
+	 * for JMeter result files in CSV format, as a CSV has a flat structure.  
+	 * 
+	 */
+	private void tearDownMainResult(Outcome outcome) {
+		if (mainResult.getEndTime() == 0) {
+			mainResult.sampleEnd(); // stop stopwatch
+		}
+		mainResult.setSuccessful(outcome.isOutcomeSuccess());
+		mainResult.setResponseMessage(outcome.getOutcomeText());
+		mainResult.setResponseCode(outcome.getOutcomeResponseCode()); // 200 code
+		
+		mainResult.setDataType(JMeterFileDatatypes.PARENT.getDatatypeText() );
+	}
+	
+	
+	
+
+	/**
+	 * Called to set the main result of a test to a failed state, regardless of the state of the sub results attached to the main result.
+	 * <p>Normally, a main result would only fail if at least one of it's sub results was a fail.</p>
+	 */
+	@Override
+	public void failTest() {
+		isForcedFail = true;
+	}
+
+	
+	/**
+	 * @return a map of the buffered logs (keyed by name) 
+	 */
+	@Override	
+	public Map<String, byte[]> getBufferedLogs() {
+		return bufferedArtifacts;
+	}
+
+	/**
+	 * Writes all buffered screenshots/logs to disk (eg, all transaction-level logging performed using
+	 * a Mark59LogLevels of "BUFFER")
+	 * @see Mark59LogLevels
+	 */
+	@Override		
+	public void writeBufferedArtifacts() {
+		LOG.debug("Writing " + bufferedArtifacts.size() + " buffered logs to disk");
+
+		for (Entry<String, byte[]> bufferedArtifact : bufferedArtifacts.entrySet()) {
+			writeLog(new File(bufferedArtifact.getKey()) , bufferedArtifact.getValue());
+		}
+		bufferedArtifacts.clear();
+	}
+
+	
+
+	@Override		
+	public void writeStackTrace(String stackTraceName, Throwable e) {
+		StringWriter sw = new StringWriter();
+		e.printStackTrace(new PrintWriter(sw));
+		String stackTrace = sw.toString(); 
+		if (loggingConfig.getLogDirectory() != null) {
+			writeLog(new File(buildFullyQualifiedLogName(stackTraceName, "txt")),
+					StringUtils.isNotBlank(stackTrace) ? stackTrace.getBytes() : null);
+		} else {
+//			 sysout??
+		}
+	}
+	
+	
+	/**
+	 * Capture and immediately output a 'screenshot' log. Use with caution in a 
+	 * Performance and Volume test as misuse of this method may produce many more screenshots
+	 * than intended. 
+	 * <p>Instead, you could use {@link #bufferScreenshot(String)} and {@link #writeBufferedArtifacts()}.
+	 * <p>Can be implemented by extending this class and combining with a 
+	 * {@link DriverFunctions} implementation that is capable of taking logs/screenshots    
+	 * 
+	 * @param imageName filename to use for the screenshot
+	 */
+	@Override	
+	public void writeScreenshot(String imageName){
+		System.out.println("writeScreenshot not implemented!" );
+	} 
+
+	
+	/**
+	 * Stores a 'screenshot' log in memory, ready to be written to file later.
+	 * <p>Can be implemented by extending this class and combining with a 
+	 * {@link DriverFunctions} implementation that is capable of taking logs/screenshots     
+	 */
+	@Override	
+	public void bufferScreenshot(String imageName){
+		System.out.println("bufferScreenshot not implemented!" );
+	} 
+
+
+	
+	/**
+	 * Puts everything together to form a full mark59 log name
+	 * @param imageName  last part of logname
+	 * @param suffix logname suffix (eg .txt)
+	 * @return a string representing the full path of the log 
+	 */
+	protected String buildFullyQualifiedLogName(String imageName, String suffix) {
+		String fullLogname = leadingPartOfLogNames;
+		
+		if (loggingConfig.getLogNamesFormat().contains(Mark59Constants.LABEL)) {
+			if (StringUtils.isNotBlank(mostRecentTransactionStarted)){
+				fullLogname +=  "_" + mostRecentTransactionStarted;
+			} else {
+				fullLogname += "_noTxn";
+			}
+		}
+
+		if (loggingConfig.getLogNamesFormat().contains(Mark59Constants.LOG_COUNTER)) {
+			fullLogname +=  "_" + String.format("%04d", StaticCounter.readCount(Mark59Constants.LOG_COUNTER));
+			// increment counter ready for next image
+			StaticCounter.incrementCount(Mark59Constants.LOG_COUNTER);			
+		}
+		return fullLogname + "_" + imageName +"." + suffix;
+	}
+
+
+	/**
+	 * Save the byte[] to the specified file name, creating the parent directory if missing 
+	 * (ie initial directory creation)
+	 * 
+	 * @param mark59Log the full filename to use for the screenshot
+	 * @param logFileBytes the screenshot/log data 
+	 */
+	protected void writeLog(File mark59Log, byte[] logFileBytes) {
+		
+		new File(mark59Log.getParent()).mkdirs();
+
+		LOG.info(MessageFormat.format("Writing image to disk: {0}", mark59Log));
+		System.out.println("[" + Thread.currentThread().getName() + "]  Writing image to disk:" + mark59Log);
+
+		if (logFileBytes == null ) {
+			logFileBytes = "(null)".getBytes();
+		}
+		
+		try (OutputStream stream = new FileOutputStream(mark59Log)) {
+			stream.write(logFileBytes);
+
+		} catch (IOException e) {
+			LOG.error("Caught " + e.getClass().getName() + " with message: " + e.getMessage());
+		}
+	}
+
 	
 	/**
 	 * Fetches the SampleResult from the transactionMap that matches the supplied label.
@@ -486,6 +674,7 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 		
 		return transactionMap.get(label);
 	}
+	
 	
 	/**
 	 * Searches the main result for all instances of the supplied label, collating the SampleResults into a List and returning all of them.
@@ -520,67 +709,5 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 		}
 		LOG.info("");
 	}
-
-	/**
-	 * Called to set the main result of a test to a failed state, regardless of the state of the sub results attached to the main result.
-	 * <p>Normally, a main result would only fail if at least one of it's sub results was a fail.</p>
-	 */
-	@Override
-	public void failTest() {
-		isForcedFail = true;
-	}
-
-	
-	
-	/**
-	 * @return a map of the buffered logs (keyed by name) 
-	 */
-	@Override	
-	public Map<String, byte[]> getBufferedLogs() {
-		return bufferedArtifacts;
-	}
-	
-	
-	/**
-	 * Capture and immediately output a 'screenshot' log. Use with caution in a 
-	 * Performance and Volume test as misuse of this method may produce many more screenshots
-	 * than intended. 
-	 * <p>Instead, you could use {@link #bufferScreenshot(String)} and {@link #writeBufferedArtifacts()}.
-	 * <p>Can be implemented by extending this class and combining with a 
-	 * {@link DriverFunctions} implementation that is capable of taking logs/screenshots    
-	 * 
-	 * @param imageName filename to use for the screenshot
-	 */
-	@Override	
-	public void writeScreenshot(String imageName){
-		System.out.println("writeScreenshot not implemented!" );
-	} 
-
-	
-	/**
-	 * Stores a 'screenshot' log in memory, ready to be written to file later.
-	 * <p>Can be implemented by extending this class and combining with a 
-	 * {@link DriverFunctions} implementation that is capable of taking logs/screenshots     
-	 */
-	@Override	
-	public void bufferScreenshot(String imageName){
-		System.out.println("bufferScreenshot not implemented!" );
-	} 
-
-		
-	/**
-	 * Writes all buffered screenshots/logs to disk 
-	 * <p>Can be implemented by extending this class and combining with a 
-	 * {@link DriverFunctions} implementation that is capable of taking logs/screenshots  
-	 */
-	@Override	
-	public void writeBufferedArtifacts(){
-		System.out.println("writeBufferedArtifacts not implemented!" );
-	}
-
-	@Override
-	public void writeStackTrace(String stackTraceName, Throwable e) {
-		System.out.println("writeBufferedArtifacts not implemented!" );		
-	} 
 	
 }

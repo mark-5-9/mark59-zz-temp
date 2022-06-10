@@ -404,7 +404,7 @@ public class JmeterFunctionsTest {
 	}
 
 	private JmeterFunctionsImpl getJmeterFunctions() {
-		return new JmeterFunctionsImpl(Thread.currentThread().getName());
+		return new JmeterFunctionsImpl(Thread.currentThread().getName(), null);
 	}
 
 }

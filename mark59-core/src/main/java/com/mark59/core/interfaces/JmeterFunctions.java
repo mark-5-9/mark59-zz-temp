@@ -147,30 +147,58 @@ public interface JmeterFunctions {
 
 	
 	/**
+	 * Return results from running the test
+	 * @return org.apache.jmeter.samplers.SampleResult
+	 */	
+	public SampleResult getMainResult();
+
+
+	
+	/**
+	 * Returns the transaction id of the last (most recent) transaction started. 
+	 * <p>(The selenium implementation excludes SET transactions and DataPoints).
+	 * 
+	 * @return mostRecentTransactionStarted (txnId)
+	 */
+	public String getMostRecentTransactionStarted();
+	
+	
+	/**
 	 * Behaviours to execute at the end of test, such as terminating transations that were started but not ended.
 	 * <p>Specific behaviours vary based on the particular implementation of Tester.</p>
 	 */
-	void tearDown();
+	public void tearDown();
 	
 	
 	/**
 	 * Marks the test as failed.
 	 */
-	void failTest();
+	public void failTest();
 	
 	
-	/**
-	 * Return results from running the test
-	 * @return org.apache.jmeter.samplers.SampleResult
-	 */	
-	SampleResult getMainResult();
-
 	
 	/**
 	 * @return the Map of the buffered screenshots
 	 */
 	public Map<String, byte[]> getBufferedLogs(); 
 	
+	
+	/**
+	 * Writes all buffered screenshots/logs to disk (ie, all transaction-level logging
+	 * performed using a Mark59LogLevels of "BUFFER")
+	 * <p>Can be implemented by extending this class and combining with a 
+	 * {@link DriverFunctions} implementation can is capable of taking logs/screenshots  
+	 */
+	public void writeBufferedArtifacts();
+
+	
+	/**
+	 * Capture and immediately write a stack track log for the passed Exception.
+	 * <p>(There's no 'Buffer' option for exceptions as it's assumed the script will not continue)
+	 * @param stackTraceName filename to use for the log (without suffix)
+	 * @param e Throwable (Exception) being loggoed
+	 */
+	public void writeStackTrace(String stackTraceName, Throwable e); 
 	
 	/**
 	 * Capture and immediately output a screenshot/log. Use with caution in a 
@@ -194,23 +222,6 @@ public interface JmeterFunctions {
 	 */
 	public void bufferScreenshot(String imageName);
 
-		
-	/**
-	 * Writes all buffered screenshots/logs to disk (ie, all transaction-level logging
-	 * performed using a Mark59LogLevels of "BUFFER")
-	 * <p>Can be implemented by extending this class and combining with a 
-	 * {@link DriverFunctions} implementation can is capable of taking logs/screenshots  
-	 */
-	public void writeBufferedArtifacts();
 
-
-	/**
-	 * Capture and immediately write a stack track log for the passed Exception.
-	 * <p>(There's no 'Buffer' option for exceptions as it's assumed the script will not continue)
-	 * @see Mark59LogLevels
-	 * @param stackTraceName filename to use for the log (without suffix)
-	 * @param e Throwable (Exception) being loggoed
-	 */
-	public void writeStackTrace(String stackTraceName, Throwable e); 
 
 }

@@ -33,12 +33,10 @@ public class DriverFunctionMock implements DriverFunctions<MockDriver> {
 		this.mockDriver = mockDriver;
 	}
 	
-	
 	@Override
 	public MockDriver getDriver() {
 		return this.mockDriver;
 	}
-
 
 	@Override
 	public byte[] captureScreenshot() {
@@ -49,26 +47,17 @@ public class DriverFunctionMock implements DriverFunctions<MockDriver> {
 	@Override
 	public void driverDispose() {
 		// TODO Auto-generated method stub
-		
 	}
-
 
 	public void clearDriverLogs() {
 		// TODO Auto-generated method stub
 		
 	}
 
-
 	@Override
 	public String getDriverClass() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-
-	@Override
-	public void documentExceptionState(Exception e) {
-		// TODO Auto-generated method stub
 	}
 
 }

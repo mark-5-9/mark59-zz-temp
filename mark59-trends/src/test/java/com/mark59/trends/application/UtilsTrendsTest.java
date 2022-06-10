@@ -17,14 +17,11 @@
 package com.mark59.trends.application;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import com.mark59.core.utils.Mark59Utils;
 
 import junit.framework.TestCase;
 
