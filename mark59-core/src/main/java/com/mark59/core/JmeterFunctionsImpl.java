@@ -599,7 +599,10 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	 * 
 	 * <p>Generally meant to be used within Mark59 to write pre-defined log types 
 	 * (eg Selenium screenshots, Chromium performance Logs, Exception stack traces), but can be invoked from 
-	 * a user-written script to immediately write data to a mark59 log. 
+	 * a user-written script to immediately write data to a Mark59 log. 
+	 * 
+	 * <p>Sample usage from a script:
+	 * <p><code>jm.writeLog("kilroy", "txt", "Kilroy was here".getBytes());</code>
 	 * 
 	 * @param mark59LogName last part of the log filename (excluding extension)  
 	 * @param mark59LogNameSuffix suffix of the log filename (eg 'txt', 'jpg')  
@@ -617,9 +620,14 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	 * (eg Selenium screenshots, Chromium performance Logs), but can be invoked from 
 	 * a user-written script.
 	 * 
+	 * <p>Sample usage from a script:
+	 * <p><code>jm.bufferLog("kilroybuffer", "txt", "Kilroy was buffered here".getBytes());</code>
+	 * 
+	 * @see #writeBufferedArtifacts()
+	 * 
 	 * @param mark59LogName last part of the log filename (excluding extension)  
 	 * @param mark59LogNameSuffix suffix of the log filename (eg 'txt', 'jpg')  
-	 * @param mark59LogBytes  dthe log data 
+	 * @param mark59LogBytes the log data 
 	 */
 	@Override	
 	public void bufferLog(String mark59LogName, String mark59LogNameSuffix, byte[] mark59LogBytes) {
