@@ -226,7 +226,7 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 	@Override
 	public SampleResult runTest(JavaSamplerContext context) {
 		System.out.println("*********************** this.getClass().getName() = " + this.getClass().getName()  );
-		if (LOG.isDebugEnabled()) LOG.debug(this.getClass().getName() +  " : exectuing runTest" );
+		if (LOG.isDebugEnabled()) LOG.debug(this.getClass().getName() +  " : executing runTest" );
 		
 		AbstractThreadGroup tg = null;
 		String tgName = null;
@@ -247,7 +247,7 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 		try {
 			mark59SeleniumDriver = new SeleniumDriverFactory().makeMark59SeleniumDriver(jmeterRuntimeArgumentsMap) ;
 		} catch (Exception e) {
-			LOG.error("ERROR : " + this.getClass() + ". Fatal error has occured for Thread Group " + tgName
+			LOG.error("ERROR : " + this.getClass() + ". Fatal error has occurred for Thread Group " + tgName
 					+ " while attempting to initiate the selenium Driver!" );
 			LOG.error(e.getMessage());
 			e.printStackTrace();			
@@ -309,7 +309,7 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 			jm.writeStackTrace(lastTxnStarted + "_EXCEPTION_STACKTRACE", e);
 			
 		} catch (Exception ex) {
-			LOG.error("["+ thread + "]  ERROR : " + this.getClass() + ".  An exception occured during scriptExceptionHandling (documentExceptionState) " 
+			LOG.error("["+ thread + "]  ERROR : " + this.getClass() + ".  An exception occurred during scriptExceptionHandling (documentExceptionState) "
 					+  ex.getClass().getName() +  " thrown",  e);
 			ex.printStackTrace();
 		}	
@@ -317,7 +317,7 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 		try {
 			userActionsOnScriptFailure(context, jm, driver); 
 		} catch (Exception errorHandlingException) {
-			LOG.error("["+ thread + "]  ERROR : " + this.getClass() + ".  An exception occured during scriptExceptionHandling (userActionsOnScriptFailure) "
+			LOG.error("["+ thread + "]  ERROR : " + this.getClass() + ".  An exception occurred during scriptExceptionHandling (userActionsOnScriptFailure) "
 					+  errorHandlingException.getClass().getName() +  " thrown",  errorHandlingException);
 			errorHandlingException.printStackTrace();
 		}

@@ -442,7 +442,7 @@ public class TestTransactionsDAOjdbcTemplateImpl implements TestTransactionsDAO
 		BigDecimal txnLast  = BigDecimal.valueOf(-1.0).setScale(3, RoundingMode.HALF_UP);
 		boolean firstTimeThru = true;	
 		
-		BigDecimal ninteyPercent = new BigDecimal("90.0");
+		BigDecimal ninetyPercent = new BigDecimal("90.0");
 		
 		
 		for (Map<String, Object> row : rows) {
@@ -473,7 +473,7 @@ public class TestTransactionsDAOjdbcTemplateImpl implements TestTransactionsDAO
 			totalOfValues =  totalOfValues.add(value);
 
 			//calculation of time spent over 90% of metric (or <10% inverted percentage like idle).  Takes the number of points at >90%  and uses total number of point to get % 'bottlenecked'
-			if (eventMapping.getIsPercentage().equals("Y") &&  value.compareTo(ninteyPercent) > 0 ){
+			if (eventMapping.getIsPercentage().equals("Y") &&  value.compareTo(ninetyPercent) > 0 ){
 				countPointsAtBottleneckThreshold = countPointsAtBottleneckThreshold + 1;
 			}
 	

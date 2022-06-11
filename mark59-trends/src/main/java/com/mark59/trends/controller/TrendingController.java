@@ -106,14 +106,11 @@ public class TrendingController {
 		
 		if (reqApp == null ){
 			// on initial entry, when no application request parameter has been sent, take the first "active" application 
-			reqAppListSelector = AppConstantsMetrics.ACTIVE; 
-			
-			if ( ! runDAO.findApplications(reqAppListSelector).isEmpty()){
-				reqApp = runDAO.findApplications(reqAppListSelector).get(0);
-			} else {														 // if no active apps, just use any existing app
-				reqAppListSelector = AppConstantsMetrics.ALL; 
-				reqApp = runDAO.findApplications(reqAppListSelector).get(0);
-			} 
+			reqAppListSelector = AppConstantsMetrics.ACTIVE;
+			if (runDAO.findApplications(reqAppListSelector).isEmpty()) { // if no active apps, just use any existing app
+				reqAppListSelector = AppConstantsMetrics.ALL;
+			}
+			reqApp = runDAO.findApplications(reqAppListSelector).get(0);
 			if (StringUtils.isBlank(reqApp)){ 
 				throw new RuntimeException("Whoa !!  No Applications found " );
 			}
@@ -445,10 +442,8 @@ public class TrendingController {
 			}			
 		}
 		
-		List<String> cdpTaggedMissingTransactions  =  new SlaChecker().checkForMissingTransactionsWithDatabaseSLAs(application, latestRunTime, slaDAO  );
-		for (String missingTnxId : cdpTaggedMissingTransactions) {
-			trxnIdsWithAnyFailedSla.add(missingTnxId);
-		}
+		List<String> cdpTaggedMissingTransactions = new SlaChecker().checkForMissingTransactionsWithDatabaseSLAs(application, latestRunTime, slaDAO  );
+		trxnIdsWithAnyFailedSla.addAll(cdpTaggedMissingTransactions);
 		
 		model.addAttribute("trxnIdsWithAnyFailedSlaId", UtilsTrends.stringListToCommaDelimString(trxnIdsWithAnyFailedSla)  );
 		model.addAttribute("trxnIdsWithFailedSla90thResponseId", UtilsTrends.stringListToCommaDelimString(trxnIdsWithFailedSla90thResponse) );	

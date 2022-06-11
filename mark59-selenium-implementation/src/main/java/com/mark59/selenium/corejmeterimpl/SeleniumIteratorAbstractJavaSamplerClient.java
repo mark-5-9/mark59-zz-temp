@@ -142,7 +142,7 @@ public abstract class SeleniumIteratorAbstractJavaSamplerClient  extends  Seleni
 	static {
 		Map<String,String> staticIterMap = new LinkedHashMap<>();
 
-		staticIterMap.put("______________________ interation settings: _____________________", "" );		
+		staticIterMap.put("______________________ interation settings: _____________________", "" );
 		staticIterMap.put(ITERATE_FOR_PERIOD_IN_SECS, 						"0");
 		staticIterMap.put(ITERATE_FOR_NUMBER_OF_TIMES,  					"1");
 		staticIterMap.put(ITERATION_PACING_IN_SECS,  						"0");
@@ -210,7 +210,7 @@ public abstract class SeleniumIteratorAbstractJavaSamplerClient  extends  Seleni
 		try {
 			mark59SeleniumDriver = new SeleniumDriverFactory().makeMark59SeleniumDriver(jmeterRuntimeArgumentsMap) ;
 		} catch (Exception e) {
-			LOG.error("ERROR : " + this.getClass() + ". Fatal error has occured for Thread Group " + tgName
+			LOG.error("ERROR : " + this.getClass() + ". Fatal error has occurred for Thread Group " + tgName
 					+ " while attempting to initiate the selenium Driver. The Thread is stopping !" );
 			LOG.error(e.getMessage());
 			e.printStackTrace();			

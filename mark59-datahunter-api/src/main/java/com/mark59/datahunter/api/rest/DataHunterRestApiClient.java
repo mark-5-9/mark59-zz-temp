@@ -72,7 +72,7 @@ public class DataHunterRestApiClient {
 				+ "&lifecycle="  + encode(policies.getLifecycle()) 
 				+ "&useability=" + encode(policies.getUseability()) 
 				+ "&otherdata="  + encode(policies.getOtherdata()) 
-				+ "&epochtime="  + String.valueOf(policies.getEpochtime());
+				+ "&epochtime="  + policies.getEpochtime();
 		// System.out.println("DHRAC addPolicy url = " + webServiceUrl); 
 		return invokeDataHunterRestApi(webServiceUrl);
 	}
@@ -277,9 +277,9 @@ public class DataHunterRestApiClient {
 	
 	
 	/**
-	 * Call to the DataHunter applcation's Rest controller, returning a DataHunterRestApiResponsePojo 
+	 * Call to the DataHunter Rest controller, returning a DataHunterRestApiResponsePojo
 	 * 
-	 * @param webServiceUrl
+	 * @param webServiceUrl DataHunter Rest controller URL
 	 * @return DataHunterRestApiResponsePojo
 	 */
 	private DataHunterRestApiResponsePojo invokeDataHunterRestApi(String webServiceUrl)  {

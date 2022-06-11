@@ -92,7 +92,9 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	/**	@see #logPageSourceAtEndOfTransactions  */
 	public static final String LOG_PAGE_SOURCE_AT_END_OF_TRANSACTIONS	= "Log_Page_Source_At_End_Of_Transactions";
 	/**	@see #logPerformanceLogAtEndOfTransactions  */
-	public static final String LOG_PERF_LOG_AT_END_OF_TRANSACTIONS 		= "Log_Perf_Log_At_End_Of_Transactions";	
+	public static final String LOG_PERF_LOG_AT_END_OF_TRANSACTIONS 		= "Log_Perf_Log_At_End_Of_Transactions";
+
+	private final DriverFunctionsSelenium<WebDriver> mark59SeleniumDriver;
 
 	private boolean writeScreenshotsAtStartOfTransactions = false;
 	private boolean writeScreenshotsAtEndOfTransactions = false; 	
@@ -104,9 +106,7 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	private boolean bufferPageSourceAtEndOfTransactions = false; 	
 	private boolean writePerformanceLogAtEndOfTransactions = false; 		
 	private boolean bufferPerformanceLogAtEndOfTransactions = false; 			
-	
-	private DriverFunctionsSelenium<WebDriver> mark59SeleniumDriver;
-	
+
 	/**
 	 * @param context the JMeter JavaSamplerContext 
 	 * @param mark59SeleniumDriver  see SeleniumDriverWrapper
@@ -489,17 +489,17 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	
 	/**
 	 * Screenshot logs to be written or buffered at the start transactions
-	 * @param cofigLogLevel  configuration used to set actions when writing logs 
+	 * @param configLogLevel  configuration used to set actions when writing logs
 	 */
-	public void logScreenshotsAtStartOfTransactions(Mark59LogLevels cofigLogLevel) {
+	public void logScreenshotsAtStartOfTransactions(Mark59LogLevels configLogLevel) {
 		bufferScreenshotsAtStartOfTransactions = false;
 		writeScreenshotsAtStartOfTransactions = false;
 		
-		if ( Mark59LogLevels.BUFFER.equals(cofigLogLevel)) {
+		if ( Mark59LogLevels.BUFFER.equals(configLogLevel)) {
 			bufferScreenshotsAtStartOfTransactions = true; 
-		} else if ( Mark59LogLevels.WRITE.equals(cofigLogLevel) ) {
+		} else if ( Mark59LogLevels.WRITE.equals(configLogLevel) ) {
 			writeScreenshotsAtStartOfTransactions = true;
-		} else if ( Mark59LogLevels.DEFAULT.equals(cofigLogLevel) ) {
+		} else if ( Mark59LogLevels.DEFAULT.equals(configLogLevel) ) {
 			
 			if (LOG.isTraceEnabled() ) {
 				writeScreenshotsAtStartOfTransactions = true;
@@ -509,17 +509,17 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 
 	/**
 	 * Screenshot logs to be written or buffered at the end of transactions
-	 * @param cofigLogLevel Used to set actions when writing logs  
+	 * @param configLogLevel Used to set actions when writing logs  
 	 */
-	public void logScreenshotsAtEndOfTransactions(Mark59LogLevels cofigLogLevel) {
+	public void logScreenshotsAtEndOfTransactions(Mark59LogLevels configLogLevel) {
 		bufferScreenshotsAtEndOfTransactions = false; 
 		writeScreenshotsAtEndOfTransactions = false;
 		
-		if ( Mark59LogLevels.BUFFER.equals(cofigLogLevel) ) {
+		if ( Mark59LogLevels.BUFFER.equals(configLogLevel) ) {
 			bufferScreenshotsAtEndOfTransactions = true; 
-		} else if ( Mark59LogLevels.WRITE.equals(cofigLogLevel) ) {
+		} else if ( Mark59LogLevels.WRITE.equals(configLogLevel) ) {
 			writeScreenshotsAtEndOfTransactions = true;
-		} else if ( Mark59LogLevels.DEFAULT.equals(cofigLogLevel) ) {
+		} else if ( Mark59LogLevels.DEFAULT.equals(configLogLevel) ) {
 
 			if (LOG.isTraceEnabled() ) {
 				writeScreenshotsAtEndOfTransactions = true;
@@ -531,17 +531,17 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	
 	/**
 	 * PageSource to be written or buffered at the start of transactions
-	 * @param cofigLogLevel Used to set actions when writing screenshots/logs  
+	 * @param configLogLevel Used to set actions when writing screenshots/logs  
 	 */
-	public void logPageSourceAtStartOfTransactions(Mark59LogLevels cofigLogLevel) {
+	public void logPageSourceAtStartOfTransactions(Mark59LogLevels configLogLevel) {
 		bufferPageSourceAtStartOfTransactions = false; 
 		writePageSourceAtStartOfTransactions = false;	
 		
-		if ( Mark59LogLevels.BUFFER.equals(cofigLogLevel) ) {
+		if ( Mark59LogLevels.BUFFER.equals(configLogLevel) ) {
 			bufferPageSourceAtStartOfTransactions = true; 
-		} else if ( Mark59LogLevels.WRITE.equals(cofigLogLevel) ) {
+		} else if ( Mark59LogLevels.WRITE.equals(configLogLevel) ) {
 			writePageSourceAtStartOfTransactions = true;
-		} else if ( Mark59LogLevels.DEFAULT.equals(cofigLogLevel) ) {
+		} else if ( Mark59LogLevels.DEFAULT.equals(configLogLevel) ) {
 			
 			if (LOG.isTraceEnabled() ) {
 				writePageSourceAtStartOfTransactions = true;
@@ -551,17 +551,17 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 
 	/**
 	 * PageSource to be written or buffered at the end of transactions
-	 * @param cofigLogLevel Used to set actions when writing logs  
+	 * @param configLogLevel Used to set actions when writing logs  
 	 */
-	public void logPageSourceAtEndOfTransactions(Mark59LogLevels cofigLogLevel) {
+	public void logPageSourceAtEndOfTransactions(Mark59LogLevels configLogLevel) {
 		bufferPageSourceAtEndOfTransactions = false; 
 		writePageSourceAtEndOfTransactions = false;
 		
-		if ( Mark59LogLevels.BUFFER.equals(cofigLogLevel) ) {
+		if ( Mark59LogLevels.BUFFER.equals(configLogLevel) ) {
 			bufferPageSourceAtEndOfTransactions = true; 
-		} else if ( Mark59LogLevels.WRITE.equals(cofigLogLevel) ) {
+		} else if ( Mark59LogLevels.WRITE.equals(configLogLevel) ) {
 			writePageSourceAtEndOfTransactions = true;
-		} else if ( Mark59LogLevels.DEFAULT.equals(cofigLogLevel) ) {
+		} else if ( Mark59LogLevels.DEFAULT.equals(configLogLevel) ) {
 
 			if (LOG.isTraceEnabled() ) {
 				writePageSourceAtEndOfTransactions = true;
@@ -573,17 +573,17 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	
 	/**
 	 * PerformanceLog to be written or buffered at the end of transactions (chrome)
-	 * @param cofigLogLevel Used to set actions when writing logs  
+	 * @param configLogLevel Used to set actions when writing logs  
 	 */
-	public void logPerformanceLogAtEndOfTransactions(Mark59LogLevels cofigLogLevel) {
+	public void logPerformanceLogAtEndOfTransactions(Mark59LogLevels configLogLevel) {
 		bufferPerformanceLogAtEndOfTransactions = false; 
 		writePerformanceLogAtEndOfTransactions = false;
 		
-		if ( Mark59LogLevels.BUFFER.equals(cofigLogLevel) ) {
+		if ( Mark59LogLevels.BUFFER.equals(configLogLevel) ) {
 			bufferPerformanceLogAtEndOfTransactions = true; 
-		} else if ( Mark59LogLevels.WRITE.equals(cofigLogLevel) ) {
+		} else if ( Mark59LogLevels.WRITE.equals(configLogLevel) ) {
 			writePerformanceLogAtEndOfTransactions = true;
-		} else if ( Mark59LogLevels.DEFAULT.equals(cofigLogLevel) ) {
+		} else if ( Mark59LogLevels.DEFAULT.equals(configLogLevel) ) {
 
 			if (LOG.isTraceEnabled() ) {
 				writePerformanceLogAtEndOfTransactions = true;
@@ -607,12 +607,12 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	 * <li>		buffer PerformanceLog At End Of Transactions
 	 * </ul> 
 	 * 
-	 * @param cofigLogLevel see explanation above	
+	 * @param configLogLevel see explanation above
 	 */
-	public void logAllLogsAtEndOfTransactions(Mark59LogLevels cofigLogLevel) {
-		logScreenshotsAtEndOfTransactions(cofigLogLevel);
-		logPageSourceAtEndOfTransactions(cofigLogLevel);
-		logPerformanceLogAtEndOfTransactions(cofigLogLevel);
+	public void logAllLogsAtEndOfTransactions(Mark59LogLevels configLogLevel) {
+		logScreenshotsAtEndOfTransactions(configLogLevel);
+		logPageSourceAtEndOfTransactions(configLogLevel);
+		logPerformanceLogAtEndOfTransactions(configLogLevel);
 		
 	}	
 
@@ -625,11 +625,11 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	 * <li>  	Page Source at start of transactions	    
 	 * </ul>  
 	 * 
-	 * 	@param cofigLogLevel see explanations above		
+	 * 	@param configLogLevel see explanations above
 	 */
-	public void logAllLogsAtStartOfTransactions(Mark59LogLevels cofigLogLevel) {
-		logScreenshotsAtStartOfTransactions(cofigLogLevel);
-		logPageSourceAtStartOfTransactions(cofigLogLevel);
+	public void logAllLogsAtStartOfTransactions(Mark59LogLevels configLogLevel) {
+		logScreenshotsAtStartOfTransactions(configLogLevel);
+		logPageSourceAtStartOfTransactions(configLogLevel);
 	}	
 	
 	

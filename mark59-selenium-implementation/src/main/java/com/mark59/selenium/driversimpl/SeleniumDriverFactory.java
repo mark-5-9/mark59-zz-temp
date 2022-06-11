@@ -160,8 +160,7 @@ public class SeleniumDriverFactory {
 		// Note: May not be a general solution (loggers can be re-created - they are "WeakReferences"), but it seems to works here.
 		java.util.logging.Logger.getLogger("org.openqa.selenium").setLevel(Level.WARNING);
 
-		
-//		all properties related to mark59 are loaded by core		
+//		note all properties related to mark59 are loaded by core
 		
 		try {
 			pr = PropertiesReader.getInstance();
@@ -170,17 +169,6 @@ public class SeleniumDriverFactory {
 			e.printStackTrace();			
 			System.exit(1);
 		}
-		
-		
-//     now done by ScreenshotLoggingConfig  (core)		
-		
-//		try {
-//			ScreenshotLoggingHelper.initialiseDirectory();
-//		} catch (IOException e) {
-//			LOG.fatal("Failed on invoke of ScreenshotLoggingHelper.initialiseDirectory");
-//			e.printStackTrace();			
-//			System.exit(1);
-//		}	
 	}
 
 	
@@ -218,8 +206,8 @@ public class SeleniumDriverFactory {
 
 		DriverFunctionsSeleniumBuilder<?> builder = getDriverBuilderOfType(arguments.get(DRIVER));
 		
-		// Set an alternate browser executable. If mark59.property contains mark59.brower.exectuable, that will be used
-		// but can overriden by the BROWSER_EXECUTABLE augument. If neither is present the default installation is used.
+		// Set an alternate browser executable. If mark59.property contains mark59.browser.executable, that will be used
+		// but can overridden by the BROWSER_EXECUTABLE augment. If neither is present the default installation is used.
 		
 		if (StringUtils.isNotBlank(pr.getProperty(PropertiesKeys.MARK59_PROP_BROWSER_EXECUTABLE)))
 			builder.setAlternateBrowser(new File(pr.getProperty(PropertiesKeys.MARK59_PROP_BROWSER_EXECUTABLE)).toPath());

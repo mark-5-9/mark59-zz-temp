@@ -71,7 +71,7 @@ public class VisGraphicDataProduction  implements VisGraphicDataProductionInterf
 		StringBuilder graphDataPoints = new StringBuilder();
 
 		// column descriptions (translates on graph to x axis, y axis, UOM label).
-		graphDataPoints.append("\"run\",\" \",\"" + graphMapping.getUomDescription() + "\"\n");
+		graphDataPoints.append("\"run\",\" \",\"").append(graphMapping.getUomDescription()).append("\"\n");
 
 		// output the values, using integer x,y values (possibly a bit OTT with the rounding, but might stop a quirky x.999999 type issue)
 		// System.out.println("VisGraphicDataProduction: number of dataPoints = " + graphDataRows.size() );
@@ -83,9 +83,9 @@ public class VisGraphicDataProduction  implements VisGraphicDataProductionInterf
 
 			Object plotPointz = Double.valueOf(dataRow[2].toString());
 			if ((Double) plotPointz % 1 == 0) { // its an integer!
-				plotPointz = Integer.valueOf((int) Math.round(((Double) plotPointz).doubleValue()));
+				plotPointz = (int) Math.round((Double) plotPointz);
 			}
-			graphDataPoints.append(plotPointx + ", " + plotPointy + ", " + plotPointz + "\n");
+			graphDataPoints.append(plotPointx).append(", ").append(plotPointy).append(", ").append(plotPointz).append("\n");
 		}
 		return graphDataPoints.toString();
 	}
@@ -95,12 +95,12 @@ public class VisGraphicDataProduction  implements VisGraphicDataProductionInterf
 			List<String> listOfStdTransactionNamesToGraph, List<String> listOfCdpTransactionNamesToGraph,
 			List<String> listOfCdpTaggedTransactionNamesToGraph) {
 
-		ArrayList<String> masterRunsList = new ArrayList<String>(
+		ArrayList<String> masterRunsList = new ArrayList<>(
 				UtilsTrends.commaDelimStringToStringList(runDatesToGraph));
-		ArrayList<String> missingRunsList = new ArrayList<String>(
+		ArrayList<String> missingRunsList = new ArrayList<>(
 				UtilsTrends.commaDelimStringToStringList(runDatesToGraph));
 
-		ArrayList<Datapoint> datapoints = new ArrayList<Datapoint>();
+		ArrayList<Datapoint> datapoints = new ArrayList<>();
 
 		if (masterRunsList.size() > 0) {
 			datapoints = (ArrayList<Datapoint>) transactionDAO.findDatapointsToGraph(application, graph,
@@ -110,11 +110,11 @@ public class VisGraphicDataProduction  implements VisGraphicDataProductionInterf
 //		System.out.println("datapoints : " + datapoints);
 
 		// Create a data table.
-		ArrayList<Object[]> dataRows = new ArrayList<Object[]>();
+		ArrayList<Object[]> dataRows = new ArrayList<>();
 
-		String runTime = null;
-		String txnId = null;
-		BigDecimal datapointValue = null;
+		String runTime;
+		String txnId;
+		BigDecimal datapointValue;
 		Datapoint datapoint = null;
 
 		// Fill the data table.

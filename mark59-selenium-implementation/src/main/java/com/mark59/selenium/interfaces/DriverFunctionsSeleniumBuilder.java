@@ -48,7 +48,7 @@ public interface DriverFunctionsSeleniumBuilder<O extends MutableCapabilities>	{
 	 * @param driverPath driver path to the WebDriver executable
 	 * @return this
 	 */
-	public DriverFunctionsSeleniumBuilder<?> setDriverExecutable(Path driverPath);
+	DriverFunctionsSeleniumBuilder<?> setDriverExecutable(Path driverPath);
 	
 	/**
 	 * Sets whether or not the Selenium WebDriver will start in headless mode,
@@ -59,7 +59,7 @@ public interface DriverFunctionsSeleniumBuilder<O extends MutableCapabilities>	{
 	 * @param isHeadless indicates if the driver should start in headless mode
 	 * @return this
 	 */
-	public DriverFunctionsSeleniumBuilder<?> setHeadless(boolean isHeadless);
+	DriverFunctionsSeleniumBuilder<?> setHeadless(boolean isHeadless);
 
 	
 	/**
@@ -92,21 +92,21 @@ public interface DriverFunctionsSeleniumBuilder<O extends MutableCapabilities>	{
 	 * @param strategy type of wait strategy the WebDriver will adopt
 	 * @return this
 	 */
-	public DriverFunctionsSeleniumBuilder<?> setPageLoadStrategy(PageLoadStrategy strategy);
+	DriverFunctionsSeleniumBuilder<?> setPageLoadStrategy(PageLoadStrategy strategy);
 
 	/**
 	 * Sets the page load strategy used by the WebDriver to "none".
 	 * @see #setPageLoadStrategy 
 	 * @return this
 	 */
-	public DriverFunctionsSeleniumBuilder<?> setPageLoadStrategyNone();
+	DriverFunctionsSeleniumBuilder<?> setPageLoadStrategyNone();
 
 	/**
 	 * Sets the page load strategy used by the WebDriver to "normal". (current default)
 	 * @see #setPageLoadStrategy
 	 * @return this
 	 */
-	public DriverFunctionsSeleniumBuilder<?> setPageLoadStrategyNormal();
+	DriverFunctionsSeleniumBuilder<?> setPageLoadStrategyNormal();
 	
 	
 	/**
@@ -129,7 +129,7 @@ public interface DriverFunctionsSeleniumBuilder<O extends MutableCapabilities>	{
 	 * @param height of the browser
 	 * @return this
 	 */
-	public DriverFunctionsSeleniumBuilder<?> setSize(int width, int height); 
+	DriverFunctionsSeleniumBuilder<?> setSize(int width, int height);
 	
 	
 	/**
@@ -155,7 +155,7 @@ public interface DriverFunctionsSeleniumBuilder<O extends MutableCapabilities>	{
 	 * @see SeleniumAbstractJavaSamplerClient
 	 * @return this 
 	 */
-	public DriverFunctionsSeleniumBuilder<?> setProxy(Proxy proxy);
+	DriverFunctionsSeleniumBuilder<?> setProxy(Proxy proxy);
 	
 	
 	/**
@@ -187,7 +187,7 @@ public interface DriverFunctionsSeleniumBuilder<O extends MutableCapabilities>	{
 	 * @param arguments options
 	 * @return this
 	 */
-	public DriverFunctionsSeleniumBuilder<?> setAdditionalOptions(java.util.List<java.lang.String> arguments);
+	DriverFunctionsSeleniumBuilder<?> setAdditionalOptions(java.util.List<java.lang.String> arguments);
 	
 	
 	/**
@@ -202,7 +202,7 @@ public interface DriverFunctionsSeleniumBuilder<O extends MutableCapabilities>	{
 	 * @param isWriteBrowserLogFile see above
 	 * @return this
 	 */
-	public DriverFunctionsSeleniumBuilder<?> setWriteBrowserLogfile(boolean isWriteBrowserLogFile);
+	DriverFunctionsSeleniumBuilder<?> setWriteBrowserLogfile(boolean isWriteBrowserLogFile);
 
 
 	/**
@@ -220,7 +220,7 @@ public interface DriverFunctionsSeleniumBuilder<O extends MutableCapabilities>	{
 	 * @param browserExecutablePath executable path to the browser executable to be used (java.nio.file.Path)
 	 * @return this
 	 */
-	public DriverFunctionsSeleniumBuilder<?> setAlternateBrowser(Path browserExecutablePath);
+	DriverFunctionsSeleniumBuilder<?> setAlternateBrowser(Path browserExecutablePath);
 	
 	
 	/**
@@ -232,7 +232,7 @@ public interface DriverFunctionsSeleniumBuilder<O extends MutableCapabilities>	{
 	 *                  required, such as requests sent and received.
 	 * @return this
 	 */
-	public DriverFunctionsSeleniumBuilder<?>setVerbosePerformanceLoggingLogging(boolean isVerbose);
+	DriverFunctionsSeleniumBuilder<?>setVerbosePerformanceLoggingLogging(boolean isVerbose);
 	
 	
 	/**
@@ -242,7 +242,6 @@ public interface DriverFunctionsSeleniumBuilder<O extends MutableCapabilities>	{
 	 * 
 	 * @see com.mark59.core.interfaces.DriverFunctions
 	 */
-    public DriverFunctionsSelenium<?> build(Map<String, String> arguments);
-
+	DriverFunctionsSelenium<?> build(Map<String, String> arguments);
 
 }

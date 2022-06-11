@@ -50,7 +50,7 @@ import com.mark59.selenium.interfaces.DriverFunctionsSelenium;
 import com.mark59.selenium.interfaces.DriverFunctionsSeleniumBuilder;
 
 /**
- * <p>Creates a chromium Selenium driver to be used in the scriptc.
+ * <p>Creates a chromium Selenium driver to be used in the scripts.
  * <p> {@link ChromeDriverService.Builder} is created, selenium {@link ChromeOptions} chromeOptions' are set, which are used
  * by the service builder during driver creation
  * 
@@ -178,7 +178,7 @@ public class DriverFunctionsSeleniumChromeBuilder implements DriverFunctionsSele
 	 * 
 	 * Note that the ChromeDriverService used is per instance of the driver, rather than one service for entire JVM (ie, the entire 
 	 * test run in JMeter). Experimentation showed this does not appear to be particularly inefficient (especially for longer running scripts).  
-	 * Using a shared ChromDriverService also caused test failures, as the ChromeDriverService becomes a single point of failure. 
+	 * Using a shared ChromeDriverService also caused test failures, as the ChromeDriverService becomes a single point of failure.
 	 */
 	@Override
 	public DriverFunctionsSelenium<ChromeDriver> build(Map<String, String> arguments) { 

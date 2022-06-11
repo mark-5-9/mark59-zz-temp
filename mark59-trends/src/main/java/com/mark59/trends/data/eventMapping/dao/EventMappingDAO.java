@@ -54,8 +54,8 @@ public interface EventMappingDAO
 	 *   <li>then next is the total length boundary characters (longest to shortest)   
 	 *   </ul>
 	 *   
-	 * @param txnId
-	 * @param metricSource
+	 * @param txnId  transaction id
+	 * @param metricSource metric source type (eg 'Jmeter_DATAPOINT' refer to AppConstantsMetrics )
 	 * @return matched EventMapping 
 	 */
     EventMapping findAnEventForTxnIdAndSource(String txnId, String metricSource);

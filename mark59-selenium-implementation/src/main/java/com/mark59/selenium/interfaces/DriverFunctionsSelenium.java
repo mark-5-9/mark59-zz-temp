@@ -67,7 +67,6 @@ public abstract class DriverFunctionsSelenium<O extends WebDriver> implements Dr
 	 */
 	public abstract void clearDriverPerfLogs();
 
-
 	
 	@Override
 	public byte[] captureScreenshot() {

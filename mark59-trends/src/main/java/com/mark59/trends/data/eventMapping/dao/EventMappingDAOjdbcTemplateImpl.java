@@ -21,6 +21,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.sql.DataSource;
 
@@ -58,14 +59,14 @@ public class EventMappingDAOjdbcTemplateImpl implements EventMappingDAO
 	
 	
 	@Override
-	public void deleteData(String txnType, String metricSource, String matchhWenLike) {
+	public void deleteData(String txnType, String metricSource, String matchWhenLike) {
 
-		String sql = " DELETE FROM EVENTMAPPING where TXN_TYPE = :txnType and METRIC_SOURCE = :metricSource and MATCH_WHEN_LIKE = :matchhWenLike ";
+		String sql = " DELETE FROM EVENTMAPPING where TXN_TYPE = :txnType and METRIC_SOURCE = :metricSource and MATCH_WHEN_LIKE = :matchWhenLike ";
 		
 		MapSqlParameterSource sqlparameters = new MapSqlParameterSource()
 				.addValue("txnType", txnType)
 				.addValue("metricSource", metricSource)
-				.addValue("matchhWenLike", matchhWenLike);		
+				.addValue("matchWhenLike", matchWhenLike);
 		
 //		System.out.println("metricSlaDao deleteAllSlasForApplication : " + sql + UtilsMetrics.prettyPrintParms(sqlparameters));
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
@@ -105,13 +106,13 @@ public class EventMappingDAOjdbcTemplateImpl implements EventMappingDAO
 
 	
 	@Override
-	public EventMapping getEventMapping(String metricSource, String matchhWenLike) {
+	public EventMapping getEventMapping(String metricSource, String matchWhenLike) {
 		
-		String sql = " SELECT * FROM EVENTMAPPING where METRIC_SOURCE = :metricSource and MATCH_WHEN_LIKE = :matchhWenLike "; 
+		String sql = " SELECT * FROM EVENTMAPPING where METRIC_SOURCE = :metricSource and MATCH_WHEN_LIKE = :matchWhenLike ";
 		
 		MapSqlParameterSource sqlparameters = new MapSqlParameterSource()
 				.addValue("metricSource", metricSource)
-				.addValue("matchhWenLike", matchhWenLike);
+				.addValue("matchWhenLike", matchWhenLike);
 		
 //		System.out.println(" getEventMapping : " + sql + UtilsMetrics.prettyPrintParms(sqlparameters));
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
@@ -185,7 +186,7 @@ public class EventMappingDAOjdbcTemplateImpl implements EventMappingDAO
 				.addValue("mdbEventName", eventMapping.getMatchWhenLike());
 		
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-		int matchCount = Integer.parseInt(jdbcTemplate.queryForObject(sql, sqlparameters, String.class));
+		int matchCount = Integer.parseInt(Objects.requireNonNull(jdbcTemplate.queryForObject(sql, sqlparameters, String.class)));
 
 		//			System.out.println("     Event matched using sql: " + sql  + "     RESULT = " +  matchCount  );
 		return matchCount > 0;
