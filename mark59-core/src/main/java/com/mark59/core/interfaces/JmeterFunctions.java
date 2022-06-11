@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.apache.jmeter.samplers.SampleResult;
 
+import com.mark59.core.JmeterFunctionsImpl;
 import com.mark59.core.utils.Mark59Constants.JMeterFileDatatypes;
 
 /**
@@ -28,10 +29,8 @@ import com.mark59.core.utils.Mark59Constants.JMeterFileDatatypes;
  * @author Philip Webb    
  * @author Michael Cohen
  * Written: Australian Winter 2019  
- */
-/**
- * @author s62991
  *
+ * @see JmeterFunctionsImpl
  */
 public interface JmeterFunctions {
 
@@ -223,5 +222,37 @@ public interface JmeterFunctions {
 	public void bufferScreenshot(String imageName);
 
 
+	/**
+	 * Save the byte[] to the specified file name file.
+	 * 
+	 * <p>Implementations may also create the parent log directory if missing (ie initial directory creation)
+	 * 
+	 * <p>Generally meant to be used within mark59 to write pre-defined log types 
+	 * (eg Selenium screenshots, Chromium performance Logs, Exception stack traces), but can be invoked from 
+	 * a user-written script to immediately write data to a mark59 log. 
+	 * 
+	 * @param mark59LogName filename to use for the log (without suffix) 
+	 * @param mark59LogNameSuffix suffix (eg 'txt', 'jpg') of the filename to use for the log 
+	 * @param mark59LogBytes the log data 
+	 * 
+	 * @see JmeterFunctionsImpl
+	 */
+	public void writeLog(String mark59LogName, String mark59LogNameSuffix, byte[] mark59LogBytes);
+	
+	
+	/**
+	 * Save a byte[] with a specified log name and suffix, ready to be written to file later. 
+	 * 
+	 * <p>Generally meant to be used within Mark59 to buffer pre-defined log types 
+	 * (eg Selenium screenshots, Chromium performance Logs), but can be invoked from 
+	 * a user-written script.
+	 * 
+	 * @param mark59LogName last part of the log filename (excluding extension)  
+	 * @param mark59LogNameSuffix suffix of the log filename (eg 'txt', 'jpg')  
+	 * @param mark59LogBytes  the log data 
+	 * 
+	 * @see JmeterFunctionsImpl
+	 */
+	public void bufferLog(String mark59LogName, String mark59LogNameSuffix, byte[] mark59LogBytes);
 
 }

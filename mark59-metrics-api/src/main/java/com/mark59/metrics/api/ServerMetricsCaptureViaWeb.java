@@ -131,7 +131,7 @@ public class ServerMetricsCaptureViaWeb  extends AbstractJavaSamplerClient {
 			return null;
 		}
 		
-		JmeterFunctions jm = new JmeterFunctionsImpl(Thread.currentThread().getName(), context);
+		JmeterFunctions jm = new JmeterFunctionsImpl(context);
 		BufferedReader in = null;
 		Integer repsonseCode = null;
 		WebServerMetricsResponsePojo response = null;

@@ -16,7 +16,6 @@
 
 package com.mark59.selenium.corejmeterimpl;
 
-import java.io.File;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -36,7 +35,7 @@ import com.mark59.selenium.interfaces.DriverFunctionsSelenium;
  * Selenium flavored extension of the Mark59 class {@link JmeterFunctionsImpl} ( whose primary purpose to to handle transaction results, 
  * implemented in mark59 by the use of 'sub-results' within a {@link SampleResult} )    
  * 
- * <p>This class is designed to additionally handle Selenium related functions with the framework, in particular mark59 logging.  
+ * <p>This class is designed to additionally handle Selenium related functions within Mark59, in particular logging.  
  * 
  * <p>At instantiation, transaction level logging usage is set, based on the log4j level.  This can be over-ridden via JMeter parameters 
  * and/or directly calling the methods in this class from the script.</p>
@@ -109,14 +108,13 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	private DriverFunctionsSelenium<WebDriver> mark59SeleniumDriver;
 	
 	/**
-	 * @param threadName  current thread name
 	 * @param context the JMeter JavaSamplerContext 
 	 * @param mark59SeleniumDriver  see SeleniumDriverWrapper
 	 * @param jmeterRuntimeArgumentsMap used to override default state of mark59 log output
 	 */
-	public JmeterFunctionsForSeleniumScripts(String threadName, JavaSamplerContext context,
-			DriverFunctionsSelenium<WebDriver> mark59SeleniumDriver, Map<String, String> jmeterRuntimeArgumentsMap) {		
-		super(threadName, context);
+	public JmeterFunctionsForSeleniumScripts(JavaSamplerContext context,DriverFunctionsSelenium<WebDriver> mark59SeleniumDriver, 
+			Map<String, String> jmeterRuntimeArgumentsMap) {		
+		super(context);
 		this.mark59SeleniumDriver = mark59SeleniumDriver;
 		
 		setDefaultTxnLoggingBehaviourBasedOnLog4j();
@@ -643,9 +641,7 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	 */
 	@Override		
 	public void writeScreenshot(String imageName) {
-		if (loggingConfig.getLogDirectory() != null) {
-			writeLog(new File(buildFullyQualifiedLogName(imageName,"jpg")),	mark59SeleniumDriver.captureScreenshot());
-		}
+		writeLog(imageName,"jpg", mark59SeleniumDriver.captureScreenshot());
 	}	
 
 	
@@ -656,53 +652,47 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	 */
 	@Override	
 	public void bufferScreenshot(String imageName) {
-		if (loggingConfig.getLogDirectory() != null) {
-			bufferedArtifacts.put(buildFullyQualifiedLogName(imageName,"jpg"), mark59SeleniumDriver.captureScreenshot());
-		}		
+		bufferLog(imageName,"jpg", mark59SeleniumDriver.captureScreenshot());	
 	}
 
 	
 	/**
 	 * Capture and immediately output a page source (.html) log. Use with caution in a Performance and Volume 
 	 * test as misuse of this method may produce many more screenshots than intended. 
-	 * <p>Instead, you could use {@link #bufferScreenshot(String)} and {@link #writeBufferedArtifacts()}.
+	 * <p>Instead, you could use {@link #bufferPageSource(String)} and {@link #writeBufferedArtifacts()}.
 	 * @param imageName last part of the log filename (excluding extension)  
 	 */
 	public void writePageSource(String imageName) {
-		if (loggingConfig.getLogDirectory() != null) {
-			writeLog(new File(buildFullyQualifiedLogName(imageName, "html")),
-					mark59SeleniumDriver.captureCurrentUrlAndtHtmlPageSource().getBytes());
-		}
+		writeLog(imageName, "html", mark59SeleniumDriver.captureCurrentUrlAndtHtmlPageSource().getBytes());
 	}	
+
 	
 	/**
 	 * Stores a page source (.html) log in memory, ready to be written to file later.  
-	 * If you want to immediately write a screenshot to file, use {@link #writeScreenshot(String)}  instead.
+	 * If you want to immediately write a screenshot to file, use {@link #writePageSource(String)} instead.
 	 * @param imageName last part of the log filename (excluding extension)   
 	 */
 	public void bufferPageSource(String imageName) {
-		if (loggingConfig.getLogDirectory() != null) {
-			bufferedArtifacts.put(buildFullyQualifiedLogName(imageName,"html"), 
-					mark59SeleniumDriver.captureCurrentUrlAndtHtmlPageSource().getBytes());
-		}	
+		bufferLog(imageName, "html", mark59SeleniumDriver.captureCurrentUrlAndtHtmlPageSource().getBytes());
+	}
+
+
+	/**
+	 * Note Performance logging is only implemented for selenium chrom(ium) drivers
+	 * @param textFileName last part of the log filename (excluding extension) 
+	 */
+	public void writeDriverPerfLogs(String textFileName) {
+		writeLog(textFileName, "txt", mark59SeleniumDriver.captureDriverPerfLogs());
 	}
 
 	
-	//@Override
-	public void writeDriverPerfLogs(String textFileName) {
-		if (loggingConfig.getLogDirectory() != null) {
-			writeLog(new File(buildFullyQualifiedLogName(textFileName, "txt")),
-					mark59SeleniumDriver.captureDriverPerfLogs());
-		}
-	}
-	
-	
-	//@Override	
+	/**
+	 * Note Performance logging is only implemented for selenium chrom(ium) drivers
+	 * @param textFileName last part of the log filename (excluding extension) 
+	 */
 	public void bufferDriverPerfLogs(String textFileName) {
-		if (loggingConfig.getLogDirectory() != null) {
-			writeLog(new File(buildFullyQualifiedLogName(textFileName, "txt")),
-					mark59SeleniumDriver.captureDriverPerfLogs());
-		}
+		bufferLog(textFileName, "txt", mark59SeleniumDriver.captureDriverPerfLogs());
 	}
 	
 }
+

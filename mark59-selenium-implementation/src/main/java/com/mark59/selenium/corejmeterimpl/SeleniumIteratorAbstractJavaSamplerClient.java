@@ -219,7 +219,7 @@ public abstract class SeleniumIteratorAbstractJavaSamplerClient  extends  Seleni
 		}
 		
 		driver = mark59SeleniumDriver.getDriver();
-		jm = new JmeterFunctionsForSeleniumScripts(Thread.currentThread().getName(), context, mark59SeleniumDriver, jmeterRuntimeArgumentsMap);   	
+		jm = new JmeterFunctionsForSeleniumScripts(context, mark59SeleniumDriver, jmeterRuntimeArgumentsMap);   	
 				
 		try {
 			LOG.debug(">> initiateSeleniumTest");			

@@ -50,8 +50,8 @@ import com.mark59.core.utils.Mark59LoggingConfig;
 
 
 /**
- * Implements the JmeterFunctions interface, with methods that can be called throughout the life cycle of the test in order to handle 
- * behavior around transaction recording and timing.
+ * Implements the JmeterFunctions interface, with methods that can be called throughout the life cycle of the test in order 
+ * to handle behavior around logging, transaction recording and timing.
  * 
  * <p>Typical usage from a scripting perspective is to time a transaction.  For example:
  * <pre><code>
@@ -64,7 +64,6 @@ import com.mark59.core.utils.Mark59LoggingConfig;
  * 
  * <p>The class works by creating JMeter 'sub-results', one per recored transaction, which are attached to a main SampleResult.  
  * At the end of the script the sub-results ({@link #tearDown()} are printed (at LOG info level).  
- * 
  * 
  * @author Philip Webb    
  * @author Michael Cohen
@@ -114,11 +113,10 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 
 	
 	/**
-	 * @param threadName thread name (eg, obtained via<code>Thread.currentThread().getName()</code> )
-	 * @param context the JavaSamplerContext
+	 * @param context the JMeter JavaSamplerContext
 	 */
-	public JmeterFunctionsImpl(String threadName, JavaSamplerContext context) {
-		this.threadName = threadName;
+	public JmeterFunctionsImpl(JavaSamplerContext context) {
+		threadName =Thread.currentThread().getName();
 		loggingConfig = Mark59LoggingConfig.getInstance();
 		
 		leadingPartOfLogNames = formLeadingPartOfLogNames(loggingConfig.getLogNamesFormat(), context);
@@ -456,7 +454,6 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	}
 	
 
-	
 	/**
 	 * Called upon completion of the test run.
 	 * 
@@ -521,8 +518,6 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 		mainResult.setDataType(JMeterFileDatatypes.PARENT.getDatatypeText() );
 	}
 	
-	
-	
 
 	/**
 	 * Called to set the main result of a test to a failed state, regardless of the state of the sub results attached to the main result.
@@ -552,23 +547,21 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 		LOG.debug("Writing " + bufferedArtifacts.size() + " buffered logs to disk");
 
 		for (Entry<String, byte[]> bufferedArtifact : bufferedArtifacts.entrySet()) {
-			writeLog(new File(bufferedArtifact.getKey()) , bufferedArtifact.getValue());
+			writeBytesToDisk(bufferedArtifact.getKey(), bufferedArtifact.getValue());
 		}
 		bufferedArtifacts.clear();
 	}
-
 	
 
-	@Override		
+	@Override
 	public void writeStackTrace(String stackTraceName, Throwable e) {
 		StringWriter sw = new StringWriter();
 		e.printStackTrace(new PrintWriter(sw));
-		String stackTrace = sw.toString(); 
+		String stackTrace = sw.toString();
 		if (loggingConfig.getLogDirectory() != null) {
-			writeLog(new File(buildFullyQualifiedLogName(stackTraceName, "txt")),
-					StringUtils.isNotBlank(stackTrace) ? stackTrace.getBytes() : null);
+			writeLog(stackTraceName, "txt", stackTrace.getBytes());
 		} else {
-//			 sysout??
+			System.out.println("Attempt to write a Exception Stack Trace, but mark59 logging is not enabled: " + e.getMessage());
 		}
 	}
 	
@@ -600,14 +593,53 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	} 
 
 
-	
+	/**
+	 * Save the byte[] to the specified file name, and will create the parent directory if missing 
+	 * (ie initial directory creation)
+	 * 
+	 * <p>Generally meant to be used within Mark59 to write pre-defined log types 
+	 * (eg Selenium screenshots, Chromium performance Logs, Exception stack traces), but can be invoked from 
+	 * a user-written script to immediately write data to a mark59 log. 
+	 * 
+	 * @param mark59LogName last part of the log filename (excluding extension)  
+	 * @param mark59LogNameSuffix suffix of the log filename (eg 'txt', 'jpg')  
+	 * @param mark59LogBytes  data to be written to log
+	 */
+	@Override	
+	public void writeLog(String mark59LogName, String mark59LogNameSuffix, byte[] mark59LogBytes) {
+		writeBytesToDisk((buildFullyQualifiedLogName(mark59LogName, mark59LogNameSuffix)), mark59LogBytes);
+	}
+
+	/**
+	 * Save a byte[] with a specified log name and suffix, ready to be written to file later. 
+	 * 
+	 * <p>Generally meant to be used within Mark59 to buffer pre-defined log types 
+	 * (eg Selenium screenshots, Chromium performance Logs), but can be invoked from 
+	 * a user-written script.
+	 * 
+	 * @param mark59LogName last part of the log filename (excluding extension)  
+	 * @param mark59LogNameSuffix suffix of the log filename (eg 'txt', 'jpg')  
+	 * @param mark59LogBytes  dthe log data 
+	 */
+	@Override	
+	public void bufferLog(String mark59LogName, String mark59LogNameSuffix, byte[] mark59LogBytes) {
+		if (loggingConfig.getLogDirectory() != null) {
+			bufferedArtifacts.put(buildFullyQualifiedLogName(mark59LogName,mark59LogNameSuffix), mark59LogBytes);
+		}		
+	}
+
+
 	/**
 	 * Puts everything together to form a full mark59 log name
 	 * @param imageName  last part of logname
 	 * @param suffix logname suffix (eg .txt)
 	 * @return a string representing the full path of the log 
 	 */
-	protected String buildFullyQualifiedLogName(String imageName, String suffix) {
+	private String buildFullyQualifiedLogName(String imageName, String suffix) {
+		if (loggingConfig.getLogDirectory() == null) {
+			return null;
+		}
+
 		String fullLogname = leadingPartOfLogNames;
 		
 		if (loggingConfig.getLogNamesFormat().contains(Mark59Constants.LABEL)) {
@@ -617,7 +649,7 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 				fullLogname += "_noTxn";
 			}
 		}
-
+		
 		if (loggingConfig.getLogNamesFormat().contains(Mark59Constants.LOG_COUNTER)) {
 			fullLogname +=  "_" + String.format("%04d", StaticCounter.readCount(Mark59Constants.LOG_COUNTER));
 			// increment counter ready for next image
@@ -626,33 +658,32 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 		return fullLogname + "_" + imageName +"." + suffix;
 	}
 
-
-	/**
-	 * Save the byte[] to the specified file name, creating the parent directory if missing 
-	 * (ie initial directory creation)
-	 * 
-	 * @param mark59Log the full filename to use for the screenshot
-	 * @param logFileBytes the screenshot/log data 
-	 */
-	protected void writeLog(File mark59Log, byte[] logFileBytes) {
+	
+	private void writeBytesToDisk(String fullyQualifiedMark59LogName, byte[] mark59LogBytes) {
+		if (loggingConfig.getLogDirectory() == null) {
+			return;
+		}		
 		
-		new File(mark59Log.getParent()).mkdirs();
-
-		LOG.info(MessageFormat.format("Writing image to disk: {0}", mark59Log));
-		System.out.println("[" + Thread.currentThread().getName() + "]  Writing image to disk:" + mark59Log);
-
-		if (logFileBytes == null ) {
-			logFileBytes = "(null)".getBytes();
+		LOG.info(MessageFormat.format("Writing image to disk: {0}", fullyQualifiedMark59LogName));
+		System.out.println("[" + Thread.currentThread().getName() + "]  Writing image to disk:" + fullyQualifiedMark59LogName);
+		
+		File fullyQualifiedMark59LogFile = new File(fullyQualifiedMark59LogName);
+		
+		//create the parent directory if missing (ie initial directory creation)
+		new File(fullyQualifiedMark59LogFile.getParent()).mkdirs();
+		
+		if (mark59LogBytes == null ) {
+			mark59LogBytes = "(null)".getBytes();
 		}
 		
-		try (OutputStream stream = new FileOutputStream(mark59Log)) {
-			stream.write(logFileBytes);
-
+		try (OutputStream stream = new FileOutputStream(fullyQualifiedMark59LogFile)){
+			stream.write(mark59LogBytes);
+			
 		} catch (IOException e) {
 			LOG.error("Caught " + e.getClass().getName() + " with message: " + e.getMessage());
 		}
 	}
-
+	
 	
 	/**
 	 * Fetches the SampleResult from the transactionMap that matches the supplied label.
@@ -666,12 +697,9 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	 * @return SampleResult belonging to the supplied label.
 	 */
 	public SampleResult getSampleResultWithLabel(String label) {
-		
-		
 		System.out.println( ">> transactionMap");
 		System.out.println( Mark59Utils.prettyPrintMap(transactionMap)  );
 		System.out.println( "<< transactionMap");
-		
 		return transactionMap.get(label);
 	}
 	

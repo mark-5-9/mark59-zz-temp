@@ -140,7 +140,7 @@ public class ServerMetricsCaptureViaExcel extends AbstractJavaSamplerClient {
 			return null;
 		}
 		
-		JmeterFunctions jm = new JmeterFunctionsImpl(Thread.currentThread().getName(), context);
+		JmeterFunctions jm = new JmeterFunctionsImpl(context);
 		String testModeNo = "N";
 		WebServerMetricsResponsePojo response = null;
 		
