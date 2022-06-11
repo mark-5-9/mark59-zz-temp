@@ -85,7 +85,7 @@ public class Mark59Utils {
 	 * @param str  the string to be resolved to TRUE for FALSE
 	 * @return boolean true or false
 	 */
-	public static boolean resovesToTrue(final String str) {
+	public static boolean resolvesToTrue(final String str) {
 		if (StringUtils.isBlank(str)) {	return false;}
 		if (str.trim().toLowerCase().startsWith("t")) {return true;}
 		return str.trim().toLowerCase().startsWith("y");
@@ -106,7 +106,7 @@ public class Mark59Utils {
 	    if (map != null && !map.isEmpty() ){
 	    
 			for (Entry<K,V> mapEntry: map.entrySet()) {
-				prettyOut+= "\n   | " + mapEntry.getKey() + " | " + mapEntry.getValue() + " | " ;
+				prettyOut += "\n   | " + mapEntry.getKey() + " | " + mapEntry.getValue() + " | " ;
 			}
 	    } else {
 			prettyOut+= "\n   |        empty or null map     | " ;

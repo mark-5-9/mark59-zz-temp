@@ -16,9 +16,6 @@
 
 package com.mark59.core.interfaces;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * Wrapper class used to encapsulate an arbitrary Driver object, where the
  * Driver object knows how to perform an arbitrary set of functions necessary to
@@ -36,32 +33,30 @@ import org.apache.logging.log4j.Logger;
  */
 public interface DriverFunctions<T> {
 
-	public static final Logger LOG = LogManager.getLogger(DriverFunctions.class);
-
-	
 	/**
 	 * Returns the concrete driver encapsulated by this class
 	 * @return driver
 	 */
-	public T getDriver(); 
+	T getDriver();
 
 	
 	/**
 	 * Returns the class name of the encapsulated Driver.
 	 * @return String
 	 */
-	public String getDriverClass();
+	String getDriverClass();
 
-	
-	/**
-	 * Handles any needed cleanup once the driver is finished with, if any cleanup is required.
-	 */
-	public void driverDispose();
-	
-	
 	/**
 	 * @return byte[] captured screenshot as a byte array (abstract)
 	 */
-	public byte[] captureScreenshot();
-	
+	byte[] captureScreenshot();
+
+
+	/**
+	 * Handles any needed cleanup once the driver is finished with, if any cleanup is required.
+	 */
+	void driverDispose();
+
+
+
 }

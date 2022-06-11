@@ -90,7 +90,7 @@ public class CommandDriverWinWmicImpl implements CommandDriver {
 		}
 
 		String IgnoreStdErrLog = "";
-		if(Mark59Utils.resovesToTrue(command.getIngoreStderr())){
+		if(Mark59Utils.resolvesToTrue(command.getIngoreStderr())){
 			IgnoreStdErrLog = ". StdErr to be ignored. ";
 		}
 

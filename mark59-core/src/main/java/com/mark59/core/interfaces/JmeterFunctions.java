@@ -149,7 +149,7 @@ public interface JmeterFunctions {
 	 * Return results from running the test
 	 * @return org.apache.jmeter.samplers.SampleResult
 	 */	
-	public SampleResult getMainResult();
+	SampleResult getMainResult();
 
 
 	
@@ -159,27 +159,27 @@ public interface JmeterFunctions {
 	 * 
 	 * @return mostRecentTransactionStarted (txnId)
 	 */
-	public String getMostRecentTransactionStarted();
+	String getMostRecentTransactionStarted();
 	
 	
 	/**
 	 * Behaviours to execute at the end of test, such as terminating transations that were started but not ended.
 	 * <p>Specific behaviours vary based on the particular implementation of Tester.</p>
 	 */
-	public void tearDown();
+	void tearDown();
 	
 	
 	/**
 	 * Marks the test as failed.
 	 */
-	public void failTest();
+	void failTest();
 	
 	
 	
 	/**
 	 * @return the Map of the buffered screenshots
 	 */
-	public Map<String, byte[]> getBufferedLogs(); 
+	Map<String, byte[]> getBufferedLogs();
 	
 	
 	/**
@@ -188,7 +188,7 @@ public interface JmeterFunctions {
 	 * <p>Can be implemented by extending this class and combining with a 
 	 * {@link DriverFunctions} implementation can is capable of taking logs/screenshots  
 	 */
-	public void writeBufferedArtifacts();
+	void writeBufferedArtifacts();
 
 	
 	/**
@@ -197,7 +197,7 @@ public interface JmeterFunctions {
 	 * @param stackTraceName filename to use for the log (without suffix)
 	 * @param e Throwable (Exception) being loggoed
 	 */
-	public void writeStackTrace(String stackTraceName, Throwable e); 
+	void writeStackTrace(String stackTraceName, Throwable e);
 	
 	/**
 	 * Capture and immediately output a screenshot/log. Use with caution in a 
@@ -209,7 +209,7 @@ public interface JmeterFunctions {
 	 * 
 	 * @param imageName filename to use for the screenshot (without suffix)
 	 */
-	public void writeScreenshot(String imageName); 
+	void writeScreenshot(String imageName);
 	
 	
 	/**
@@ -219,7 +219,7 @@ public interface JmeterFunctions {
 	 *      
 	 * @param imageName filename to use for the screenshot (without suffix)
 	 */
-	public void bufferScreenshot(String imageName);
+	void bufferScreenshot(String imageName);
 
 
 	/**
@@ -237,7 +237,7 @@ public interface JmeterFunctions {
 	 * 
 	 * @see JmeterFunctionsImpl
 	 */
-	public void writeLog(String mark59LogName, String mark59LogNameSuffix, byte[] mark59LogBytes);
+	void writeLog(String mark59LogName, String mark59LogNameSuffix, byte[] mark59LogBytes);
 	
 	
 	/**
@@ -253,6 +253,6 @@ public interface JmeterFunctions {
 	 * 
 	 * @see JmeterFunctionsImpl
 	 */
-	public void bufferLog(String mark59LogName, String mark59LogNameSuffix, byte[] mark59LogBytes);
+	void bufferLog(String mark59LogName, String mark59LogNameSuffix, byte[] mark59LogBytes);
 
 }

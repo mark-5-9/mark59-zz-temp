@@ -42,10 +42,10 @@ public class Mark59LoggingConfig {
 	private static final String DEFAULT_LOGNAMES_FORMAT = 
 			Mark59Constants.THREAD_NAME	+ "," + Mark59Constants.LOG_COUNTER;
 
-	private File logDirectory;
+	private final File logDirectory;
 	private String logNamesFormat = DEFAULT_LOGNAMES_FORMAT;
 
-	private static Mark59LoggingConfig instance;
+	private static final Mark59LoggingConfig instance;
 
 	static {
 		try {
@@ -107,7 +107,7 @@ public class Mark59LoggingConfig {
 						+ Mark59Constants.DATE + "' will be assumed.");
 				logDirectoryPathname += File.separator + LocalDate.now();
 			} else if (Mark59Constants.DATE_TIME.equalsIgnoreCase(directorySuffixFormat.trim())) {
-				logDirectoryPathname += File.separator	+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-mm-dd-HHmmss"));
+				logDirectoryPathname += File.separator	+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HHmmss"));
 			} else if (Mark59Constants.DATE.equalsIgnoreCase(directorySuffixFormat.trim())) {
 				logDirectoryPathname += File.separator + LocalDate.now();
 			} else {
@@ -129,7 +129,7 @@ public class Mark59LoggingConfig {
 
 	
 	private void configureLogNamesFormatter() {
-		String mark59PropLognameFormat = null;
+		String mark59PropLognameFormat;
 		try {
 			mark59PropLognameFormat = PropertiesReader.getInstance().getProperty(PropertiesKeys.MARK59_PROP_LOGNAME_FORMAT);
 		} catch (IOException e) {

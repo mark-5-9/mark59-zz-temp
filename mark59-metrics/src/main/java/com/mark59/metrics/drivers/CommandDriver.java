@@ -111,7 +111,7 @@ public interface CommandDriver {
 			}
 			p.waitFor();
 			
-			if ( ! Mark59Utils.resovesToTrue(ingoreStderr)){
+			if ( ! Mark59Utils.resolvesToTrue(ingoreStderr)){
 				errors = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 				while ((line = errors.readLine()) != null) {
 					if (line.length() > 0) {

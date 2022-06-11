@@ -86,7 +86,7 @@ public class PropertiesReader {
 			LOG.debug(" Mark59 Properties Loaded From " + MARK59_PROPERTIES + ":");
 			properties.forEach((p, v) -> {if (((String) p).startsWith("mark59")) {LOG.debug("    " + p + " : " + v);}});
 			LOG.debug("    ----------------------- ");
-			LOG.debug("    " + MARK59_PROPERTIES + " properties may be overwritten by being set as system properties (eg directly in the Jmetar plans)   ");
+			LOG.debug("    " + MARK59_PROPERTIES + " properties may be overwritten by being set as system properties (eg directly in the JMeter plans)   ");
 		}
 
 		properties.forEach((p, v) -> {
@@ -163,10 +163,10 @@ public class PropertiesReader {
 						LOG.info("Using mark59.properties found on the class path (org/apache/jmeter/mark59.properties) .. ");
 					} catch (IOException e) {
 						LOG.info("mark59.properties not found (error reading classpath entry org/apache/jmeter/mark59.properties) : " + e.getMessage());
-						LOG.info("Note that mark59 properties may of been set directy in system properties (see below)");
+						LOG.info("Note that mark59 properties may of been set directly in system properties (see below)");
 					}
 				} else {
-					LOG.info("mark59.properties not found !! Note that mark59 properties may of been set directy in system properties (see below)");
+					LOG.info("mark59.properties not found !! Note that mark59 properties may of been set directly in system properties (see below)");
 				}
 			}
 		}

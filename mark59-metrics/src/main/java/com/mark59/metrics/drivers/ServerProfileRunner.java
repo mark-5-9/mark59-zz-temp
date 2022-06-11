@@ -80,7 +80,7 @@ public class ServerProfileRunner {
 		try {
 	
 			ServerProfile serverProfile = serverProfilesDAO.findServerProfile(reqServerProfileName);
-			boolean testMode = Mark59Utils.resovesToTrue(reqTestMode);
+			boolean testMode = Mark59Utils.resolvesToTrue(reqTestMode);
 			
 			if (serverProfile == null ) {
 				response.setServerProfileName(reqServerProfileName); 

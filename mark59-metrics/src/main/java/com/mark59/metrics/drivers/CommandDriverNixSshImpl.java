@@ -77,7 +77,7 @@ public class CommandDriverNixSshImpl implements CommandDriver {
 		} 
 		
 		String IgnoreStdErrLog = "";
-		if(Mark59Utils.resovesToTrue(command.getIngoreStderr())){
+		if(Mark59Utils.resolvesToTrue(command.getIngoreStderr())){
 			IgnoreStdErrLog = ". StdErr to be ignored. ";
 		}
 
@@ -141,7 +141,7 @@ public class CommandDriverNixSshImpl implements CommandDriver {
 	
 			channelExec.connect();               // its actually command execution
 							
-			if ( ! Mark59Utils.resovesToTrue(ingoreStderr)){
+			if ( ! Mark59Utils.resolvesToTrue(ingoreStderr)){
 				rawCommandResponseLines = readCommandInputStream(commandErrStream);
 				if (rawCommandResponseLines.size() > 0  ) {
 					commandDriverResponse.setCommandFailure(true);

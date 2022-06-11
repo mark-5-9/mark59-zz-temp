@@ -25,18 +25,6 @@ import java.util.List;
  * @author Philip Webb
  * Written: Australian Winter 2019  
  */
-/**
- * @author s62991
- *
- */
-/**
- * @author s62991
- *
- */
-/**
- * @author s62991
- *
- */
 public class Mark59Constants {
 	
 	/**

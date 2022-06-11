@@ -62,7 +62,7 @@ import com.mark59.core.utils.Mark59LoggingConfig;
  * 
  * <p>where '<code>jm</code>' is this class, or an extension of this class (eg SeleniumAbstractJavaSamplerClient)
  * 
- * <p>The class works by creating JMeter 'sub-results', one per recored transaction, which are attached to a main SampleResult.  
+ * <p>The class works by creating JMeter 'sub-results', one per recorded transaction, which are attached to a main SampleResult.
  * At the end of the script the sub-results ({@link #tearDown()} are printed (at LOG info level).  
  * 
  * @author Philip Webb    
@@ -130,8 +130,8 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	 * The leading components a for log name of a given Selenium script are constant, so can be set during 
 	 * creation of this JMeter functions class for a script   
 	 * 
-	 * @param logNamesFormat
-	 * @param context
+	 * @param logNamesFormat  from the Mark59 property "mark59.logname.format"
+	 * @param context the JMeter JavaSamplerContext
 	 */
 	private String formLeadingPartOfLogNames(String logNamesFormat, JavaSamplerContext context) {
 		String leadingPartOfLogNames = null;
