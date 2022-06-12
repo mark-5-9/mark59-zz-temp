@@ -89,12 +89,32 @@ public class SecurityConfig { //extends WebSecurityConfigurerAdapter {
             .antMatchers("/login").permitAll()
             .antMatchers("/logout").permitAll()
             .antMatchers("/api/**").permitAll()
+//            .antMatchers("/h2-console/**").permitAll()
             .antMatchers("/**").hasRole("USER")            
             .and().formLogin().loginPage("/login").defaultSuccessUrl("/serverProfileList", true)
-            .and().logout().logoutSuccessUrl("/login").permitAll();
+            .and().logout().logoutSuccessUrl("/login").permitAll()
+             // for h2-console:
+            .and().csrf().ignoringAntMatchers("/h2-console/**")
+	        .and().headers().frameOptions().disable()
+//	        .and().cors().disable()  
+	        ;  
         return http.build();
     }
       
+//    @Bean
+//    public SecurityFilterChain filterChainH2Console(HttpSecurity http) throws Exception {
+//        http.authorizeRequests().antMatchers("/").permitAll().and()
+//	        .authorizeRequests().antMatchers("/h2-console/**").permitAll().and()
+//	        .headers().frameOptions().disable().and()
+//	        .csrf().ignoringAntMatchers("/h2-console/**").and()
+//	        .cors().disable();
+//        return http.build();
+//    }
+   
+    
+    
+    
+    
 	//@Override
 //	public void configure(HttpSecurity http) throws Exception {
 //		//https://www.yawintutor.com/how-to-enable-and-disable-csrf
@@ -107,10 +127,11 @@ public class SecurityConfig { //extends WebSecurityConfigurerAdapter {
 //        .and().logout().logoutSuccessUrl("/login").permitAll();
 //	}
     
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers("/h2-console/**");
-    }
+//  You are asking Spring Security to ignore Ant [pattern='/h2-console/**']. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.    
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return (web) -> web.ignoring().antMatchers("/h2-console/**");
+//    }
 
    //@Override
 //    public void configure(WebSecurity web) {
