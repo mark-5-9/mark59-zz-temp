@@ -38,7 +38,6 @@ import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
-import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.Command;
 import org.openqa.selenium.remote.CommandExecutor;
 import org.openqa.selenium.remote.service.DriverService;
@@ -168,7 +167,7 @@ public class DriverFunctionsSeleniumChromeBuilder implements DriverFunctionsSele
 	public DriverFunctionsSeleniumBuilder<ChromeOptions> setVerbosePerformanceLoggingLogging(boolean isVerbose) {
 		LoggingPreferences logPreferences = new LoggingPreferences();
 		logPreferences.enable(LogType.PERFORMANCE, Level.INFO);
-		options.setCapability(CapabilityType.LOGGING_PREFS, logPreferences);
+		options.setCapability(ChromeOptions.LOGGING_PREFS, logPreferences);		// "goog:loggingPrefs"
 		return this;
 	}
 

@@ -108,8 +108,9 @@ public class DataHunterBasicSampleScript  extends SeleniumAbstractJavaSamplerCli
 		String user 			= context.getParameter("USER");
 
 // 		delete any existing policies for this application/thread combination
-		
+		jm.writeLog("kilroy", "txt", "Kilroy was here".getBytes());
 		jm.startTransaction("DH_lifecycle_0001_loadInitialPage");
+		jm.bufferLog("kilroybuffer", "txt", "Kilroy was buffered here".getBytes());		
 		driver.get(dataHunterUrl + DslConstants.DELETE_MULTIPLE_POLICIES_URL_PATH + "?application=" + application);
 		jm.endTransaction("DH_lifecycle_0001_loadInitialPage");
 		

@@ -19,12 +19,13 @@ package com.mark59.core.utils;
 /**
  * The current list of properties used by the Mark59 framework are defined here.
  * <p>
- * <b>mark59.screenshot.directory</b> : depricated use mark59.log.directory instead
- * <b>mark59.log.directory</b> : value defines the directory where transaction-level/error logging will occur
- * <b>mark59.log.directory.suffix</b> : log directory suffix, may be a local 'date' or 'datetime'
- * <b>mark59.selenium.driver.path.chrome</b> : location of the chrome driver executable
- * <b>mark59.selenium.driver.path.firefox</b> :  location of the geokodriver executable 
- * <b>mark59.server.profiles.excel.file.path</b> :  location of a excel file to be used for server metrics capture 
+ * <b>mark59.screenshot.directory</b> : deprecated - renamed as mark59.log.directory<br>
+ * <b>mark59.log.directory</b> : value defines the directory where transaction-level/error logging will occur<br>
+ * <b>mark59.logname.format</b> : formatter for log names output to the log directory<br>
+ * <b>mark59.log.directory.suffix</b> : log directory suffix, may be a local 'date' or 'datetime'<br>
+ * <b>mark59.selenium.driver.path.chrome</b> : location of the chrome driver executable<br>
+ * <b>mark59.selenium.driver.path.firefox</b> :  location of the geokodriver executable <br>
+ * <b>mark59.server.profiles.excel.file.path</b> :  location of a excel file to be used for server metrics capture<br> 
  * <b>mark59.browser.executable</b> :  location of an alternate browser executable  
  * </p>
  * 
@@ -38,7 +39,7 @@ public class PropertiesKeys {
 	}
 	
 	/**
-	 *  mark59.screenshot.directory
+	 *  mark59.screenshot.directory.  Deprecated - renamed as mark59.log.directory
 	 */
 	@Deprecated
 	public static final String MARK59_PROP_SCREENSHOT_DIRECTORY 			= "mark59.screenshot.directory";
@@ -55,7 +56,7 @@ public class PropertiesKeys {
 
 
 	/**
-	 *  format for the log names output to the screenshot directory. A comma delimited list of values as described {@link Mark59Constants#LOGNAME_FORMAT_OPTIONS}	
+	 *  Formatter for log names output to the log directory. A comma delimited list of values as described {@link Mark59Constants#LOGNAME_FORMAT_OPTIONS}	
 	 *  <p>Default is <code>"ThreadName,Label"</code>
 	 */
 	public static final String MARK59_PROP_LOGNAME_FORMAT			 		= "mark59.logname.format";

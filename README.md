@@ -35,7 +35,10 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
 	    </li>
 	  </ul>  
 	</li>
-	<li>BUG fix : PERFLOG was outputting blank files in v4.2
+	<li>new property mark59.log.directory renames mark59.screenshot.directory (flagged as redundant)</li>
+	<li>new property mark59.logname.format : formatter for log names output to the log directory</li>
+	<li>new property mark59.log.directory.suffix : log directory suffix (a local 'date' or 'datetime')</li>	
+	<li>selenium to 4.2.2 (chrome102+), H2 to 2.1.212 </li>		
   </ul>
 
   
