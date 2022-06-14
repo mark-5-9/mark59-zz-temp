@@ -270,7 +270,7 @@ public abstract class SeleniumIteratorAbstractJavaSamplerClient  extends  Seleni
 
 		} catch (Exception | AssertionError e) {
 
-			scriptExceptionHandling(context, e);	
+			scriptExceptionHandling(context, jmeterRuntimeArgumentsMap, e);	
 
 			if ("true".equalsIgnoreCase(context.getParameter(STOP_THREAD_ON_FAILURE))){
 				LOG.info("Thread Group " + tgName + " is stopping (script failure, and STOP_THREAD_ON_FAILURE is set to true)" );

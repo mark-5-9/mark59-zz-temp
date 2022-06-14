@@ -91,6 +91,7 @@ import jodd.util.CsvUtil;
  * @see com.mark59.selenium.driversimpl.SeleniumDriverFactory#EMULATE_NETWORK_CONDITIONS 
  * @see IpUtilities#localIPisNotOnListOfIPaddresses(String)   
  * @see JmeterFunctionsForSeleniumScripts
+ * @see #scriptExceptionHandling(JavaSamplerContext, Map, Throwable)
  *
  * @author Philip Webb
  * Written: Australian Winter 2019  
@@ -115,7 +116,14 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 
 	/** log4J class logger */
 	public static final Logger LOG = LogManager.getLogger(SeleniumAbstractJavaSamplerClient.class);	
-		
+
+	/**	@see SeleniumAbstractJavaSamplerClient#scriptExceptionHandling(JavaSamplerContext, Map, Throwable)    */
+	public static final String ON_EXCEPTION_WRITE_BUFFERED_LOGS	 		= "On_Exception_Write_Buffered_Logs";
+	public static final String ON_EXCEPTION_WRITE_SCREENSHOT	 		= "On_Exception_Write_Screenshot";
+	public static final String ON_EXCEPTION_WRITE_PAGE_SOURCE	 		= "On_Exception_Write_Page_Source";
+	public static final String ON_EXCEPTION_WRITE_PERF_LOG		 		= "On_Exception_Write_Perf_Log";
+	public static final String ON_EXCEPTION_WRITE_STACK_TRACE	 		= "On_Exception_Write_Stack_Trace";
+	
 	/**  the mark59 JmeterFunctionsForSeleniumScripts for the test  */		
 	protected JmeterFunctionsForSeleniumScripts jm;
 	/**  the Selenium driver 'Wrapper' for the test, with additional functions around logging and exception handling */	
@@ -145,6 +153,12 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 		staticMap.put(JmeterFunctionsForSeleniumScripts.LOG_PAGE_SOURCE_AT_START_OF_TRANSACTIONS,	Mark59LogLevels.DEFAULT.getName());
 		staticMap.put(JmeterFunctionsForSeleniumScripts.LOG_PAGE_SOURCE_AT_END_OF_TRANSACTIONS, 	Mark59LogLevels.DEFAULT.getName());
 		staticMap.put(JmeterFunctionsForSeleniumScripts.LOG_PERF_LOG_AT_END_OF_TRANSACTIONS, 		Mark59LogLevels.DEFAULT.getName());
+
+		staticMap.put(ON_EXCEPTION_WRITE_BUFFERED_LOGS, String.valueOf(true));
+		staticMap.put(ON_EXCEPTION_WRITE_SCREENSHOT, 	String.valueOf(true));
+		staticMap.put(ON_EXCEPTION_WRITE_PAGE_SOURCE, 	String.valueOf(true));
+		staticMap.put(ON_EXCEPTION_WRITE_PERF_LOG, 		String.valueOf(true));
+		staticMap.put(ON_EXCEPTION_WRITE_STACK_TRACE, 	String.valueOf(true));
 		
 		staticMap.put("______________________ miscellaneous: __________________________", "");				
 		staticMap.put(IpUtilities.RESTRICT_TO_ONLY_RUN_ON_IPS_LIST, "");
@@ -269,7 +283,7 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 
 		} catch (Exception | AssertionError e) {
 
-			scriptExceptionHandling(context, e);
+			scriptExceptionHandling(context, jmeterRuntimeArgumentsMap, e);
 		
 		} finally {
 			if (! keepBrowserOpen.equals(KeepBrowserOpen.ALWAYS )     ) { 
@@ -282,13 +296,23 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 	
 
 	/**
-	 * Log and record this script execution as a failure.
-	 * 
+	 * Log and record this script execution as a failure.  All available mark59 logs are output for the point of failure, plus any
+	 * previously buffered logs.  Logs can be suppressed by setting a additionalTestParameters parameter controlling it's output 
+	 * to <code>false</code>: 
+	 * <ul>
+	 * <li>{@link #ON_EXCEPTION_WRITE_BUFFERED_LOGS} -  log buffered (during the script)</li>
+	 * <li>{@link #ON_EXCEPTION_WRITE_SCREENSHOT} - screenshot when exception occurred</li>
+	 * <li>{@link #ON_EXCEPTION_WRITE_PAGE_SOURCE} - page source when exception occurred</li>
+	 * <li>{@link #ON_EXCEPTION_WRITE_PERF_LOG} - Chromium Performance Log, unwritten or unbuffered records when exception occurred</li>
+	 * <li>{@link #ON_EXCEPTION_WRITE_STACK_TRACE} - Exceptin stack trace</li>
+	 * </ul>
+	 *    
 	 * @see #userActionsOnScriptFailure(JavaSamplerContext, JmeterFunctionsForSeleniumScripts, WebDriver)
 	 * @param context the current JavaSamplerContext  
+	 * @param jmeterRuntimeArgumentsMap 
 	 * @param e can be an exception or Assertion error
 	 */
-	protected void scriptExceptionHandling(JavaSamplerContext context, Throwable e) {
+	protected void scriptExceptionHandling(JavaSamplerContext context, Map<String, String> jmeterRuntimeArgumentsMap, Throwable e) {
 		String thread = Thread.currentThread().getName();
 		StringWriter sw = new StringWriter();
 		e.printStackTrace(new PrintWriter(sw));
@@ -302,11 +326,22 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 		} 
 		
 		try {
-			jm.writeBufferedArtifacts();
-			jm.writeScreenshot(lastTxnStarted + "_EXCEPTION");	
-			jm.writePageSource(lastTxnStarted + "_EXCEPTION" );
-			jm.writeDriverPerfLogs(lastTxnStarted + "_EXCEPTION_PERFLOG");
-			jm.writeStackTrace(lastTxnStarted + "_EXCEPTION_STACKTRACE", e);
+			
+			if (Boolean.parseBoolean(context.getParameter(ON_EXCEPTION_WRITE_BUFFERED_LOGS))){
+				jm.writeBufferedArtifacts();
+			}
+			if (Boolean.parseBoolean(context.getParameter(ON_EXCEPTION_WRITE_SCREENSHOT))){
+				jm.writeScreenshot(lastTxnStarted + "_EXCEPTION");	
+			}
+			if (Boolean.parseBoolean(context.getParameter(ON_EXCEPTION_WRITE_PAGE_SOURCE))){	
+				jm.writePageSource(lastTxnStarted + "_EXCEPTION" );
+			}
+			if (Boolean.parseBoolean(context.getParameter(ON_EXCEPTION_WRITE_PERF_LOG))){	
+				jm.writeDriverPerfLogs(lastTxnStarted + "_EXCEPTION_PERFLOG");
+			}
+			if (Boolean.parseBoolean(context.getParameter(ON_EXCEPTION_WRITE_STACK_TRACE))){	
+				jm.writeStackTrace(lastTxnStarted + "_EXCEPTION_STACKTRACE", e);
+			}
 			
 		} catch (Exception ex) {
 			LOG.error("["+ thread + "]  ERROR : " + this.getClass() + ".  An exception occurred during scriptExceptionHandling (documentExceptionState) "

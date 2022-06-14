@@ -38,7 +38,8 @@ import com.mark59.selenium.interfaces.DriverFunctionsSelenium;
  * <p>This class is designed to additionally handle Selenium related functions within Mark59, in particular logging.  
  * 
  * <p>At instantiation, transaction level logging usage is set, based on the log4j level.  This can be over-ridden via JMeter parameters 
- * and/or directly calling the methods in this class from the script.</p>
+ * and/or directly calling the methods in this class from the script.  
+ * Please refer to {@link #overrideTxnLoggingBehaviourUsingJmeterParameters(Map)}</p>
  * 
  * <p>From JMeter, Selenium scripts (that extend SeleniumAbstractJavaSamplerClient) have been provisioned to have transaction-level 
  * 'logging settings' available.<br>
@@ -135,12 +136,17 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 		logPerformanceLogAtEndOfTransactions(Mark59LogLevels.DEFAULT);
 	}
 
+	
 	/**
 	 *  Allows JMeter parameters to override of the  default state of mark59 logging at script transaction level.
 	 *  <p>The JMeter parameters can be set from the Java Request for the script.  The table below lists the names of the parameters. 
-	 *  <p>For example, to buffer all Screenshot JPGs at transaction start and end, always write Html Page Source at transaction start, 
-	 *  never write Html Page Source at transaction end, and to use the default (log4j based) setting for the PerfLog, the entries in 
-	 *  the Java Request Parameters section for a script would be:   
+	 *  <p>For example, to :
+	 *  <ul>
+	 *  <li>buffer all Screenshot JPGs at transaction start and end,</li>
+	 *  <li>always write Html Page Source at transaction start,</li>
+	 *  <li>never write Html Page Source at transaction end</li>
+	 *  </ul>
+	 *  the entries in the entries in the Java Request Parameters section for a script would be:   
 	 *  <p>
 	 * <table>
 	 * 	<tr><td>Name</td>									  <td>|</td><td>Value  </td><td></td></tr>
@@ -164,10 +170,7 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	 *		&emsp;&emsp;jm.logPerformanceLogAtEndOfTransactions(Mark59LogLevels.WRITE);<br>
 	 *		&emsp;&emsp;// you need to use jm.writeBufferedArtifacts to output BUFFERed data<br>		
 	 *		&emsp;&emsp;jm.logAllLogsAtEndOfTransactions(Mark59LogLevels.BUFFER);<br>
-	 *	
   	 * </code>
-  	 * 
-  	 * <p>Also note, a <b>mark59.<i>{logtype}</i>.disable=true</b> property setting overrides all other settings for a log type.
  	 *
  	 * @see #logScreenshotsAtStartOfTransactions
  	 * @see #logScreenshotsAtEndOfTransactions
@@ -393,8 +396,7 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	public SampleResult setCdpTransaction(String transactionLabel, long transactionTime, boolean success) {
 		return setTransaction(transactionLabel, JMeterFileDatatypes.CDP, transactionTime, success, null, true );		
 	}
-	
-	
+
 	
 	/**
 	 * As per {@link #setTransaction(String, long, boolean)}, but also allows for forcing switch-off of logging for this

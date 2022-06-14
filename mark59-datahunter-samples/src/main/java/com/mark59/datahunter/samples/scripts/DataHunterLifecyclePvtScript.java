@@ -37,6 +37,7 @@ import com.mark59.core.Outcome;
 import com.mark59.core.utils.IpUtilities;
 import com.mark59.core.utils.Log4jConfigurationHelper;
 import com.mark59.core.utils.Mark59Constants;
+import com.mark59.core.utils.Mark59LogLevels;
 import com.mark59.core.utils.SafeSleep;
 import com.mark59.datahunter.samples.dsl.datahunterSpecificPages.AddPolicyActionPage;
 import com.mark59.datahunter.samples.dsl.datahunterSpecificPages.AddPolicyPage;
@@ -92,13 +93,14 @@ public class DataHunterLifecyclePvtScript  extends SeleniumAbstractJavaSamplerCl
 	@Override
 	protected Map<String, String> additionalTestParameters() {
 		Map<String, String> jmeterAdditionalParameters = new LinkedHashMap<>();
-		// application specific
-		jmeterAdditionalParameters.put("DATAHUNTER_URL",			"http://localhost:8081/mark59-datahunter");
+		// user defined parameters
+		jmeterAdditionalParameters.put("DATAHUNTER_URL", "http://localhost:8081/mark59-datahunter");
 		jmeterAdditionalParameters.put("DATAHUNTER_APPLICATION_ID", "DATAHUNTER_PV_TEST");
-		jmeterAdditionalParameters.put("FORCE_TXN_FAIL_PERCENT", 	"20");
-		jmeterAdditionalParameters.put("START_CDP_LISTENERS",		String.valueOf(false));
-		jmeterAdditionalParameters.put("USER", 	 "default_user");				
-		// optional (defaults apply)
+		jmeterAdditionalParameters.put("FORCE_TXN_FAIL_PERCENT", "20");
+		jmeterAdditionalParameters.put("START_CDP_LISTENERS", String.valueOf(false));
+		jmeterAdditionalParameters.put("USER", "default_user");				
+
+		// optional selenium driver related settings (defaults apply)
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.DRIVER, Mark59Constants.CHROME);
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.HEADLESS_MODE, String.valueOf(false));
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.PAGE_LOAD_STRATEGY, PageLoadStrategy.NONE.toString());
@@ -106,17 +108,33 @@ public class DataHunterLifecyclePvtScript  extends SeleniumAbstractJavaSamplerCl
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.PROXY, "");
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.ADDITIONAL_OPTIONS, "");
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.WRITE_FFOX_BROWSER_LOGFILE, String.valueOf(false));
+//		jmeterAdditionalParameters.put(SeleniumDriverFactory.BROWSER_EXECUTABLE, "C:/win_chrom_ium_install_path/chrome.exe");
+		
+		// optional logging settings (defaults apply) 
+		jmeterAdditionalParameters.put(JmeterFunctionsForSeleniumScripts.LOG_SCREENSHOTS_AT_START_OF_TRANSACTIONS,	Mark59LogLevels.DEFAULT.getName());
+		jmeterAdditionalParameters.put(JmeterFunctionsForSeleniumScripts.LOG_SCREENSHOTS_AT_END_OF_TRANSACTIONS, 	Mark59LogLevels.DEFAULT.getName());
+		jmeterAdditionalParameters.put(JmeterFunctionsForSeleniumScripts.LOG_PAGE_SOURCE_AT_START_OF_TRANSACTIONS,	Mark59LogLevels.DEFAULT.getName());
+		jmeterAdditionalParameters.put(JmeterFunctionsForSeleniumScripts.LOG_PAGE_SOURCE_AT_END_OF_TRANSACTIONS, 	Mark59LogLevels.DEFAULT.getName());
+		jmeterAdditionalParameters.put(JmeterFunctionsForSeleniumScripts.LOG_PERF_LOG_AT_END_OF_TRANSACTIONS, 		Mark59LogLevels.DEFAULT.getName());		
+
+		jmeterAdditionalParameters.put(ON_EXCEPTION_WRITE_BUFFERED_LOGS,	String.valueOf(true));
+		jmeterAdditionalParameters.put(ON_EXCEPTION_WRITE_SCREENSHOT, 		String.valueOf(true));
+		jmeterAdditionalParameters.put(ON_EXCEPTION_WRITE_PAGE_SOURCE, 		String.valueOf(true));
+		jmeterAdditionalParameters.put(ON_EXCEPTION_WRITE_PERF_LOG,			String.valueOf(true));
+		jmeterAdditionalParameters.put(ON_EXCEPTION_WRITE_STACK_TRACE,		String.valueOf(true));
+		
+		// optional miscellaneous settings (defaults apply) 	
 		jmeterAdditionalParameters.put(IpUtilities.RESTRICT_TO_ONLY_RUN_ON_IPS_LIST, "");			
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.EMULATE_NETWORK_CONDITIONS, "");			
-//		jmeterAdditionalParameters.put(SeleniumDriverFactory.BROWSER_EXECUTABLE, "C:/win_chrom_ium_install_path/chrome.exe");		
+	
 		return jmeterAdditionalParameters;			
 	}
 	
 
 	@Override
 	protected void runSeleniumTest(JavaSamplerContext context, JmeterFunctionsForSeleniumScripts jm,  WebDriver driver) {
-		
-//      // import com.mark59.selenium.corejmeterimpl.Mark59LogLevels;;		
+
+// 		These log settings can be used to override log4j based defaults and transaction log-related additionalTestParameters 		
 //		jm.logScreenshotsAtStartOfTransactions(Mark59LogLevels.WRITE);
 //		jm.logScreenshotsAtEndOfTransactions(Mark59LogLevels.WRITE);
 //		jm.logPageSourceAtStartOfTransactions(Mark59LogLevels.WRITE);		

@@ -3,12 +3,8 @@ package com.mark59.metrics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -24,15 +20,16 @@ import org.springframework.security.web.SecurityFilterChain;
  * https://www.baeldung.com/spring-boot-security-autoconfiguration<br>
  * https://www.baeldung.com/spring-security-login<br>
  * - Above reference uses classes deprecated in spring boot 2.7, refactor details at<br>
- * https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter  
+ * https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter<br>
+ * https://stackoverflow.com/questions/41961270/h2-console-and-spring-security-permitall-not-working<br>
+ * https://stackoverflow.com/questions/65894268/how-does-headers-frameoptions-disable-work
  * 
  * @author Philip Webb
  * Written: Australian Autumn 2020  
  */
-@SuppressWarnings("deprecation")
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig { //extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
 
 	@Autowired
 	PropertiesConfiguration springBootConfiguration;	
@@ -62,26 +59,7 @@ public class SecurityConfig { //extends WebSecurityConfigurerAdapter {
             .build();
         return new InMemoryUserDetailsManager(user);
     }
-	
-	
-	//@Override
-//	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//		PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-//
-//		String id       = springBootConfiguration.getMark59metricsid();
-//		String passwrd  = springBootConfiguration.getMark59metricspasswrd();
-//		String hide     = springBootConfiguration.getMark59metricshide();
-//		
-//		if ( hide!= null && (hide.toLowerCase().startsWith("y") || hide.toLowerCase().startsWith("t"))){
-//			System.out.println("hide activated");
-//		} else {
-//			System.out.println("id=" + id + ",passwrd=" + passwrd 
-//					+ "       Please set 'mark59metricshide' as 'true' to hide credentials"
-//					+ " (either as a command line argument or OS environment variable)");
-//		}
-		//auth.inMemoryAuthentication().withUser(id).password(encoder.encode(passwrd)).roles("USER");
-//	}
-    
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -89,55 +67,13 @@ public class SecurityConfig { //extends WebSecurityConfigurerAdapter {
             .antMatchers("/login").permitAll()
             .antMatchers("/logout").permitAll()
             .antMatchers("/api/**").permitAll()
-//            .antMatchers("/h2-console/**").permitAll()
             .antMatchers("/**").hasRole("USER")            
             .and().formLogin().loginPage("/login").defaultSuccessUrl("/serverProfileList", true)
             .and().logout().logoutSuccessUrl("/login").permitAll()
-             // for h2-console:
+             // for h2-console (see references):
             .and().csrf().ignoringAntMatchers("/h2-console/**")
-	        .and().headers().frameOptions().disable()
-//	        .and().cors().disable()  
-	        ;  
+	        .and().headers().frameOptions().sameOrigin(); 
         return http.build();
     }
-      
-//    @Bean
-//    public SecurityFilterChain filterChainH2Console(HttpSecurity http) throws Exception {
-//        http.authorizeRequests().antMatchers("/").permitAll().and()
-//	        .authorizeRequests().antMatchers("/h2-console/**").permitAll().and()
-//	        .headers().frameOptions().disable().and()
-//	        .csrf().ignoringAntMatchers("/h2-console/**").and()
-//	        .cors().disable();
-//        return http.build();
-//    }
-   
-    
-    
-    
-    
-	//@Override
-//	public void configure(HttpSecurity http) throws Exception {
-//		//https://www.yawintutor.com/how-to-enable-and-disable-csrf
-//        http.authorizeRequests()
-//        .antMatchers("/login").permitAll()
-//        .antMatchers("/logout").permitAll()
-//        .antMatchers("/api/**").permitAll()
-//        .antMatchers("/**").hasRole("USER")
-//        .and().formLogin().loginPage("/login").defaultSuccessUrl("/serverProfileList", true)
-//        .and().logout().logoutSuccessUrl("/login").permitAll();
-//	}
-    
-//  You are asking Spring Security to ignore Ant [pattern='/h2-console/**']. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.    
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        return (web) -> web.ignoring().antMatchers("/h2-console/**");
-//    }
-
-   //@Override
-//    public void configure(WebSecurity web) {
-//        web
-//         .ignoring()
-//         .antMatchers("/h2-console/**");
-//    }
     
 }

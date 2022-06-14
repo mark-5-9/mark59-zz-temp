@@ -47,18 +47,20 @@ import com.mark59.selenium.driversimpl.SeleniumDriverFactory;
  * <p>This type of scripting would be appropriate when our are knocking out a 'quick and dirty' script for a simple application. It will quickly
  *  become too limited, cumbersome and difficult to maintain for more complex application tests, where DSL style scripts should be used.   
  * 
- * <p>This script performs a sub-set of the actions in performed by DataHunterLifecyclePvtScript:
+ * <p>This script performs a sub-set of the actions in performed by  {@link DataHunterLifecyclePvtScript}:
  * <ul>
  * <li>deletes 'DataHunter' rows for application 'DATAHUNTER_PV_TEST_BASIC', which have a 'lifecycle' based on the thread name</li>
  * <li>adds a single Policy for application 'DATAHUNTER_PV_TEST_BASIC' </li>
  * <li>creates a DataPoint </li>   
  * </ul> 
  *  
+ * <p>Only some of the parameters available are included in the {@link #additionalTestParameters()} method below.  
+ * Refer to the {@link DataHunterLifecyclePvtScript} source code for a more complete example of the options available.     
+ *  
  * @see SeleniumAbstractJavaSamplerClient
  * 
  * @author Philip Webb
  * Written: Australian Summer 2019/20
- * 
  */
 public class DataHunterBasicSampleScript  extends SeleniumAbstractJavaSamplerClient {
 
@@ -68,9 +70,11 @@ public class DataHunterBasicSampleScript  extends SeleniumAbstractJavaSamplerCli
 	@Override
 	protected Map<String, String> additionalTestParameters() {
 		Map<String, String> jmeterAdditionalParameters = new LinkedHashMap<>();
+		// user defined parameters
 		jmeterAdditionalParameters.put("DATAHUNTER_URL",			"http://localhost:8081/mark59-datahunter");
 		jmeterAdditionalParameters.put("DATAHUNTER_APPLICATION_ID", "DATAHUNTER_PV_TEST_BASIC");
-		jmeterAdditionalParameters.put("USER", 	 "default_user");		
+		jmeterAdditionalParameters.put("USER", 	 "default_user");	
+		// mark59 defined parameters 
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.DRIVER, Mark59Constants.CHROME);   // FIREFOX
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.HEADLESS_MODE, String.valueOf(false));
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.PAGE_LOAD_STRATEGY, PageLoadStrategy.NORMAL.toString());
@@ -79,6 +83,13 @@ public class DataHunterBasicSampleScript  extends SeleniumAbstractJavaSamplerCli
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.WRITE_FFOX_BROWSER_LOGFILE, 	String.valueOf(false));
 		jmeterAdditionalParameters.put(IpUtilities.RESTRICT_TO_ONLY_RUN_ON_IPS_LIST, "");
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.EMULATE_NETWORK_CONDITIONS, "");	
+		
+		jmeterAdditionalParameters.put(ON_EXCEPTION_WRITE_BUFFERED_LOGS,	String.valueOf(false));
+		jmeterAdditionalParameters.put(ON_EXCEPTION_WRITE_SCREENSHOT, 		String.valueOf(false));
+		jmeterAdditionalParameters.put(ON_EXCEPTION_WRITE_PAGE_SOURCE, 		String.valueOf(false));
+		jmeterAdditionalParameters.put(ON_EXCEPTION_WRITE_PERF_LOG,			String.valueOf(false));
+		jmeterAdditionalParameters.put(ON_EXCEPTION_WRITE_STACK_TRACE,		String.valueOf(false));		
+		
 		return jmeterAdditionalParameters;			
 	}
 	
@@ -86,13 +97,12 @@ public class DataHunterBasicSampleScript  extends SeleniumAbstractJavaSamplerCli
 	@Override
 	protected void runSeleniumTest(JavaSamplerContext context, JmeterFunctionsForSeleniumScripts jm,  WebDriver driver) {
 		
-//      // import com.mark59.selenium.corejmeterimpl.Mark59LogLevels;		
+// 		These log settings can be used to override log4j based defaults and log-related additionalTestParameters 
 //		jm.logScreenshotsAtStartOfTransactions(Mark59LogLevels.WRITE);
 //		jm.logScreenshotsAtEndOfTransactions(Mark59LogLevels.WRITE);
 //		jm.logPageSourceAtStartOfTransactions(Mark59LogLevels.WRITE);		
 //		jm.logPageSourceAtEndOfTransactions(Mark59LogLevels.WRITE );
 //		jm.logPerformanceLogAtEndOfTransactions(Mark59LogLevels.WRITE);
-//		// you need to use jm.writeBufferedArtifacts to output BUFFERed data (see end of this method)		
 //		jm.logAllLogsAtEndOfTransactions(Mark59LogLevels.BUFFER);
 
 		String thread = Thread.currentThread().getName();

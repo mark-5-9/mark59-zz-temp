@@ -40,8 +40,7 @@ public class DriverFunctionMock implements DriverFunctions<MockDriver> {
 
 	@Override
 	public byte[] captureScreenshot() {
-		// TODO Auto-generated method stub
-		return null;
+		return "ShouldReturnSomeIminageAsaByteArray".getBytes();
 	}
 
 	@Override

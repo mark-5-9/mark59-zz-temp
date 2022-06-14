@@ -24,14 +24,6 @@ import com.mark59.core.interfaces.DriverFunctions;
 /**
 * @author Michael Cohen
 * Written: Australian Winter 2019 
-* 
-* 
-* 
-* 
-* move to jmeter functions
-* 
-* 
-* 
 */
 public class DriverFunctionMockTest {
 
@@ -40,15 +32,8 @@ public class DriverFunctionMockTest {
 	
 	@Test
 	public final void bufferScreenshot_bufferAScreenshotWithASpecifiedName_screenshotBufferContainsScreenshot() {
-		String imageName = "bufferScreenshot";
 		DriverFunctions<?> w = new DriverFunctionMock(mockDriver);
-//		w.captureAndBufferScreenshot(imageName);
-//		
-//		
-//		
-//		//assert(!w.getBufferedScreenshots().isEmpty());
-//		assert(w.getBufferedScreenshots().keySet().stream().anyMatch(v->v.contains(imageName)));
+		w.captureScreenshot();
+		assert(w.captureScreenshot() != null);
 	}
-
-
 }
