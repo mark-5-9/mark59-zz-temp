@@ -69,12 +69,12 @@ import com.opencsv.exceptions.CsvValidationException;
  *     timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
  *     ts,       t,      lb   ,rc (added)  ,rm (added)     ,tn        ,dt      ,s      ,(unmapped)    ,by   ,sby      ,ng        ,na        ,*  ,lt     ,it      ,ct       
  * </pre> 
- * * URL is unmapped (TODO: could be obtained via the java.net.URL child node when present)
+ * * URL is unmapped
  * <p>For CSV, the fields are simply (re)ordered the same way for all files (so that only one format for the header is required).
  *   
  * <p>For both CSV and XML files, additional entries may be produced for ERROR reporting,  See the "errortransactionnaming (e)" program argument description.
  *   
- * <p>Will process all the jmeter results files (suffixes .xml, .csv or .jtl) residing in the top level of the input directory.
+ * <p>Will process all the JMeter results files (suffixes .xml, .csv or .jtl) residing in the top level of the input directory.
  * 
  * @author Philip Webb
  * Written: Australian Winter 2019  
@@ -98,14 +98,26 @@ public class ResultsSplitter {
 	private static final String DEFAULT_NO			  	= "NO";
 	
 	public static final String CDP_TAG 	= " (CDP)";
-		
+	
+	/* argCdpfilter values */
+	public static final String SHOW_CDP	= "ShowCDP";
+	public static final String HIDE_CDP	= "HideCDP";
+	public static final String ONLY_CDP = "OnlyCDP";
+	
 	private static String argInputdirectory;	
 	private static String argOutputdirectoy;	
 	private static String argOutputFilename;	
 	private static String argErrortransactions;	
 	private static String argeXcludeResultsWithSub;	
 	private static String argMetricsfile;	
+	private static String argCdpfilter;	
 	
+	private static final String CSV_STANDARD_HEADER = "timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,"
+			+ "failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect";
+	
+	private static final String CSV_STANDARD_HEADER_PLUS_HOSTNAME = "timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,"
+			+ "failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,Hostname,IdleTime,Connect";
+
 	private static final String[] blankLine = {"0","0","","0","","","","","","0","0","0","0","","0","","0","0"};
 	
 	private final String[] nextLine = new String[18];
@@ -137,14 +149,27 @@ public class ResultsSplitter {
 
 	public void parseArguments(String[] args) {
 		
-		Options options = new Options(); 
-		options.addOption("i", "inputdirectory",		true, "The directory containing the performance test result file(s).  Multiple xml/csv/jtl results files allowed.  Default is current directory");			
-		options.addOption("o", "outputdirectoy", 		true, "Directory in which to write the output CSV file. Must already exist.  Default is a folder named 'MERGED' under the input directory");
-		options.addRequiredOption("f", "outputFilename",true, "Base output CSV file name.  File extension will be .csv (will be suffixed .csv even if not included in the argument).  If metrics are split out, an additional file ending will be added for metric datafile(s) - see 'Metricsreportsplit' options for details." );
-		options.addOption("e", "errortransactionnaming",true, "How to handle txns marked as failed. 'Rename' suffixes the failed txn names with '_ERRORED'. 'Duplicate' keeps the original txn plus adds a '_ERRORED' txn. Default is 'No' - just keep the original txn name." );
-		options.addOption("x", "eXcludeResultsWithSub",	true, "TRUE (the default) will exclude the XML file main sample transaction for entries which has sub-results, or for CSV files lines marked as 'PARENT' ('FALSE' to include)") ;		
-		options.addOption("m", "Metricsreportsplit", 	true, "Option to create separate file(s) for metric data.  'CreateMetricsReport' - create separate file with all non-txn data, suffixed _METRICS , 'SplitByDataType' create a file per datatype, suffixed with _{datatype}.  Default is 'No' - just put everything in the one output file" );		
-	
+		Options options = new Options();
+		options.addOption("i", "inputdirectory", true,
+				"The directory containing the performance test result file(s).  Multiple xml/csv/jtl results files allowed.  Default is current directory");
+		options.addOption("o", "outputdirectoy", true,
+				"Directory in which to write the output CSV file. Must already exist.  Default is a folder named 'MERGED' under the input directory");
+		options.addRequiredOption("f", "outputFilename", true,
+				"Base output CSV file name.  File extension will be .csv (will be suffixed .csv even if not included in the argument).  If metrics are split out, "
+				+ "an additional file ending will be added for metric datafile(s) - see 'Metricsreportsplit' options for details.");
+		options.addOption("e", "errortransactionnaming", true,
+				"How to handle txns marked as failed. 'Rename' suffixes the failed txn names with '_ERRORED'. 'Duplicate' keeps the original txn plus adds a "
+				+ "'_ERRORED' txn. Default is 'No' - just keep the original txn name.");
+		options.addOption("x", "eXcludeResultsWithSub", true,
+				"TRUE (the default) will exclude the XML file main sample transaction for entries which has sub-results, or for CSV files lines marked as 'PARENT' "
+				+ "('FALSE' to include)");
+		options.addOption("m", "Metricsreportsplit", true,
+				"Option to create separate file(s) for metric data.  'CreateMetricsReport' - create separate file with all non-txn data, suffixed _METRICS , "
+				+ "'SplitByDataType' create a file per datatype, suffixed with _{datatype}.  Default is 'No' - just put everything in the one output file");
+		options.addOption("c", "cdpfilter", true,
+				"'ShowCDP' (the default) will include CDP transaction in the transactions. 'HideCDP' will remove any CDP transactions from the report. "
+				+ "'OnlyCDP' will create a transactions report that ONLY contains transactions marked as CDP transactions.  Any separate Metrics report(s) will not be "
+				+ "affected, as CDP filtering is only to transactional data");		
 		
 		HelpFormatter formatter = new HelpFormatter();
 		CommandLine commandLine;
@@ -167,6 +192,7 @@ public class ResultsSplitter {
 		argErrortransactions	 = commandLine.getOptionValue("e", DEFAULT_NO);	
 		argeXcludeResultsWithSub = commandLine.getOptionValue("x", "True");	
 		argMetricsfile			 = commandLine.getOptionValue("m", DEFAULT_NO);	
+		argCdpfilter			 = commandLine.getOptionValue("c", SHOW_CDP);	
 	
 	
 		File inputdirectory = new File(argInputdirectory);
@@ -198,8 +224,16 @@ public class ResultsSplitter {
 		if ( !METRICS_FILE_NO.equalsIgnoreCase(argMetricsfile)  
 				&&  !METRICS_FILE_CREATE_METRICS_REPORT.equalsIgnoreCase(argMetricsfile)
 				&&  !METRICS_FILE_SPLIT_BY_DATATYPE.equalsIgnoreCase(argMetricsfile)) {
-			throwRuntimeError(options, "The metricsfile (-m) arg must be " + METRICS_FILE_NO + ", " + METRICS_FILE_CREATE_METRICS_REPORT + ", or  " + METRICS_FILE_SPLIT_BY_DATATYPE );   
+			throwRuntimeError(options, "The metricsfile (-m) arg must be " + METRICS_FILE_NO + ", " + METRICS_FILE_CREATE_METRICS_REPORT 
+					+ ", or  " + METRICS_FILE_SPLIT_BY_DATATYPE );   
 		}
+		
+		if ( !SHOW_CDP.equalsIgnoreCase(argCdpfilter)  
+				&&  !HIDE_CDP.equalsIgnoreCase(argCdpfilter)
+				&&  !ONLY_CDP.equalsIgnoreCase(argCdpfilter)) {
+			throwRuntimeError(options, "The cdpfilter (-c) arg must be " + SHOW_CDP + ", " + HIDE_CDP + ", or  " + ONLY_CDP );   
+		}
+
 		
 		System.out.println();
 		System.out.println("JmterResultsConverter  executing using the following arguments " );
@@ -210,6 +244,7 @@ public class ResultsSplitter {
 		System.out.println(" errortransactions     : " + argErrortransactions );		
 		System.out.println(" eXcludeResultsWithSub : " + argeXcludeResultsWithSub );		
 		System.out.println(" metricsfile           : " + argMetricsfile );				
+		System.out.println(" cdpfilter             : " + argCdpfilter );				
 		System.out.println("-------------------------------------------------------------- " );			    
 		System.out.println();
 	}	
@@ -228,9 +263,11 @@ public class ResultsSplitter {
 		System.out.println();	
 		System.out.println( "Sample usage");
 		System.out.println( "------------");
-		System.out.println( "1.  Concatenate a set of Jmeter result files in D:/Jmeter_Results/MyTestApp, into a single .csv result file, output file MyTestAppJmeterResult.csv to directory D:/Jmeter_Results/MyTestApp/MERGED : ");
+		System.out.println( "1.  Concatenate a set of Jmeter result files in D:/Jmeter_Results/MyTestApp, into a single .csv result file, output file"
+				+ " MyTestAppJmeterResult.csv to directory D:/Jmeter_Results/MyTestApp/MERGED : ");
 		System.out.println( "      java -jar mark59-results-splitter.jar -iD:\\Jmeter_Results\\MyTestApp\\ -fMyTestAppJmeterResult" );
-		System.out.println( "2.  As above (but with the current directory set as D:/Jmeter_Results/MyTestApp before running), but this time split the metric data types out into separate csv files, and suffix errored txns named with _ERRORED  ");
+		System.out.println( "2.  As above (but with the current directory set as D:/Jmeter_Results/MyTestApp before running), but this time split the"
+				+ " metric data types out into separate csv files, and suffix errored txns named with _ERRORED  ");
 		System.out.println( "      java -jar mark59-results-splitter.jar -fMyTestAppJmeterResult -eRename -mSplitByDataType" );		
 		System.out.println();
 	}
@@ -325,11 +362,13 @@ public class ResultsSplitter {
 		} else if (firstLineOfFile.trim().startsWith("timeStamp") &&  firstLineOfFile.matches("timeStamp.elapsed.*")){	
 			return reformatCSVFile(jmeterResultsFile, true);
 			
-		} else if ( firstLineOfFile.length() > 28 && countMatches(firstLineOfFile, ",") > 14  && firstLineOfFile.indexOf(",") == 13   ){  //assuming a headerless CSV file in default layout	
+		//assuming a headerless CSV file in default layout	
+		} else if ( firstLineOfFile.length() > 28 && countMatches(firstLineOfFile, ",") > 14  && firstLineOfFile.indexOf(",") == 13   ){  
 			return reformatCSVFile(jmeterResultsFile, false);
 			
 		} else {
-			System.out.println("   Warning : " + jmeterResultsFile.getName() + " bypassed - not in expected Jmeter results format. (Does not start with regex 'timeStamp.elapsed' (csv) or '<' (xml))" );
+			System.out.println("   Warning : " + jmeterResultsFile.getName() + " bypassed - not in expected Jmeter results format. "
+					+ "(Does not start with regex 'timeStamp.elapsed' (csv) or '<' (xml))" );
 			return 0;
 		}
 
@@ -376,8 +415,9 @@ public class ResultsSplitter {
 		try {
 			FileWriter fileWriter = new FileWriter(csvWriterFileName, false);
 			BufferedWriter bf = new BufferedWriter(fileWriter);
-			csvWriter = new CSVWriter(bf, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)					;		
-			csvWriter.writeNext("timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,Hostname,IdleTime,Connect".split(","), false   );  
+			csvWriter = new CSVWriter(bf, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, 
+					CSVWriter.DEFAULT_LINE_END)					;		
+			csvWriter.writeNext(CSV_STANDARD_HEADER_PLUS_HOSTNAME.split(","), false   );  
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Was unable to open output csv file '" + csvWriterFileName + "' for output'.  \n\n    " + e.getMessage());
@@ -539,27 +579,30 @@ public class ResultsSplitter {
 			if (nodeItems.getNamedItem("it")!=null) nextLine[16] = nodeItems.getNamedItem("it").getNodeValue(); 				
 			if (nodeItems.getNamedItem("ct")!=null) nextLine[17] = nodeItems.getNamedItem("ct").getNodeValue(); 				
 			
-			if ("true".equalsIgnoreCase(success) || ERROR_TXNS_NO.equalsIgnoreCase(argErrortransactions)) {
-				writeCsvOuptput(inputFileDatatype, nextLine);	
-				samplesCreatedForLine++;
 			
-			} else {   // an error transaction that needs handling 
-
-				nextLine[2]  =  transactionNameLabel + "_ERRORED";		    			
-				writeCsvOuptput(inputFileDatatype, nextLine);
-				samplesCreatedForLine++;
-				
-				if (ERROR_TXNS_DUPLICATE.equalsIgnoreCase(argErrortransactions)) {
-					nextLine[2]  =  transactionNameLabel;		    			
+			if ( !cdpFilterRemovesLine(inputFileDatatype)){
+			
+				if ("true".equalsIgnoreCase(success) || ERROR_TXNS_NO.equalsIgnoreCase(argErrortransactions)) {
+					writeCsvOuptput(inputFileDatatype, nextLine);	
+					samplesCreatedForLine++;
+					
+				} else {   // an error transaction that needs handling 
+					
+					nextLine[2]  =  transactionNameLabel + "_ERRORED";		    			
 					writeCsvOuptput(inputFileDatatype, nextLine);
 					samplesCreatedForLine++;
-				} 
+					
+					if (ERROR_TXNS_DUPLICATE.equalsIgnoreCase(argErrortransactions)) {
+						nextLine[2]  =  transactionNameLabel;		    			
+						writeCsvOuptput(inputFileDatatype, nextLine);
+						samplesCreatedForLine++;
+					} 
+				}
 			}
 
 		} 
 		return samplesCreatedForLine;
 	}
-
 
 
 	/**
@@ -630,6 +673,7 @@ public class ResultsSplitter {
 	    		String transactionNameLabel = csvDataLineFields[fieldPoslabel];
 	    		String inputFileDatatype    = csvDataLineFields[fieldPosdataType];
 	    		String success 				= csvDataLineFields[fieldPossuccess];
+	    		System.out.println("at :  " + inputFileDatatype + " - " +  transactionNameLabel  );
 
 				if (!( transactionNameLabel.startsWith(IGNORE)
 						|| (inputFileDatatype.equals(JMeterFileDatatypes.PARENT.getDatatypeText())
@@ -656,22 +700,24 @@ public class ResultsSplitter {
 		    		if (fieldPosIdleTime>0) 		nextLine[16] =  csvDataLineFields[fieldPosIdleTime]; 
 		    		if (fieldPosConnect>0) 			nextLine[17] =  csvDataLineFields[fieldPosConnect]; 
 		    		
+					if ( !cdpFilterRemovesLine(inputFileDatatype)){
 		    		
-					if ("true".equalsIgnoreCase(success) || ERROR_TXNS_NO.equalsIgnoreCase(argErrortransactions)) {
-						writeCsvOuptput(inputFileDatatype, nextLine);	
-						samplesCreated++;
-					
-					} else {   // an error transaction that needs handling 
-
-						nextLine[2]  =  transactionNameLabel + "_ERRORED";		    			
-						writeCsvOuptput(inputFileDatatype, nextLine);
-						samplesCreated++;
+						if ("true".equalsIgnoreCase(success) || ERROR_TXNS_NO.equalsIgnoreCase(argErrortransactions)) {
+							writeCsvOuptput(inputFileDatatype, nextLine);	
+							samplesCreated++;
 						
-						if (ERROR_TXNS_DUPLICATE.equalsIgnoreCase(argErrortransactions)) {
-							nextLine[2]  =  transactionNameLabel;		    			
+						} else {   // an error transaction that needs handling 
+	
+							nextLine[2]  =  transactionNameLabel + "_ERRORED";		    			
 							writeCsvOuptput(inputFileDatatype, nextLine);
 							samplesCreated++;
-						} 
+							
+							if (ERROR_TXNS_DUPLICATE.equalsIgnoreCase(argErrortransactions)) {
+								nextLine[2]  =  transactionNameLabel;		    			
+								writeCsvOuptput(inputFileDatatype, nextLine);
+								samplesCreated++;
+							} 
+						}
 					}
 		    	}
 	    	} 
@@ -711,7 +757,7 @@ public class ResultsSplitter {
 	
 	private void setFieldPositionsAssumingTheDefaultCsvLayout() {
 		System.out.println("\n   This file is assumed to be a CSV file WITHOUT A HEADER.  Therefore the default Jmeter CSV field layout has to be assumed:" );
-		System.out.println("\n       timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect");
+		System.out.println("\n       " + CSV_STANDARD_HEADER );
 		fieldPostimeStamp 		= 0; 
 		fieldPoselapsed   		= 1; 
 		fieldPoslabel     		= 2;
@@ -780,6 +826,30 @@ public class ResultsSplitter {
 	}	
 
 	
+	private boolean cdpFilterRemovesLine(String inputFileDatatype) {
+		if (SHOW_CDP.equalsIgnoreCase(argCdpfilter)) {
+			return false;
+		}
+		if (inputFileDatatype.equalsIgnoreCase(JMeterFileDatatypes.CPU_UTIL.getDatatypeText())
+				|| inputFileDatatype.equalsIgnoreCase(JMeterFileDatatypes.DATAPOINT.getDatatypeText())
+				|| inputFileDatatype.equalsIgnoreCase(JMeterFileDatatypes.MEMORY.getDatatypeText())) {
+			return false;
+		}
+		if (ONLY_CDP.equalsIgnoreCase(argCdpfilter)) {
+			if (inputFileDatatype.equals(JMeterFileDatatypes.CDP.getDatatypeText())) {
+				return false;
+			}
+			return true;
+		}
+		if (HIDE_CDP.equalsIgnoreCase(argCdpfilter)) {
+			if (inputFileDatatype.equals(JMeterFileDatatypes.CDP.getDatatypeText())) {
+				return true;
+			}
+			return false;
+		}
+		throw new RuntimeException(
+				"Logic error in cdpFilterApplies : " + inputFileDatatype + ", argMetricsfile=" + argMetricsfile);
+	}
 	
 	/*
 	 *   The methods below are based on code in Commons StringUtils  

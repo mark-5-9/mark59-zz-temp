@@ -16,9 +16,12 @@
 
 package com.mark59.results.splitter.test;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Scanner;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -38,6 +41,7 @@ import junit.framework.TestCase;
 public class ResultsSplitterTest     extends TestCase
 {
 	int actualSamplesCount=0;
+	String outdest = "./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV";
 	
     public void testJmterResultsOneFileMetricsFileSplitterTest() throws IOException, ParserConfigurationException, SAXException
     {
@@ -55,7 +59,7 @@ public class ResultsSplitterTest     extends TestCase
 		resultsSplitter.parseArguments(args);    
 		resultsSplitter.clearOutputDirectory();     
 		actualSamplesCount=resultsSplitter.convert();
-        assertEquals(122, actualSamplesCount);
+        assertEquals(124, actualSamplesCount);
         
     	Files.delete(Paths.get("./TESTDATA/MERGED/jmterResultsFileConvertedToCSV.csv"));
     	Files.delete(Paths.get("./TESTDATA/MERGED"));    	
@@ -80,7 +84,7 @@ public class ResultsSplitterTest     extends TestCase
 		resultsSplitter.parseArguments(args);    
 		resultsSplitter.clearOutputDirectory();     
 		actualSamplesCount=resultsSplitter.convert();
-        assertEquals(145, actualSamplesCount);
+        assertEquals(147, actualSamplesCount);
         
     	Files.delete(Paths.get("./TESTDATA/SEPARATE_METRICS/jmterResultsFileConvertedToCSV_METRICS.csv"));
     	Files.delete(Paths.get("./TESTDATA/SEPARATE_METRICS/jmterResultsFileConvertedToCSV.csv"));
@@ -107,7 +111,47 @@ public class ResultsSplitterTest     extends TestCase
 		resultsSplitter.parseArguments(args);    
 		resultsSplitter.clearOutputDirectory();     
 		actualSamplesCount=resultsSplitter.convert();
-        assertEquals(122, actualSamplesCount);
+
+		assertEquals("total", 124, actualSamplesCount);
+        assertEquals("_CPU_UTIL", 9, linecount(outdest+"_CPU_UTIL.csv"));
+        assertEquals("_DATAPOINT", 12, linecount(outdest+"_DATAPOINT.csv"));
+        assertEquals("_MEMORY", 14, linecount(outdest+"_MEMORY.csv"));
+        assertEquals("TXN", 95, linecount(outdest+".csv"));
+      
+    	Files.delete(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_CPU_UTIL.csv"));
+    	Files.delete(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_DATAPOINT.csv"));
+    	Files.delete(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_MEMORY.csv"));
+    	Files.delete(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV.csv"));
+    	Files.delete(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE"));
+    }
+    
+    
+    public void testJmterResultsSplitByDatatypeTxnsAsCDPONLYTest() throws IOException, ParserConfigurationException, SAXException
+    {
+    	Files.deleteIfExists(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_CPU_UTIL.csv"));
+    	Files.deleteIfExists(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_DATAPOINT.csv"));
+    	Files.deleteIfExists(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_MEMORY.csv"));
+    	Files.deleteIfExists(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV.csv"));
+    	Files.deleteIfExists(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE"));
+    	Files.createDirectory(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE"));
+    	
+		String[] args = { "-i./TESTDATA",
+							"-o./TESTDATA/MERGED_SPLIT_BY_DATAYPE",
+    						"-fjmterResultsFileConvertedToCSV.csv",
+    						"-m" +  ResultsSplitter.METRICS_FILE_SPLIT_BY_DATATYPE,	
+    						"-e" +  ResultsSplitter.ERROR_TXNS_RENAME,
+							"-c" +  ResultsSplitter.ONLY_CDP};
+    	
+		ResultsSplitter resultsSplitter = new ResultsSplitter(); 
+		resultsSplitter.parseArguments(args);    
+		resultsSplitter.clearOutputDirectory();     
+		actualSamplesCount=resultsSplitter.convert();
+        
+		assertEquals("total", 32, actualSamplesCount);  						// 8 + 9 + 13 + 2 = 32
+        assertEquals("_CPU_UTIL", 9, linecount(outdest+"_CPU_UTIL.csv")); 		// 1 header =>  8 datas 
+        assertEquals("_DATAPOINT", 12, linecount(outdest+"_DATAPOINT.csv")); 	// 1 header + 2 <lf> => 9 datas
+        assertEquals("_MEMORY", 14, linecount(outdest+"_MEMORY.csv"));  		// 1 header =>  13 datas 
+        assertEquals("TXN", 3, linecount(outdest+".csv"));        				// 1 header =>  2 datas 
         
     	Files.delete(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_CPU_UTIL.csv"));
     	Files.delete(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_DATAPOINT.csv"));
@@ -115,5 +159,108 @@ public class ResultsSplitterTest     extends TestCase
     	Files.delete(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV.csv"));
     	Files.delete(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE"));
     }
+
+    
+    public void testJmterResultsSplitByDatatypeTxnsAsCDPHIDETest() throws IOException, ParserConfigurationException, SAXException
+    {
+    	Files.deleteIfExists(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_CPU_UTIL.csv"));
+    	Files.deleteIfExists(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_DATAPOINT.csv"));
+    	Files.deleteIfExists(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_MEMORY.csv"));
+    	Files.deleteIfExists(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV.csv"));
+    	Files.deleteIfExists(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE"));
+    	Files.createDirectory(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE"));
+    	
+		String[] args = { "-i./TESTDATA",
+							"-o./TESTDATA/MERGED_SPLIT_BY_DATAYPE",
+    						"-fjmterResultsFileConvertedToCSV.csv",
+    						"-m" +  ResultsSplitter.METRICS_FILE_SPLIT_BY_DATATYPE,	
+    						"-e" +  ResultsSplitter.ERROR_TXNS_RENAME,
+							"-c" +  ResultsSplitter.HIDE_CDP};
+    	
+		ResultsSplitter resultsSplitter = new ResultsSplitter(); 
+		resultsSplitter.parseArguments(args);    
+		resultsSplitter.clearOutputDirectory();     
+		actualSamplesCount=resultsSplitter.convert();
+        
+		assertEquals("total", 122, actualSamplesCount);  						
+        assertEquals("_CPU_UTIL", 9, linecount(outdest+"_CPU_UTIL.csv")); 		 
+        assertEquals("_DATAPOINT", 12, linecount(outdest+"_DATAPOINT.csv")); 	
+        assertEquals("_MEMORY", 14, linecount(outdest+"_MEMORY.csv"));  		 
+        assertEquals("TXN", 93, linecount(outdest+".csv"));        				 
+        
+    	Files.delete(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_CPU_UTIL.csv"));
+    	Files.delete(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_DATAPOINT.csv"));
+    	Files.delete(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_MEMORY.csv"));
+    	Files.delete(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV.csv"));
+    	Files.delete(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE"));
+    }
+   
+ 
+    public void testJmterResultsSplitByDatatypeTxnsAsSHOWCDPTest() throws IOException, ParserConfigurationException, SAXException
+    {
+    	Files.deleteIfExists(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_CPU_UTIL.csv"));
+    	Files.deleteIfExists(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_DATAPOINT.csv"));
+    	Files.deleteIfExists(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_MEMORY.csv"));
+    	Files.deleteIfExists(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV.csv"));
+    	Files.deleteIfExists(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE"));
+    	Files.createDirectory(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE"));
+    	
+		String[] args = { "-i./TESTDATA",
+							"-o./TESTDATA/MERGED_SPLIT_BY_DATAYPE",
+    						"-fjmterResultsFileConvertedToCSV.csv",
+    						"-m" +  ResultsSplitter.METRICS_FILE_SPLIT_BY_DATATYPE,	
+    						"-e" +  ResultsSplitter.ERROR_TXNS_RENAME,
+							"-c" +  ResultsSplitter.SHOW_CDP};
+    	
+		ResultsSplitter resultsSplitter = new ResultsSplitter(); 
+		resultsSplitter.parseArguments(args);    
+		resultsSplitter.clearOutputDirectory();     
+		actualSamplesCount=resultsSplitter.convert();
+        
+		assertEquals("total", 124, actualSamplesCount);  						
+        assertEquals("_CPU_UTIL", 9, linecount(outdest+"_CPU_UTIL.csv")); 		 
+        assertEquals("_DATAPOINT", 12, linecount(outdest+"_DATAPOINT.csv")); 	
+        assertEquals("_MEMORY", 14, linecount(outdest+"_MEMORY.csv"));  		 
+        assertEquals("TXN", 95, linecount(outdest+".csv"));        				 
+        
+    	Files.delete(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_CPU_UTIL.csv"));
+    	Files.delete(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_DATAPOINT.csv"));
+    	Files.delete(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV_MEMORY.csv"));
+    	Files.delete(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE/jmterResultsFileConvertedToCSV.csv"));
+    	Files.delete(Paths.get("./TESTDATA/MERGED_SPLIT_BY_DATAYPE"));
+    }
+
+    
+    
+    
+	public int linecount(String filename) {  // count includes header line
+		int lineCount = 0;
+		Scanner scanner;
+		String line = "";
+		try {
+			scanner = new Scanner(new File(filename));
+			while (scanner.hasNextLine()) {
+				line = scanner.nextLine();
+				lineCount++;
+			}
+			scanner.close();
+		} catch (FileNotFoundException e) {
+			System.out.println(filename + " fails around line " + line);
+			e.printStackTrace();
+			return -1;
+		}
+		return lineCount;
+	}    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 }

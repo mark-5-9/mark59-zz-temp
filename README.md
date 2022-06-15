@@ -39,6 +39,7 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
 	<li>new property mark59.logname.format : formatter for log names output to the log directory</li>
 	<li>new property mark59.log.directory.suffix : log directory suffix (a local 'date' or 'datetime')</li>	
 	<li>mark59 logs can now be disabled rather thatn output on script exception</li>	
+	<li>filter for CDP markers on results splitter for Transactions Report</li>	
 	<li>selenium to 4.2.2 (chrome102+), H2 to 2.1.212, spring-boot to 2.7.0</li>		
   </ul>
 
