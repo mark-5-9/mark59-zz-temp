@@ -62,13 +62,13 @@ public class CommandResponseParserController {
 		Map<String, Object> map = createMapOfDropdowns();			
 		map.put("reqMetricTxnType",reqMetricTxnType);
 
-		if (StringUtils.isEmpty(commandResponseParser.getScriptName())) {
+		if (StringUtils.isEmpty(commandResponseParser.getParserName())) {
 			map.put("commandResponseParser", commandResponseParser);		
-			map.put("reqErr", "Script Name id is required");			
+			map.put("reqErr", "Parser Name id is required");			
 			return new ModelAndView("registerCommandResponseParser", "map", map);
 		}
 
-		CommandResponseParser existingCommandResponseParser = commandResponseParsersDAO.findCommandResponseParser(commandResponseParser.getScriptName());
+		CommandResponseParser existingCommandResponseParser = commandResponseParsersDAO.findCommandResponseParser(commandResponseParser.getParserName());
 		
 		if (existingCommandResponseParser == null ){  //not trying to add something already there, so go ahead..
 
@@ -79,7 +79,7 @@ public class CommandResponseParserController {
 		} else {
 		
 			map.put("serverProfileName",existingCommandResponseParser);		
-			map.put("reqErr","Oh, a listing for script name  " + existingCommandResponseParser.getScriptName() + " AlreadyExists");			
+			map.put("reqErr","Oh, a listing for parser name  " + existingCommandResponseParser.getParserName() + " AlreadyExists");			
 			return new ModelAndView("registerCommandResponseParser", "map", map);
 		}
 	}
@@ -107,8 +107,8 @@ public class CommandResponseParserController {
 	}
 
 	@RequestMapping("/viewCommandResponseParser")
-	public String viewCommandResponseParser(@RequestParam String reqScriptName, @RequestParam(required=false) String reqMetricTxnType, Model model) {
-		CommandResponseParser commandResponseParser = commandResponseParsersDAO.findCommandResponseParser(reqScriptName); 
+	public String viewCommandResponseParser(@RequestParam String reqParserName, @RequestParam(required=false) String reqMetricTxnType, Model model) {
+		CommandResponseParser commandResponseParser = commandResponseParsersDAO.findCommandResponseParser(reqParserName); 
 		model.addAttribute("commandResponseParser", commandResponseParser);
 		
 		Map<String, Object> map = createMapOfDropdowns();
@@ -120,8 +120,8 @@ public class CommandResponseParserController {
 	
 	
 	@RequestMapping("/copyCommandResponseParser")
-	public String copyCommandResponseParser(@RequestParam String reqScriptName, @RequestParam(required=false) String reqMetricTxnType, Model model) {
-		CommandResponseParser commandResponseParser = commandResponseParsersDAO.findCommandResponseParser(reqScriptName); 
+	public String copyCommandResponseParser(@RequestParam String reqParserName, @RequestParam(required=false) String reqMetricTxnType, Model model) {
+		CommandResponseParser commandResponseParser = commandResponseParsersDAO.findCommandResponseParser(reqParserName); 
 		model.addAttribute("commandResponseParser", commandResponseParser);
 		
 		Map<String, Object> map = createMapOfDropdowns();
@@ -133,8 +133,8 @@ public class CommandResponseParserController {
 	
 	
 	@RequestMapping("/editCommandResponseParser")
-	public String editCommandResponseParser(@RequestParam String reqScriptName, @RequestParam(required=false) String reqMetricTxnType, Model model) {
-		CommandResponseParser commandResponseParser = commandResponseParsersDAO.findCommandResponseParser(reqScriptName); 
+	public String editCommandResponseParser(@RequestParam String reqParserName, @RequestParam(required=false) String reqMetricTxnType, Model model) {
+		CommandResponseParser commandResponseParser = commandResponseParsersDAO.findCommandResponseParser(reqParserName); 
 		model.addAttribute("commandResponseParser", commandResponseParser);
 		
 		Map<String, Object> map = createMapOfDropdowns();
@@ -159,8 +159,8 @@ public class CommandResponseParserController {
 
 
 	@RequestMapping("/deleteCommandResponseParser")
-	public String deleteCommandResponseParser(@RequestParam String reqScriptName, @RequestParam String reqMetricTxnType) {
-		commandResponseParsersDAO.deleteCommandResponseParser(reqScriptName);
+	public String deleteCommandResponseParser(@RequestParam String reqParserName, @RequestParam String reqMetricTxnType) {
+		commandResponseParsersDAO.deleteCommandResponseParser(reqParserName);
 		return "redirect:/commandResponseParserList?reqMetricTxnType=" + reqMetricTxnType;
 	}
 	

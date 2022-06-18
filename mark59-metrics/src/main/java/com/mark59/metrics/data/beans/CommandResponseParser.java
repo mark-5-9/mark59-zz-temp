@@ -22,7 +22,7 @@ package com.mark59.metrics.data.beans;
  */
 public class CommandResponseParser {
 
-	String scriptName;
+	String parserName;
 	String metricTxnType;
 	String metricNameSuffix;
 	String script;
@@ -34,13 +34,13 @@ public class CommandResponseParser {
 	}
 
 
-	public String getScriptName() {
-		return scriptName;
+	public String getParserName() {
+		return parserName;
 	}
 
 
-	public void setScriptName(String scriptName) {
-		this.scriptName = scriptName;
+	public void setParserName(String parserName) {
+		this.parserName = parserName;
 	}
 
 
@@ -96,7 +96,7 @@ public class CommandResponseParser {
 
 	@Override
     public String toString() {
-        return   "[scriptName="+ scriptName + 
+        return   "[parserName="+ parserName + 
         		", metricTxnType="+ metricTxnType + 
         		", metricNameSuffix="+ metricNameSuffix + 
         		", script="+ script.trim() + 

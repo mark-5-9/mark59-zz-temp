@@ -97,11 +97,11 @@
       <td>Response&nbsp;Parsers</td>
       <td>
  		<table>    
-        <c:forEach items="${commandEditingForm.scriptSelectors}" var="scriptSelector"  varStatus="status"   >
+        <c:forEach items="${commandEditingForm.parserSelectors}" var="parserSelector"  varStatus="status"   >
      		<tr>
-     		   <td><form:checkbox path="scriptSelectors[${status.index}].scriptChecked" /></td>     		   
-     		   <td><a href="viewCommandResponseParser?&reqScriptName=${scriptSelector.scriptName}">${scriptSelector.scriptName}</a></td>
-    		   <td><form:hidden path="scriptSelectors[${status.index}].scriptName" /></td>
+     		   <td><form:checkbox path="parserSelectors[${status.index}].parserChecked" /></td>     		   
+     		   <td><a href="viewCommandResponseParser?&reqParserName=${parserSelector.parserName}">${parserSelector.parserName}</a></td>
+    		   <td><form:hidden path="parserSelectors[${status.index}].parserName" /></td>
      		</tr>
         </c:forEach>
         </table> 

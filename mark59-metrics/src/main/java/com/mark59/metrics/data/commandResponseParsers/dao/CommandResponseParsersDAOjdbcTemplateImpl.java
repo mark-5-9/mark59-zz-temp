@@ -41,16 +41,16 @@ public class CommandResponseParsersDAOjdbcTemplateImpl implements CommandRespons
 		
 
 	@Override
-	public CommandResponseParser findCommandResponseParser(String scriptName){
+	public CommandResponseParser findCommandResponseParser(String parserName){
 
-		String sql = "select SCRIPT_NAME, METRIC_TXN_TYPE, METRIC_NAME_SUFFIX, SCRIPT, COMMENT, SAMPLE_COMMAND_RESPONSE "
-				+ "from COMMANDRESPONSEPARSERS where SCRIPT_NAME = :scriptName "
-				+ " order by SCRIPT_NAME asc;";
+		String sql = "select PARSER_NAME, METRIC_TXN_TYPE, METRIC_NAME_SUFFIX, SCRIPT, COMMENT, SAMPLE_COMMAND_RESPONSE "
+				+ "from COMMANDRESPONSEPARSERS where PARSER_NAME = :parserName "
+				+ " order by PARSER_NAME asc;";
 		
 		MapSqlParameterSource sqlparameters = new MapSqlParameterSource()
-				.addValue("scriptName", scriptName);
+				.addValue("parserName", parserName);
 
-//		System.out.println(" findCommandResponseParser : " + sql + " : " + scriptName);
+//		 System.out.println(" findCommandResponseParser : " + sql + " : " + parserName);
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql, sqlparameters);
 		
@@ -60,13 +60,13 @@ public class CommandResponseParsersDAOjdbcTemplateImpl implements CommandRespons
 		Map<String, Object> row = rows.get(0);
 		
 		CommandResponseParser commandResponseParser = new CommandResponseParser();
-		commandResponseParser.setScriptName((String)row.get("SCRIPT_NAME"));
+		commandResponseParser.setParserName((String)row.get("PARSER_NAME"));
 		commandResponseParser.setMetricTxnType((String)row.get("METRIC_TXN_TYPE"));
 		commandResponseParser.setMetricNameSuffix((String)row.get("METRIC_NAME_SUFFIX"));
 		commandResponseParser.setScript((String)row.get("SCRIPT"));
 		commandResponseParser.setComment((String)row.get("COMMENT"));
 		commandResponseParser.setSampleCommandResponse((String)row.get("SAMPLE_COMMAND_RESPONSE"));
-		commandResponseParser.setScriptName((String)row.get("SCRIPT_NAME"));
+		commandResponseParser.setParserName((String)row.get("PARSER_NAME"));
 //		System.out.println("ServerCommandLinksDAO..findCommandResponseParser : " + commandResponseParser.toString());		
 		return  commandResponseParser;
 	}
@@ -80,12 +80,12 @@ public class CommandResponseParsersDAOjdbcTemplateImpl implements CommandRespons
 	@Override
 	public List<CommandResponseParser> findCommandResponseParsers(String selectionCol, String selectionValue){
 
-		String sql = "select SCRIPT_NAME, METRIC_TXN_TYPE, METRIC_NAME_SUFFIX, SCRIPT, COMMENT, SAMPLE_COMMAND_RESPONSE from COMMANDRESPONSEPARSERS ";
+		String sql = "select PARSER_NAME, METRIC_TXN_TYPE, METRIC_NAME_SUFFIX, SCRIPT, COMMENT, SAMPLE_COMMAND_RESPONSE from COMMANDRESPONSEPARSERS ";
 		
 		if (!selectionValue.isEmpty()  ) {			
 			sql += "  where " + selectionCol + " like :selectionValue ";
 		} 
-		sql += " order by SCRIPT_NAME ";		
+		sql += " order by PARSER_NAME ";		
 
 		MapSqlParameterSource sqlparameters = new MapSqlParameterSource()
 				.addValue("selectionValue", selectionValue);
@@ -97,13 +97,13 @@ public class CommandResponseParsersDAOjdbcTemplateImpl implements CommandRespons
 		
 		for (Map<String, Object> row : rows) {
 			CommandResponseParser commandResponseParser = new CommandResponseParser();
-			commandResponseParser.setScriptName((String)row.get("SCRIPT_NAME"));
+			commandResponseParser.setParserName((String)row.get("PARSER_NAME"));
 			commandResponseParser.setMetricTxnType((String)row.get("METRIC_TXN_TYPE"));
 			commandResponseParser.setMetricNameSuffix((String)row.get("METRIC_NAME_SUFFIX"));
 			commandResponseParser.setScript((String)row.get("SCRIPT"));
 			commandResponseParser.setComment((String)row.get("COMMENT"));
 			commandResponseParser.setSampleCommandResponse((String)row.get("SAMPLE_COMMAND_RESPONSE"));			
-			commandResponseParser.setScriptName((String)row.get("SCRIPT_NAME"));
+			commandResponseParser.setParserName((String)row.get("PARSER_NAME"));
 			commandResponseParsersList.add(commandResponseParser);
 //			System.out.println("ServerCommandLinksDAOjdbcTemplateImpl.findCommandResponseParsers  : " + commandResponseParser.toString()  ) ;		
 		}	
@@ -114,13 +114,13 @@ public class CommandResponseParsersDAOjdbcTemplateImpl implements CommandRespons
 	@Override
 	public void insertCommandResponseParser(CommandResponseParser commandResponseParser) {
 		
-		String sql = "INSERT INTO COMMANDRESPONSEPARSERS ( SCRIPT_NAME, METRIC_TXN_TYPE, METRIC_NAME_SUFFIX, SCRIPT, COMMENT, SAMPLE_COMMAND_RESPONSE ) " + 
+		String sql = "INSERT INTO COMMANDRESPONSEPARSERS ( PARSER_NAME, METRIC_TXN_TYPE, METRIC_NAME_SUFFIX, SCRIPT, COMMENT, SAMPLE_COMMAND_RESPONSE ) " + 
 				      " VALUES (?,?,?,?,?,?)";
 		
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
 		jdbcTemplate.update(sql,
-				commandResponseParser.getScriptName(),
+				commandResponseParser.getParserName(),
 				commandResponseParser.getMetricTxnType(),
 				commandResponseParser.getMetricNameSuffix(),
 				commandResponseParser.getScript(),
@@ -132,34 +132,34 @@ public class CommandResponseParsersDAOjdbcTemplateImpl implements CommandRespons
 	@Override
 	public void updateCommandResponseParser(CommandResponseParser commandResponseParser){
 
-		String sql = "UPDATE COMMANDRESPONSEPARSERS set SCRIPT_NAME = ?, METRIC_TXN_TYPE = ?, METRIC_NAME_SUFFIX = ?, SCRIPT = ?, COMMENT = ?, SAMPLE_COMMAND_RESPONSE = ? "
-				+ "where SCRIPT_NAME = ? ";
+		String sql = "UPDATE COMMANDRESPONSEPARSERS set PARSER_NAME = ?, METRIC_TXN_TYPE = ?, METRIC_NAME_SUFFIX = ?, SCRIPT = ?, COMMENT = ?, SAMPLE_COMMAND_RESPONSE = ? "
+				+ "where PARSER_NAME = ? ";
 		
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		
 		jdbcTemplate.update(sql,
-				commandResponseParser.getScriptName(),
+				commandResponseParser.getParserName(),
 				commandResponseParser.getMetricTxnType(),
 				commandResponseParser.getMetricNameSuffix(),
 				commandResponseParser.getScript(),
 				commandResponseParser.getComment(),
 				commandResponseParser.getSampleCommandResponse(),
-				commandResponseParser.getScriptName());
+				commandResponseParser.getParserName());
 	}	
 	
 	
 	@Override
-	public void deleteCommandResponseParser(String scriptName) {
+	public void deleteCommandResponseParser(String parserName) {
 
-		String sql = "delete from COMMANDPARSERLINKS where SCRIPT_NAME = :scriptName ";
+		String sql = "delete from COMMANDPARSERLINKS where PARSER_NAME = :parserName ";
 
 		MapSqlParameterSource sqlparameters = new MapSqlParameterSource()
-				.addValue("scriptName", scriptName);		
+				.addValue("parserName", parserName);		
 
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		jdbcTemplate.update(sql, sqlparameters);
 		
-		sql = "delete from COMMANDRESPONSEPARSERS where SCRIPT_NAME = :scriptName ";
+		sql = "delete from COMMANDRESPONSEPARSERS where PARSER_NAME = :parserName ";
 		jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		jdbcTemplate.update(sql, sqlparameters);
 	}	

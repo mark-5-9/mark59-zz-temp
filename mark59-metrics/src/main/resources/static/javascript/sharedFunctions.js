@@ -111,14 +111,14 @@
 	
 	
 	function testCommandResponseParser() {
-		var scriptNameId = document.getElementById('scriptName').innerHTML
+		var parserNameId = document.getElementById('parserName').innerHTML
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				populateTestCommandResponseParserResult(this.responseText)
 			} 
 		};
-		xhttp.open("GET", encodeURI("api/testCommandResponseParser?scriptName="	+ scriptNameId ), true);
+		xhttp.open("GET", encodeURI("api/testCommandResponseParser?parserName="	+ parserNameId ), true);
 		xhttp.send();
 	}
 

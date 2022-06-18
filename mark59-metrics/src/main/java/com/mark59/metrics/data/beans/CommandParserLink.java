@@ -24,7 +24,7 @@ package com.mark59.metrics.data.beans;
 public class CommandParserLink {
 
 	String commandName;
-	String scriptName;
+	String parserName;
 	
 	public CommandParserLink() {
 	}
@@ -40,20 +40,20 @@ public class CommandParserLink {
 	}
 
 
-	public String getScriptName() {
-		return scriptName;
+	public String getParserName() {
+		return parserName;
 	}
 
 
-	public void setScriptName(String scriptName) {
-		this.scriptName = scriptName;
+	public void setParserName(String parserName) {
+		this.parserName = parserName;
 	}
 
 
 	@Override
     public String toString() {
         return   "[commandName="+ commandName + 
-        		", scriptName="+ scriptName + 
+        		", parserName="+ parserName + 
         		"]";
 	}
 		

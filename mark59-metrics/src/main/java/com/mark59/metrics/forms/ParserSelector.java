@@ -21,34 +21,34 @@ package com.mark59.metrics.forms;
  * Written: Australian Spring 2020
  * 
  */
-public class ScriptSelector {
+public class ParserSelector {
 	
-	String scriptName;
-	boolean scriptChecked;
+	String parserName;
+	boolean parserChecked;
 	
-	public ScriptSelector() {
+	public ParserSelector() {
 	}
 	
-	public String getScriptName() {
-		return scriptName;
-	}
-
-	public void setScriptName(String scriptName) {
-		this.scriptName = scriptName;
-	}
-	
-	public boolean isScriptChecked() {
-		return scriptChecked;
+	public String getParserName() {
+		return parserName;
 	}
 
-	public void setScriptChecked(boolean scriptChecked) {
-		this.scriptChecked = scriptChecked;
+	public void setParserName(String parserName) {
+		this.parserName = parserName;
+	}
+	
+	public boolean isParserChecked() {
+		return parserChecked;
+	}
+
+	public void setParserChecked(boolean parserChecked) {
+		this.parserChecked = parserChecked;
 	}
 
 	@Override
     public String toString() {
-        return   "[scriptName="+ scriptName + 
-        		", scriptChecked="+ scriptChecked + 
+        return   "[parserName="+ parserName + 
+        		", parserChecked="+ parserChecked + 
         		"]";
 	}
 		

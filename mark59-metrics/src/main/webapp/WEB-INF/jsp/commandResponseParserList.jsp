@@ -64,7 +64,7 @@
     <th></th>
     <th></th>
     <th></th>
-    <th>Script Name</th>
+    <th>Parser Name</th>
     <th>Metric Type<br><form:select id='metricTxnType' path="parmsMap" items="${parmsMap.metricTxnTypes}"  onChange="resendCommandResponseParserListMetricTxnType()" /></th>
     <th>Metric Name Suffix</th>
     <th>Script</th>        
@@ -72,10 +72,10 @@
    </tr>
    <c:forEach var="commandResponseParser" items="${parmsMap.commandResponseParserList}">
     <tr>
-     <td><a href="copyCommandResponseParser?&reqScriptName=${commandResponseParser.scriptName}&reqMetricTxnType=${parmsMap.reqMetricTxnType}" title="Copy"><img src="images/copy.png"/></a></td> 
-     <td><a href="editCommandResponseParser?&reqScriptName=${commandResponseParser.scriptName}&reqMetricTxnType=${parmsMap.reqMetricTxnType}" title="Edit"><img src="images/edit.png"/></a></td>
-     <td><a href="deleteCommandResponseParser?&reqScriptName=${commandResponseParser.scriptName}&reqMetricTxnType=${parmsMap.reqMetricTxnType}" onclick="return confirm('Are you sure (server : ${commandResponseParser.scriptName})?');" title="Delete"><img src="images/delete.png"/></a></td>
-     <td><a href="viewCommandResponseParser?&reqScriptName=${commandResponseParser.scriptName}&reqMetricTxnType=${parmsMap.reqMetricTxnType}">${commandResponseParser.scriptName}</a></td>     
+     <td><a href="copyCommandResponseParser?&reqParserName=${commandResponseParser.parserName}&reqMetricTxnType=${parmsMap.reqMetricTxnType}" title="Copy"><img src="images/copy.png"/></a></td> 
+     <td><a href="editCommandResponseParser?&reqParserName=${commandResponseParser.parserName}&reqMetricTxnType=${parmsMap.reqMetricTxnType}" title="Edit"><img src="images/edit.png"/></a></td>
+     <td><a href="deleteCommandResponseParser?&reqParserName=${commandResponseParser.parserName}&reqMetricTxnType=${parmsMap.reqMetricTxnType}" onclick="return confirm('Are you sure (server : ${commandResponseParser.parserName})?');" title="Delete"><img src="images/delete.png"/></a></td>
+     <td><a href="viewCommandResponseParser?&reqParserName=${commandResponseParser.parserName}&reqMetricTxnType=${parmsMap.reqMetricTxnType}">${commandResponseParser.parserName}</a></td>     
      <td>${commandResponseParser.metricTxnType}</td>
      <td>${commandResponseParser.metricNameSuffix}</td>
      <td>${commandResponseParser.script}</td>

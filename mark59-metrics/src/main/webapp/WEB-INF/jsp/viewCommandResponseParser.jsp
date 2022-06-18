@@ -52,7 +52,7 @@ table { border-collapse: collapse;}
 
    <table>
      
-    <tr><td width="9%">Script&nbsp;Name</td>			 <td>:</td><td id='scriptName' width="85%">${map.commandResponseParser.scriptName}</td></tr>
+    <tr><td width="9%">Parser&nbsp;Name</td>			 <td>:</td><td id='parserName' width="85%">${map.commandResponseParser.parserName}</td></tr>
     <tr><td width="9%">Metric&nbsp;Type</td> 			 <td>:</td><td width="90%">${map.commandResponseParser.metricTxnType}</td></tr>
     <tr><td width="9%">Metric&nbsp;Name&nbsp;Suffix</td><td>:</td><td width="90%">${map.commandResponseParser.metricNameSuffix}</td></tr>
     <tr><td></td><td></td><td></td><tr>	
@@ -84,7 +84,7 @@ table { border-collapse: collapse;}
     <tr>
       <td colspan="3">
         <a href="commandResponseParserList?reqMetricTxnType=${map.reqMetricTxnType}">Command Parsers List</a>&nbsp;
-        <a href="editCommandResponseParser?&reqScriptName=${map.commandResponseParser.scriptName}&reqMetricTxnType=${map.reqMetricTxnType}">Edit Command Parser</a>
+        <a href="editCommandResponseParser?&reqParserName=${map.commandResponseParser.parserName}&reqMetricTxnType=${map.reqMetricTxnType}">Edit Command Parser</a>
       </td>
     </tr>
    </table>

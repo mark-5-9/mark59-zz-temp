@@ -185,7 +185,7 @@ public class ServerProfileController {
 		for (CommandParserLink commandParserLink : commandparserlinks) {
 			Row dataRow = sheet.createRow(rowIndex);
 			dataRow.createCell(0).setCellValue(commandParserLink.getCommandName());
-			dataRow.createCell(1).setCellValue(commandParserLink.getScriptName());
+			dataRow.createCell(1).setCellValue(commandParserLink.getParserName());
 			rowIndex++;
 		}
 		autoSizeColumns(sheet, columnCount);
@@ -196,7 +196,7 @@ public class ServerProfileController {
 		List<CommandResponseParser> commandResponseParsers = commandResponseParsersDAO.findCommandResponseParsers();
 		for (CommandResponseParser commandResponseParser : commandResponseParsers) {
 			Row dataRow = sheet.createRow(rowIndex);
-			dataRow.createCell(0).setCellValue(commandResponseParser.getScriptName());
+			dataRow.createCell(0).setCellValue(commandResponseParser.getParserName());
 			dataRow.createCell(1).setCellValue(commandResponseParser.getMetricTxnType());
 			dataRow.createCell(2).setCellValue(commandResponseParser.getMetricNameSuffix());
 			dataRow.createCell(3).setCellValue(commandResponseParser.getScript());

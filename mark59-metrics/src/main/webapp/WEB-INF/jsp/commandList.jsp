@@ -82,8 +82,8 @@
      <td>${commandWithParsers.command.comment}</td>
      <td>
  		<table>    
-        <c:forEach var="scriptName" items="${commandWithParsers.scriptNames}">
-     		<tr><td><a href="viewCommandResponseParser?&reqScriptName=${scriptName}">${scriptName}</a></td></tr>
+        <c:forEach var="parserName" items="${commandWithParsers.parserNames}">
+     		<tr><td><a href="viewCommandResponseParser?&reqParserName=${parserName}">${parserName}</a></td></tr>
         </c:forEach>
         </table> 
       </td>  

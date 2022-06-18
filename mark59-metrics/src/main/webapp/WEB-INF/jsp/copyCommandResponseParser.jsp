@@ -46,8 +46,8 @@
     <table >
 
      <tr>
-      <td width="9%">Script&nbsp;Name</td><td>:</td>
-      <td width="90%"><form:input path="scriptName" size="64" maxlength="64"  height="20" /></td>
+      <td width="9%">Parser&nbsp;Name</td><td>:</td>
+      <td width="90%"><form:input path="parserName" size="64" maxlength="64"  height="20" /></td>
      </tr>      
      <tr>
       <td width="9%">Metric&nbsp;Type</td><td>:</td>

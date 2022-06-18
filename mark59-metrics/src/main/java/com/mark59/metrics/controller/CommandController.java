@@ -39,7 +39,7 @@ import com.mark59.metrics.data.commandResponseParsers.dao.CommandResponseParsers
 import com.mark59.metrics.data.commandparserlinks.dao.CommandParserLinksDAO;
 import com.mark59.metrics.data.commands.dao.CommandsDAO;
 import com.mark59.metrics.forms.CommandEditingForm;
-import com.mark59.metrics.forms.ScriptSelector;
+import com.mark59.metrics.forms.ParserSelector;
 import com.mark59.metrics.utils.AppConstantsServerMetricsWeb;
 import com.mark59.metrics.utils.ServerMetricsWebUtils;
 
@@ -72,7 +72,7 @@ public class CommandController {
 		commandEditingForm.setCommand(command);
 
 		commandEditingForm.setParamNamesTextboxFormat(""); 
-		commandEditingForm.setScriptSelectors(createListOfAllScriptSelectorsWithNothingSelected());
+		commandEditingForm.setParserSelectors(createListOfAllSParserSelectorsWithNothingSelected());
 		
 		Map<String, Object> map = createMapOfDropdowns();
 		map.put("reqExecutor", reqExecutor);		
@@ -108,8 +108,8 @@ public class CommandController {
 		if (existingCommand == null ){  //not trying to add something already there, so go ahead..
 			command.setParamNames(ServerMetricsWebUtils.textboxFormatToList(commandEditingForm.getParamNamesTextboxFormat()));
 			commandsDAO.insertCommand(command);
-			List<String> scriptNames = createListOfSelectedScripts(commandEditingForm.getScriptSelectors());   
-			commandParserLinksDAO.updateCommandParserLinksForCommandName(commandEditingForm.getCommand().getCommandName(), scriptNames);
+			List<String> parserNames = createListOfSelectedParsers(commandEditingForm.getParserSelectors());   
+			commandParserLinksDAO.updateCommandParserLinksForCommandName(commandEditingForm.getCommand().getCommandName(), parserNames);
 			map.put("commandEditingForm", commandEditingForm);			
 			return "redirect:/commandList?reqExecutor=" + reqExecutor;			
 		} else {
@@ -163,7 +163,7 @@ public class CommandController {
 		commandEditingForm.setParamNamesTextboxFormat(ServerMetricsWebUtils.listToTextboxFormat(command.getParamNames()));
 		
 		CommandWithParserLinks commandWithParserLinks = commandAddParserLinks(command);
-		commandEditingForm.setScriptSelectors(createListOfAllScriptSelectors(commandWithParserLinks));
+		commandEditingForm.setParserSelectors(createListOfAllParserSelectors(commandWithParserLinks));
 		model.addAttribute("commandEditingForm", commandEditingForm);
 		
 		Map<String, Object> map = createMapOfDropdowns();
@@ -183,7 +183,7 @@ public class CommandController {
 		commandEditingForm.setParamNamesTextboxFormat(ServerMetricsWebUtils.listToTextboxFormat(command.getParamNames()));
 
 		CommandWithParserLinks commandWithParserLinks = commandAddParserLinks(command);
-		commandEditingForm.setScriptSelectors(createListOfAllScriptSelectors(commandWithParserLinks));
+		commandEditingForm.setParserSelectors(createListOfAllParserSelectors(commandWithParserLinks));
 		model.addAttribute("commandEditingForm", commandEditingForm);
 		
 		Map<String, Object> map = createMapOfDropdowns();
@@ -201,8 +201,8 @@ public class CommandController {
 		command.setParamNames(ServerMetricsWebUtils.textboxFormatToList(commandEditingForm.getParamNamesTextboxFormat()));
 		
 		commandsDAO.updateCommand(command);
-		List<String> scriptNames = createListOfSelectedScripts(commandEditingForm.getScriptSelectors());   
-		commandParserLinksDAO.updateCommandParserLinksForCommandName(command.getCommandName(), scriptNames);
+		List<String> parserNames = createListOfSelectedParsers(commandEditingForm.getParserSelectors());   
+		commandParserLinksDAO.updateCommandParserLinksForCommandName(command.getCommandName(), parserNames);
 		
 		Map<String, Object> map = createMapOfDropdowns();			
 		map.put("reqExecutor", reqExecutor);
@@ -219,29 +219,29 @@ public class CommandController {
 	}
 
 	
-	private List<ScriptSelector> createListOfAllScriptSelectorsWithNothingSelected() {
-		return createListOfAllScriptSelectors(null);
+	private List<ParserSelector> createListOfAllSParserSelectorsWithNothingSelected() {
+		return createListOfAllParserSelectors(null);
 	}
 	
 	/**
 	 * @param commandWithParserLinks scripts names associated with a given command
 	 */
-	private List<ScriptSelector> createListOfAllScriptSelectors(CommandWithParserLinks commandWithParserLinks){
+	private List<ParserSelector> createListOfAllParserSelectors(CommandWithParserLinks commandWithParserLinks){
 		
-		List<ScriptSelector> listOfAllScriptSelectors = new ArrayList<>();
+		List<ParserSelector> listOfAllParserSelectors = new ArrayList<>();
 		List<CommandResponseParser> listOfAllCommandResponseParsers = commandResponseParsersDAO.findCommandResponseParsers();
 		
 		for (CommandResponseParser commandResponseParser : listOfAllCommandResponseParsers) {
-			ScriptSelector scriptSelector = new ScriptSelector();
-			scriptSelector.setScriptName(commandResponseParser.getScriptName());
-			scriptSelector.setScriptChecked(false);
+			ParserSelector parserSelector = new ParserSelector();
+			parserSelector.setParserName(commandResponseParser.getParserName());
+			parserSelector.setParserChecked(false);
 			if (commandWithParserLinks != null &&
-				commandWithParserLinks.getScriptNames().contains(commandResponseParser.getScriptName())) {
-				scriptSelector.setScriptChecked(true);
+				commandWithParserLinks.getParserNames().contains(commandResponseParser.getParserName())) {
+				parserSelector.setParserChecked(true);
 			}
-			listOfAllScriptSelectors.add(scriptSelector);
+			listOfAllParserSelectors.add(parserSelector);
 		}
-		return listOfAllScriptSelectors;
+		return listOfAllParserSelectors;
 	}
 
 	
@@ -251,25 +251,25 @@ public class CommandController {
 	 */
 	private CommandWithParserLinks commandAddParserLinks(Command command) {
 		List<CommandParserLink> commandParserLinkList = commandParserLinksDAO.findCommandParserLinks("COMMAND_NAME", command.getCommandName());
-		List<String> scriptNames = new ArrayList<>();
+		List<String> parserNames = new ArrayList<>();
 		for (CommandParserLink commandParserLink : commandParserLinkList) {
-			scriptNames.add(commandParserLink.getScriptName());
+			parserNames.add(commandParserLink.getParserName());
 		}
 		CommandWithParserLinks commandWithParserLinks = new CommandWithParserLinks();
 		commandWithParserLinks.setCommand(command);
-		commandWithParserLinks.setScriptNames(scriptNames);
+		commandWithParserLinks.setParserNames(parserNames);
 		return commandWithParserLinks;
 	}
 
 
-	private List<String> createListOfSelectedScripts(List<ScriptSelector> scriptSelectors) {
-		List<String> scriptNames = new ArrayList<>();
-		for (ScriptSelector scriptSelector : scriptSelectors) {
-			if (scriptSelector.isScriptChecked()) {
-				scriptNames.add(scriptSelector.getScriptName());
+	private List<String> createListOfSelectedParsers(List<ParserSelector> parserSelectors) {
+		List<String> parserNames = new ArrayList<>();
+		for (ParserSelector parserSelector : parserSelectors) {
+			if (parserSelector.isParserChecked()) {
+				parserNames.add(parserSelector.getParserName());
 			}
 		}
-		return scriptNames;
+		return parserNames;
 	}
 
 	

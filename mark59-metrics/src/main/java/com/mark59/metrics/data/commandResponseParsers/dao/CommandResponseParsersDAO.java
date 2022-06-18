@@ -27,7 +27,7 @@ import com.mark59.metrics.data.beans.CommandResponseParser;
  */
 public interface CommandResponseParsersDAO 
 {
-	CommandResponseParser findCommandResponseParser(String scriptName);
+	CommandResponseParser findCommandResponseParser(String parserName);
 	
 	List<CommandResponseParser> findCommandResponseParsers();
 	
@@ -37,6 +37,6 @@ public interface CommandResponseParsersDAO
 
 	void updateCommandResponseParser(CommandResponseParser commandResponseParser);
 
-	void deleteCommandResponseParser(String scriptName);
+	void deleteCommandResponseParser(String parserName);
 
 }

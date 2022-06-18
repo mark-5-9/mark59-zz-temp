@@ -27,7 +27,7 @@ import java.util.List;
 public class CommandWithParserLinks {
 
 	Command command;
-	List<String> scriptNames;
+	List<String> parserNames;
 	
 	
 	public CommandWithParserLinks() {
@@ -41,12 +41,12 @@ public class CommandWithParserLinks {
 		this.command = command;
 	}
 
-	public List<String> getScriptNames() {
-		return scriptNames;
+	public List<String> getParserNames() {
+		return parserNames;
 	}
 
-	public void setScriptNames(List<String> scriptNames) {
-		this.scriptNames = scriptNames;
+	public void setParserNames(List<String> parserNames) {
+		this.parserNames = parserNames;
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class CommandWithParserLinks {
         		", executor="+ command.getExecutor() + 
         		", command="+ command.getCommand() + 
         		", comment="+ command.getComment() + 
-        		", scripts= "+ Arrays.toString(scriptNames.toArray()) + 
+        		", parsers= "+ Arrays.toString(parserNames.toArray()) + 
         		"]";
 	}
 		

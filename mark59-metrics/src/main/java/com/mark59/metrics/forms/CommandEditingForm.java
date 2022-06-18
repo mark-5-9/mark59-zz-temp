@@ -29,7 +29,7 @@ import com.mark59.metrics.data.beans.Command;
 public class CommandEditingForm {
 
 	Command command;
-	List<ScriptSelector> scriptSelectors;
+	List<ParserSelector> parserSelectors;
 	String paramNamesTextboxFormat;
 
 	
@@ -44,12 +44,12 @@ public class CommandEditingForm {
 		this.command = command;
 	}
 
-	public List<ScriptSelector> getScriptSelectors() {
-		return scriptSelectors;
+	public List<ParserSelector> getParserSelectors() {
+		return parserSelectors;
 	}
 
-	public void setScriptSelectors(List<ScriptSelector> scriptSelectors) {
-		this.scriptSelectors = scriptSelectors;
+	public void setParserSelectors(List<ParserSelector> parserSelectors) {
+		this.parserSelectors = parserSelectors;
 	}
 
 	public String getParamNamesTextboxFormat() {
@@ -67,7 +67,7 @@ public class CommandEditingForm {
         		", command="+ command.getCommand() + 
         		", comment="+ command.getComment() + 
         		", command.parmNames="+ command.getParamNames() + 
-        		", scriptSelectors = "+ Arrays.toString(scriptSelectors.toArray()) + 
+        		", parserSelectors = "+ Arrays.toString(parserSelectors.toArray()) + 
         		", paramNamesTextboxFormat = " + paramNamesTextboxFormat + 
         		"]";
 	}

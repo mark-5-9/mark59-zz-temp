@@ -109,11 +109,11 @@ public class ServerMetricRestController {
 
 	
 	@GetMapping(path =  "/testCommandResponseParser")
-	public ResponseEntity<Object> testCommandResponseParser(@RequestParam(required=false) String scriptName){
+	public ResponseEntity<Object> testCommandResponseParser(@RequestParam(required=false) String parserName){
 		
-		// System.out.println("ServerMetricRestController.testCommandResponseParser script : " + scriptName );
+		// System.out.println("ServerMetricRestController.testCommandResponseParser script : " + parserName );
 		TestCommandParserResponsePojo testResponse = new TestCommandParserResponsePojo();
-		CommandResponseParser commandResponseParser = commandResponseParsersDAO.findCommandResponseParser(scriptName); 
+		CommandResponseParser commandResponseParser = commandResponseParsersDAO.findCommandResponseParser(parserName); 
 			
 		String candidateTxnId = Mark59Utils.constructCandidateTxnIdforMetric(
 				commandResponseParser.getMetricTxnType(), "{SERVER}", commandResponseParser.getMetricNameSuffix()) ;

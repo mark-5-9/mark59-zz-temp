@@ -53,7 +53,7 @@ public class TestCommandParserResponsePojo {
 
 	@Override
     public String toString() {
-        return   "[candidateTxnId"     + candidateTxnId
+        return   "[candidateTxnId" + candidateTxnId
         		+ ", parserResult="+ parserResult   
         		+ ", summary="     + summary   
         		+ "]";

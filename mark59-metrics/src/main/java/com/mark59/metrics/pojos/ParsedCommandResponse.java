@@ -5,7 +5,7 @@ import java.util.List;
 public class ParsedCommandResponse {
 	
 	private String commandName;
-	private String scriptName;
+	private String parserName;
 	private String commandResponse;
 	private List<ParsedMetric> parsedMetrics;
 
@@ -20,12 +20,12 @@ public class ParsedCommandResponse {
 		this.commandName = commandName;
 	}
 	
-	public String getScriptName() {
-		return scriptName;
+	public String getParserName() {
+		return parserName;
 	}
 	
-	public void setScriptName(String scriptName) {
-		this.scriptName = scriptName;
+	public void setParserName(String parserName) {
+		this.parserName = parserName;
 	}
 	
 	public String getCommandResponse() {
@@ -47,7 +47,7 @@ public class ParsedCommandResponse {
 	@Override
     public String toString() {
         return   "[commandName" + commandName
-         	   + ", scriptName="+ scriptName   
+         	   + ", parserName="+ parserName   
          	   + ", commandResponse="+ commandResponse
          	   + ", parsedMetrics="+ parsedMetrics  
         	   + "]";

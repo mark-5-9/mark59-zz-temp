@@ -18,11 +18,13 @@ package com.mark59.metrics.data.commandResponseParsers.dao;
 
 import java.util.Iterator;
 import java.util.List;
+
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import com.mark59.metrics.data.beans.CommandResponseParser;
 import com.mark59.metrics.utils.ServerMetricsWebUtils;
+
 
 /**
  * @author Philip Webb
@@ -40,7 +42,7 @@ public class CommandResponseParsersDAOexcelWorkbookImpl implements CommandRespon
 
 
 	@Override
-	public CommandResponseParser findCommandResponseParser(String scriptName){
+	public CommandResponseParser findCommandResponseParser(String parserName){
 
 		CommandResponseParser commandResponseParser = null; 
         Iterator<Row> iterator = commandresponseparsersSheet.iterator();
@@ -49,12 +51,12 @@ public class CommandResponseParsersDAOexcelWorkbookImpl implements CommandRespon
 		
         while (iterator.hasNext() && notFound ) {
             Row commandResponseParserRow = iterator.next();
-            // System.out.println("commandResponseParser scriptName=" + ServerMetricsWebUtils.cellValue(commandResponseParserRow.getCell(0)));
+            //System.out.println("commandResponseParser parserName=" + ServerMetricsWebUtils.cellValue(commandResponseParserRow.getCell(0)));
             
-			if (scriptName != null && scriptName.equalsIgnoreCase(ServerMetricsWebUtils.cellValue(commandResponseParserRow.getCell(0)))){	
+			if (parserName != null && parserName.equalsIgnoreCase(ServerMetricsWebUtils.cellValue(commandResponseParserRow.getCell(0)))){	
             	notFound=false;
             	commandResponseParser = new CommandResponseParser();
-            	commandResponseParser.setScriptName				(ServerMetricsWebUtils.cellValue(commandResponseParserRow.getCell(0)));
+            	commandResponseParser.setParserName				(ServerMetricsWebUtils.cellValue(commandResponseParserRow.getCell(0)));
             	commandResponseParser.setMetricTxnType			(ServerMetricsWebUtils.cellValue(commandResponseParserRow.getCell(1)));
             	commandResponseParser.setMetricNameSuffix    	(ServerMetricsWebUtils.cellValue(commandResponseParserRow.getCell(2)));
             	commandResponseParser.setScript  				(ServerMetricsWebUtils.cellValue(commandResponseParserRow.getCell(3)));
@@ -85,7 +87,7 @@ public class CommandResponseParsersDAOexcelWorkbookImpl implements CommandRespon
 	}
 
 	@Override
-	public void deleteCommandResponseParser(String scriptName) {
+	public void deleteCommandResponseParser(String parserName) {
 	}
 
 }

@@ -45,7 +45,7 @@
 
     <table >
      
-     <tr><td width="9%">Script&nbsp;Name</td><td>:</td><td width="90%">${map.commandResponseParser.scriptName}</td></tr>
+     <tr><td width="9%">Parser&nbsp;Name</td><td>:</td><td width="90%">${map.commandResponseParser.parserName}</td></tr>
      
      <tr>
       <td width="9%">Metric&nbsp;Type</td><td>:</td>
@@ -83,7 +83,7 @@
 
     </table>
      
-    <form:hidden path="scriptName" />
+    <form:hidden path="parserName" />
      
    </form:form>
   </div>

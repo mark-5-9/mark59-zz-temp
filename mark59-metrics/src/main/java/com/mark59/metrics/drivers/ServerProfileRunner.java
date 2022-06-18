@@ -94,13 +94,14 @@ public class ServerProfileRunner {
 			response.setReportedServerId(CommandDriver.obtainReportedServerId(serverProfile.getServer(),serverProfile.getAlternativeServerId()));
 			response.setFailMsg("");
 			
-			
 			List<ParsedCommandResponse> parsedCommandResponses = new ArrayList<>();
 			List<ServerCommandLink> serverCommandLinks = serverCommandLinksDAO.findServerCommandLinksForServerProfile(serverProfile.getServerProfileName());  
 			
 			for (ServerCommandLink serverCommandLink : serverCommandLinks) {  // loop thru and execute each command linked to the server profile
 			
 				Command command = commandsDAO.findCommand(serverCommandLink.getCommandName());
+				
+				System.out.println("########## processing command " + serverCommandLink.getCommandName() );
 			
 				CommandDriver driver =  CommandDriver.init(command.getExecutor(), serverProfile);	
 				CommandDriverResponse commandDriverResponse = driver.executeCommand(command); 
@@ -111,9 +112,9 @@ public class ServerProfileRunner {
 					
 					String failureMsg  = "server profile " + reqServerProfileName +"<br> command " + command.getCommandName() + " has failed."
 							+ "<br> Command Log : "	+ commandDriverResponse.getCommandLog() + ".";
-					LOG.warn(failureMsg);
+					LOG.warn(failureMsg.replace("<br>", " "));
 					logLines.add(failureMsg);					
-					logLines.add("<br><font color='red'><b>Execution has errored. </b></font> " );
+					logLines.add("<br><font color='red'><b>Execution has errored. </b></font><br><br>" );
 				
 				} else if  (CommandExecutorDatatypes.GROOVY_SCRIPT.getExecutorText().equalsIgnoreCase(command.getExecutor())){
 					// Groovy script command responses don't need to invoke a 'Parser'
@@ -122,7 +123,7 @@ public class ServerProfileRunner {
 					
 					ParsedCommandResponse parsedCommandResponse = new ParsedCommandResponse(); 
 					parsedCommandResponse.setCommandName(command.getCommandName());
-					parsedCommandResponse.setScriptName(command.getCommandName());
+					parsedCommandResponse.setParserName(command.getCommandName());
 					
 					for (ParsedMetric parsedMetric : commandDriverResponse.getParsedMetrics() ) {	
 						if ( parsedMetric.getSuccess())	{				
@@ -147,7 +148,7 @@ public class ServerProfileRunner {
 					
 					for (CommandParserLink commandParserLink : commandParserLinks) {
 					
-						CommandResponseParser commandResponseParser = commandResponseParsersDAO.findCommandResponseParser(commandParserLink.getScriptName()); 
+						CommandResponseParser commandResponseParser = commandResponseParsersDAO.findCommandResponseParser(commandParserLink.getParserName()); 
 						
 						ParsedCommandResponse parsedCommandResponse = parseCommandResponse( commandResponseParser,
 																							commandDriverResponse,
@@ -155,8 +156,8 @@ public class ServerProfileRunner {
 																							command.getCommandName(), 
 																						    response);
 						if (testMode) {
-							logLines.add(indent + "<b><a href=./viewCommandResponseParser?&reqScriptName=" 
-									+ commandParserLink.getScriptName() + ">" + commandParserLink.getScriptName()
+							logLines.add(indent + "<b><a href=./viewCommandResponseParser?&reqParserName=" 
+									+ commandParserLink.getParserName() + ">" + commandParserLink.getParserName()
 									+ "</a></b> parser ( " + parsedCommandResponse.getParsedMetrics().size() + " txn/s) "  );
 							
 							logLines.addAll(logParsedMetrics(parsedCommandResponse.getParsedMetrics()));
@@ -190,7 +191,7 @@ public class ServerProfileRunner {
 	private static ParsedCommandResponse parseCommandResponse(CommandResponseParser commandResponseParser, CommandDriverResponse commandDriverResponse, 
 			String serverProfileName, String commandName, WebServerMetricsResponsePojo response) {
 
-		LOG.debug("parseCommandResponse for " + commandName + ", commandResponseParser script " + commandResponseParser.getScriptName()  );
+		LOG.debug("parseCommandResponse for " + commandName + ", commandResponseParser script " + commandResponseParser.getParserName()  );
 		
 		ParsedCommandResponse parsedCommandResponse = new ParsedCommandResponse();
 		List<ParsedMetric> parsedMetrics = new ArrayList<>();
@@ -199,19 +200,25 @@ public class ServerProfileRunner {
 		parsedCommandResponse.setCommandResponse(commandResponseAsString);
 		
 		parsedCommandResponse.setCommandName(commandName);
-		parsedCommandResponse.setScriptName(commandResponseParser.getScriptName());
+		parsedCommandResponse.setParserName(commandResponseParser.getParserName());
 		parsedCommandResponse.setParsedMetrics(parsedMetrics);  // empty list
 		
+		ParsedMetric parsedMetric = new ParsedMetric(); 		
+		parsedMetric.setDataType(commandResponseParser.getMetricTxnType());	
+		parsedMetric.setLabel(Mark59Utils.constructCandidateTxnIdforMetric(
+				commandResponseParser.getMetricTxnType(),
+				response.getReportedServerId(),
+				commandResponseParser.getMetricNameSuffix()));				
+
 		if (commandDriverResponse.isCommandFailure()) {
 			parsingFailureCount++;
-			ParsedMetric parsedMetric = new ParsedMetric();  
-			parsedMetric.setSuccess(false);					
+			parsedMetric.setSuccess(false);	
 			parsedMetric.setResult(null);
 			parsedMetrics.add(parsedMetric);
 			parsedCommandResponse.setParsedMetrics(parsedMetrics);
 			response.setFailMsg(response.getFailMsg() + "Error : " + commandName + " command execution failure. "
 									+ "Command response." + "\n" + commandResponseAsString +  "\n"
-									+ " Parser " + commandResponseParser.getScriptName() + "bypassed\n"); 
+									+ " Parser " + commandResponseParser.getParserName() + "bypassed\n"); 
 		} else {
 
 			try {
@@ -225,30 +232,24 @@ public class ServerProfileRunner {
 						Double metricResult = Double.parseDouble(groovyScriptResult.toString());
 						
 						parsingSuccessCount++;
-						ParsedMetric parsedMetric = new ParsedMetric();  
+						//ParsedMetric parsedMetric = new ParsedMetric();  
 						parsedMetric.setSuccess(true);		
-						parsedMetric.setDataType(commandResponseParser.getMetricTxnType());	
-						parsedMetric.setLabel(Mark59Utils.constructCandidateTxnIdforMetric(
-															commandResponseParser.getMetricTxnType(),
-															response.getReportedServerId(),
-															commandResponseParser.getMetricNameSuffix()));						
 						parsedMetric.setResult(metricResult);	
 						parsedMetrics.add(parsedMetric);
 						parsedCommandResponse.setParsedMetrics(parsedMetrics);
 						
 					} catch (Exception pe) {
 						parsingFailureCount++;
-						ParsedMetric parsedMetric = new ParsedMetric();  
-						parsedMetric.setSuccess(false);					
-						parsedMetric.setResult(null);	
+						parsedMetric.setSuccess(false);	
+							parsedMetric.setResult(null);	
 						parsedMetrics.add(parsedMetric);
 						parsedCommandResponse.setParsedMetrics(parsedMetrics);
 						response.setFailMsg(response.getFailMsg() +
-								"\n\nError : " + commandResponseParser.getScriptName() + " Script parsing failure\n" + 
+								"\n\nError : " + commandResponseParser.getParserName() + " Script parsing failure\n" + 
 								"Script parsing failure (for an passed numeric result) : [" + groovyScriptResult + "]." +  
 								"\nServerprofile : " + serverProfileName +
 								"\nCommand  : " + commandName +
-								"\nParser : " + commandResponseParser.getScriptName() +
+								"\nParser : " + commandResponseParser.getParserName() +
 								"\nCommand Response : " + "\n" + commandResponseAsString +  "\n" +
 								"\nError Msg : " + pe.getMessage());
 						LOG.warn(response.getFailMsg());
@@ -257,17 +258,16 @@ public class ServerProfileRunner {
 				} else {
 
 					parsingFailureCount++;
-					ParsedMetric parsedMetric = new ParsedMetric();
 					parsedMetric.setSuccess(false);
 					parsedMetric.setResult(null);
 					parsedMetrics.add(parsedMetric);
 					parsedCommandResponse.setParsedMetrics(parsedMetrics);
 					response.setFailMsg(response.getFailMsg() +
-							"\n\nError : " + commandResponseParser.getScriptName() + " Script parsing failure\n" +
+							"\n\nError : " + commandResponseParser.getParserName() + " Script parsing failure\n" +
 							"Error : Script parsing failure.  Neither null or valid numeric returned : [" + groovyScriptResult + "]." +
 							"\nServerprofile : " + serverProfileName +
 							"\nCommand  : " + commandName +
-							"\nParser : " + commandResponseParser.getScriptName() +
+							"\nParser : " + commandResponseParser.getParserName() +
 							"\nCommand Response : " + "\n" + commandResponseAsString);
 					LOG.warn(response.getFailMsg());
 				}
@@ -276,17 +276,16 @@ public class ServerProfileRunner {
  				parsingFailureCount++;
  				StringWriter stackTrace = new StringWriter();
  				e.printStackTrace(new PrintWriter(stackTrace));
-				ParsedMetric parsedMetric = new ParsedMetric();  
 				parsedMetric.setSuccess(false);	
 				parsedMetric.setResult(null);
 				parsedMetrics.add(parsedMetric);
 				parsedCommandResponse.setParsedMetrics(parsedMetrics);
  				response.setFailMsg(response.getFailMsg() +
- 						"\n\nError: " + commandResponseParser.getScriptName() + " parser failed to processes command response.\n" + 
+ 						"\n\nError: " + commandResponseParser.getParserName() + " parser failed to processes command response.\n" + 
  						"Script parser failure.  Script has failed to processes a command response." +
  						"\nServerprofile : " + serverProfileName +
  						"\nCommand  : " + commandName +
- 						"\nParser : " + commandResponseParser.getScriptName() + 
+ 						"\nParser : " + commandResponseParser.getParserName() + 
  						"\nCommand Response : " + "\n" + commandResponseAsString + "\n" + e.getMessage() + "\n" + stackTrace.toString()); 						
  				LOG.warn(response.getFailMsg());
  			}

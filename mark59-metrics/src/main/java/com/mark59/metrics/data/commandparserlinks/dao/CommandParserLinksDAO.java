@@ -27,7 +27,7 @@ import com.mark59.metrics.data.beans.CommandParserLink;
  */
 public interface CommandParserLinksDAO 
 {
-	CommandParserLink findCommandParserLink(String commandName, String scriptName);
+	CommandParserLink findCommandParserLink(String commandName, String parserNames);
 	
 	List<CommandParserLink> findCommandParserLinks();
 	List<CommandParserLink> findCommandParserLinksForCommand(String commandName);
@@ -37,11 +37,11 @@ public interface CommandParserLinksDAO
 
 	// all fields are currently key - so any update methods are really add / delete
 	// public void updateCommandParserLink(CommandParserLink commandParserLink); 
-    void updateCommandParserLinksForCommandName(String commandName, List<String> scriptNames);
+    void updateCommandParserLinksForCommandName(String commandName, List<String> parserNames);
 
 	void deleteCommandParserLink(CommandParserLink commandParserLink);
 	void deleteCommandParserLinksForCommandName(String commandName);
-	void deleteCommandParserLinksForScriptName(String scriptName);
+	void deleteCommandParserLinksForParserName(String parserNames);
 
 
 

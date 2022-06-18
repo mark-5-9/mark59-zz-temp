@@ -10,7 +10,7 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
 <p>Release 5.x<br>
 
   <ul>  
-	<li>Change project, URL and database URL names.  This is planned as a once-off refactor :)
+	<li>Change project, URL and database URL names.  This is a planned to be once-off change :)
 	  <ul>
 	    <li>Web application Urls context path changes
 	       	<ul>
@@ -19,7 +19,7 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
 				<li>/metrics                   to /mark59-trends</li>     	
 	    	</ul> 
 		</li>
-	    <li>PG, MYSQL Database Renames
+	    <li>Database Renames (review conversion files in the mark59 zip download databaseScripts folder) 
 	    	<ul>
 				<li>datahunterdb               to mark59datahunterdb</li> 
 				<li>mark59servermetricswebdb   to mark59metricsdb</li>
@@ -38,9 +38,13 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
 	<li>new property mark59.log.directory renames mark59.screenshot.directory (flagged as redundant)</li>
 	<li>new property mark59.logname.format : formatter for log names output to the log directory</li>
 	<li>new property mark59.log.directory.suffix : log directory suffix (a local 'date' or 'datetime')</li>	
-	<li>mark59 logs can now be disabled rather thatn output on script exception</li>	
+	<li>mark59 logs types can be disabled on script exception</li>	
 	<li>filter for CDP markers on results splitter for Transactions Report</li>	
-	<li>selenium to 4.2.2 (chrome102+), H2 to 2.1.212, spring-boot to 2.7.0</li>		
+	<li>selenium to 4.2.2 (chrome102+), H2 to 2.1.212, spring-boot to 2.7.0</li>
+	<li>improved error handling for the mark59-metrics appllcation</li>
+	<li>mark59metricsdb (ex mark59servermetricswebdb) database column nanme SCRIPT_NAME changed to PARSER_NAME 
+		on tables COMMANDRESPONSEPARSERS and COMMANDPARSERLINKS<br>
+		(review conversion files in the mark59 zip download databaseScripts folder)</li>	
   </ul>
 
   

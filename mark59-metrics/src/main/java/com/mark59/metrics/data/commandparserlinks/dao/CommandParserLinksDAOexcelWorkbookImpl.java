@@ -54,7 +54,7 @@ public class CommandParserLinksDAOexcelWorkbookImpl implements CommandParserLink
 			if (commandName != null && commandName.equalsIgnoreCase(ServerMetricsWebUtils.cellValue(commandparserlinksRow.getCell(0)))) {				
 				CommandParserLink commandParserLink = new CommandParserLink();
 				commandParserLink.setCommandName(ServerMetricsWebUtils.cellValue(commandparserlinksRow.getCell(0)));
-				commandParserLink.setScriptName	(ServerMetricsWebUtils.cellValue(commandparserlinksRow.getCell(1)));
+				commandParserLink.setParserName	(ServerMetricsWebUtils.cellValue(commandparserlinksRow.getCell(1)));
 				commandParserLinkList.add(commandParserLink);
 			}
 
@@ -64,7 +64,7 @@ public class CommandParserLinksDAOexcelWorkbookImpl implements CommandParserLink
 
 	
 	@Override
-	public CommandParserLink findCommandParserLink(String commandName, String scriptName) {
+	public CommandParserLink findCommandParserLink(String commandName, String parserName) {
 		return null;
 	}
 
@@ -83,7 +83,7 @@ public class CommandParserLinksDAOexcelWorkbookImpl implements CommandParserLink
 	}
 
 	@Override
-	public void updateCommandParserLinksForCommandName(String commandName, List<String> scriptNames) {
+	public void updateCommandParserLinksForCommandName(String commandName, List<String> parserNames) {
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class CommandParserLinksDAOexcelWorkbookImpl implements CommandParserLink
 	}
 
 	@Override
-	public void deleteCommandParserLinksForScriptName(String scriptName) {
+	public void deleteCommandParserLinksForParserName(String parserName) {
 	}
 	
 }
