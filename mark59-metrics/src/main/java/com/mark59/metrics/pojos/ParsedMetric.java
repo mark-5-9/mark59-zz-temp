@@ -6,20 +6,26 @@ public class ParsedMetric {
 	Number result;
 	String dataType;
 	Boolean success;
+	String parseFailMsg;
 
 	public ParsedMetric() {
 	}
 
-	public ParsedMetric(String label, Number result, String dataType) {
-		this(label, result, dataType, true);
+	public ParsedMetric(String label, Number result, String dataType){
+		this(label, result, dataType, true, null);
 	}
 	
-	public ParsedMetric(String label, Number result, String dataType, Boolean success) {
+	public ParsedMetric(String label, Number result, String dataType, String parseFailMsg){
+		this(label, result, dataType, true, parseFailMsg);
+	}
+	
+	public ParsedMetric(String label, Number result, String dataType, Boolean success, String parseFailMsg){
 		super();
 		this.label = label;
 		this.result = result;
 		this.dataType = dataType;
 		this.success = success;
+		this.parseFailMsg = parseFailMsg;
 	}
 
 	public String getLabel() {
@@ -53,6 +59,14 @@ public class ParsedMetric {
 	public void setSuccess(Boolean success) {
 		this.success = success;
 	}
+	
+	public String getParseFailMsg() {
+		return parseFailMsg;
+	}
+
+	public void setParseFailMsg(String parseFailMsg) {
+		this.parseFailMsg = parseFailMsg;
+	}
 
 	@Override
     public String toString() {
@@ -60,6 +74,7 @@ public class ParsedMetric {
          	   + ", result="+ result   
          	   + ", dataType=" + dataType         	   
          	   + ", success="+ success
+         	   + ", parseFailMsg="+ parseFailMsg
         	   + "]";
 	}
 

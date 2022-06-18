@@ -5,8 +5,8 @@ import java.util.List;
 public class ParsedCommandResponse {
 	
 	private String commandName;
-	private String parserName;
 	private String commandResponse;
+	private List<String> parserNames;
 	private List<ParsedMetric> parsedMetrics;
 
 	public ParsedCommandResponse() {
@@ -20,20 +20,20 @@ public class ParsedCommandResponse {
 		this.commandName = commandName;
 	}
 	
-	public String getParserName() {
-		return parserName;
-	}
-	
-	public void setParserName(String parserName) {
-		this.parserName = parserName;
-	}
-	
 	public String getCommandResponse() {
 		return commandResponse;
 	}
 
 	public void setCommandResponse(String commandResponse) {
 		this.commandResponse = commandResponse;
+	}
+
+	public List<String> getParserNames() {
+		return parserNames;
+	}
+
+	public void setParserNames(List<String> parserNames) {
+		this.parserNames = parserNames;
 	}
 
 	public List<ParsedMetric> getParsedMetrics() {
@@ -47,8 +47,8 @@ public class ParsedCommandResponse {
 	@Override
     public String toString() {
         return   "[commandName" + commandName
-         	   + ", parserName="+ parserName   
          	   + ", commandResponse="+ commandResponse
+         	   + ", parserNames="+ parserNames   
          	   + ", parsedMetrics="+ parsedMetrics  
         	   + "]";
 	}

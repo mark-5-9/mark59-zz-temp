@@ -40,10 +40,10 @@ public class UtilsTest   {
 		commandLogForDebugging += "<br>" + serverProfile.getComment();
 
 		Number aNumber = 123;
-		parsedMetrics.add(new ParsedMetric("a_memory_txn", aNumber, "MEMORY"));
-		parsedMetrics.add(new ParsedMetric("a_cpu_util_txn", 33.3, "CPU_UTIL"));
-		parsedMetrics.add(new ParsedMetric("some_datapoint", 44.6, "DATAPOINT"));
-		parsedMetrics.add(new ParsedMetric("set_a_failure", 66.6, "DATAPOINT", false));
+		parsedMetrics.add(new ParsedMetric("a_memory_txn", aNumber, "MEMORY", null));
+		parsedMetrics.add(new ParsedMetric("a_cpu_util_txn", 33.3, "CPU_UTIL", null));
+		parsedMetrics.add(new ParsedMetric("some_datapoint", 44.6, "DATAPOINT", null));
+		parsedMetrics.add(new ParsedMetric("set_a_failure", 66.6, "DATAPOINT", false, null));
 
 		scriptResponse.setCommandLog(commandLogForDebugging);
 		scriptResponse.setParsedMetrics(parsedMetrics);

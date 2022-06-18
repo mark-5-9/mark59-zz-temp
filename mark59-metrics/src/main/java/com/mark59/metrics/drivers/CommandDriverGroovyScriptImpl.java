@@ -58,7 +58,7 @@ public class CommandDriverGroovyScriptImpl implements CommandDriver {
 		LOG.debug("executeCommand (script) : " + command);
 		CommandDriverResponse commandDriverResponse = new CommandDriverResponse();
 		commandDriverResponse.setRawCommandResponseLines(new ArrayList<>());
-		String commandLog = " :<br><font face='Courier'> executing groovy script : " + command.getCommandName() + "</font><br>"; 
+		String commandLog = "<br><font face='Courier'> executed groovy script " + command.getCommandName() + "</font><br>"; 
 		
 		ScriptResponse groovyScriptResult = new ScriptResponse();
 		
@@ -78,10 +78,10 @@ public class CommandDriverGroovyScriptImpl implements CommandDriver {
 			commandDriverResponse.setCommandFailure(true);			
 			StringWriter stackTrace = new StringWriter();
 			e.printStackTrace(new PrintWriter(stackTrace));
-			commandLog+= "<br>A faiure has occured attempting to execute groovy script command : " + e.getMessage() + "<br>" + stackTrace.toString() 
+			commandLog+= "<br>Failure attempting to execute groovy script command : " + e.getMessage() + "<br>" + stackTrace.toString() 
 						+ "<br><br>" + groovyScriptResult.getCommandLog();
 
-			LOG.warn("Command failure on script : " + command.getCommandName() + ":\n" + e.getMessage() + stackTrace.toString());
+			LOG.warn("Command failure on script : " + command.getCommandName() + ":\n" + e.getMessage());
 		}
 		commandDriverResponse.setCommandLog(commandLog);
 		
