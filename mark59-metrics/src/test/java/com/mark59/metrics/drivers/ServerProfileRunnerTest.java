@@ -22,10 +22,10 @@ public class ServerProfileRunnerTest extends TestCase {
 		
 		ScriptResponse scriptResponse = ServerProfileRunnerTest.runScript();
 	
-		assertEquals("[[label=a_memory_txn, result=123, dataType=MEMORY, success=true], "
-				+ "[label=a_cpu_util_txn, result=33.3, dataType=CPU_UTIL, success=true], "
-				+ "[label=some_datapoint, result=44.6, dataType=DATAPOINT, success=true], "
-				+ "[label=set_a_failure, result=66.6, dataType=DATAPOINT, success=false]]"
+		assertEquals("[[label=a_memory_txn, result=123, dataType=MEMORY, success=true, parseFailMsg=null], "
+				+ "[label=a_cpu_util_txn, result=33.3, dataType=CPU_UTIL, success=true, parseFailMsg=null], "
+				+ "[label=some_datapoint, result=44.6, dataType=DATAPOINT, success=true, parseFailMsg=null], "
+				+ "[label=set_a_failure, result=66.6, dataType=DATAPOINT, success=false, parseFailMsg=null]]"
 				+ "", scriptResponse.getParsedMetrics().toString() );
 	}	
 	
