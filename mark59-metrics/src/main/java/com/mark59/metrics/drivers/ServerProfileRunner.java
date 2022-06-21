@@ -100,14 +100,11 @@ public class ServerProfileRunner {
 			List<ServerCommandLink> serverCommandLinks = serverCommandLinksDAO.findServerCommandLinksForServerProfile(
 					serverProfile.getServerProfileName());  
 			
-			 // loop thru and execute each command linked to the server profile
+			// execute each command linked to the server profile
 			
 			for (ServerCommandLink serverCommandLink : serverCommandLinks) { 
 				
 				Command command = commandsDAO.findCommand(serverCommandLink.getCommandName());
-				
-				System.out.println("########## processing command " + serverCommandLink.getCommandName() );
-			
 				CommandDriver driver =  CommandDriver.init(command.getExecutor(), serverProfile);	
 				CommandDriverResponse commandDriverResponse = driver.executeCommand(command); 
 	
@@ -177,7 +174,6 @@ public class ServerProfileRunner {
 					
 						parsedMetric = RunParser(commandResponseParser, commandResponseAsString, parsedMetric );
 
-						
 						if (testMode) {
 							logLines.add(indent + "<b><a href=./viewCommandResponseParser?&reqParserName=" 
 									+ commandParserLink.getParserName() + ">" + commandParserLink.getParserName()+ "</a></b> parser"  );
@@ -188,9 +184,7 @@ public class ServerProfileRunner {
 							LOG.warn("Parser Fails for profile: " + reqServerProfileName + " command: " + command.getCommandName() 
 									+ "\ndetails: " +  StringUtils.abbreviate(parsedMetric.getParseFailMsg(), 1000)); 
 						}
-						
 						parsedMetrics.add(parsedMetric);
-						
 					}
 					logLines.add("<br>");
 					parsedCommandResponse.setParsedMetrics(parsedMetrics);
@@ -267,117 +261,6 @@ public class ServerProfileRunner {
 					"\nCommand Response was : " + "\n" 	+ commandResponseAsString + "\n" + e.getMessage() + "\n" + stackTrace.toString());						
 		}
 		return parsedMetric;
-	}
-
-
-
-
-	private static ParsedCommandResponse parseCommandResponse(CommandResponseParser commandResponseParser, 
-			CommandDriverResponse commandDriverResponse, 
-			String serverProfileName, String commandName, WebServerMetricsResponsePojo response) {
-
-		LOG.debug("parseCommandResponse for " + commandName + ", commandResponseParser script " + commandResponseParser.getParserName()  );
-		
-		ParsedCommandResponse parsedCommandResponse = new ParsedCommandResponse();
-		List<ParsedMetric> parsedMetrics = new ArrayList<>();
-		
-		String commandResponseAsString = ServerMetricsWebUtils.createMultiLineLiteral(commandDriverResponse.getRawCommandResponseLines());
-		parsedCommandResponse.setCommandResponse(commandResponseAsString);
-		
-		parsedCommandResponse.setCommandName(commandName);
-		// parsedCommandResponse.setParserName(commandResponseParser.getParserName());
-		parsedCommandResponse.setParsedMetrics(parsedMetrics);  // empty list
-		
-		ParsedMetric parsedMetric = new ParsedMetric(); 		
-		parsedMetric.setDataType(commandResponseParser.getMetricTxnType());	
-		parsedMetric.setLabel(Mark59Utils.constructCandidateTxnIdforMetric(
-				commandResponseParser.getMetricTxnType(),
-				response.getReportedServerId(),
-				commandResponseParser.getMetricNameSuffix()));				
-
-		if (commandDriverResponse.isCommandFailure()) {
-			parsingFailureCount++;
-			parsedMetric.setSuccess(false);	
-			parsedMetric.setResult(null);
-			parsedMetrics.add(parsedMetric);
-			parsedCommandResponse.setParsedMetrics(parsedMetrics);
-			response.setFailMsg(response.getFailMsg() + "Error : " + commandName + " command execution failure. "
-									+ "Command response." + "\n" + commandResponseAsString +  "\n"
-									+ " Parser " + commandResponseParser.getParserName() + "bypassed\n"); 
-		} else {
-
-			try {
-				
-				Object groovyScriptResult = ServerMetricsWebUtils.runGroovyScript(commandResponseParser.getScript(), commandResponseAsString);
-	
-				if (isaParsableDouble(groovyScriptResult.toString())) {
-				
-					try {
-						
-						Double metricResult = Double.parseDouble(groovyScriptResult.toString());
-						
-						parsingSuccessCount++;
-						//ParsedMetric parsedMetric = new ParsedMetric();  
-						parsedMetric.setSuccess(true);		
-						parsedMetric.setResult(metricResult);	
-						parsedMetrics.add(parsedMetric);
-						parsedCommandResponse.setParsedMetrics(parsedMetrics);
-						
-					} catch (Exception pe) {
-						parsingFailureCount++;
-						parsedMetric.setSuccess(false);	
-							parsedMetric.setResult(null);	
-						parsedMetrics.add(parsedMetric);
-						parsedCommandResponse.setParsedMetrics(parsedMetrics);
-						response.setFailMsg(response.getFailMsg() +
-								"\n\nError : " + commandResponseParser.getParserName() + " Script parsing failure\n" + 
-								"Script parsing failure (for an passed numeric result) : [" + groovyScriptResult + "]." +  
-								"\nServerprofile : " + serverProfileName +
-								"\nCommand  : " + commandName +
-								"\nParser : " + commandResponseParser.getParserName() +
-								"\nCommand Response : " + "\n" + commandResponseAsString +  "\n" +
-								"\nError Msg : " + pe.getMessage());
-						LOG.warn(response.getFailMsg());
-					}
-				
-				} else {
-
-					parsingFailureCount++;
-					parsedMetric.setSuccess(false);
-					parsedMetric.setResult(null);
-					parsedMetrics.add(parsedMetric);
-					parsedCommandResponse.setParsedMetrics(parsedMetrics);
-					response.setFailMsg(response.getFailMsg() +
-							"\n\nError : " + commandResponseParser.getParserName() + " Script parsing failure\n" +
-							"Error : Script parsing failure.  Neither null or valid numeric returned : [" + groovyScriptResult + "]." +
-							"\nServerprofile : " + serverProfileName +
-							"\nCommand  : " + commandName +
-							"\nParser : " + commandResponseParser.getParserName() +
-							"\nCommand Response : " + "\n" + commandResponseAsString);
-					LOG.warn(response.getFailMsg());
-				}
-				
- 			} catch (Exception e) {
- 				parsingFailureCount++;
- 				StringWriter stackTrace = new StringWriter();
- 				e.printStackTrace(new PrintWriter(stackTrace));
-				parsedMetric.setSuccess(false);	
-				parsedMetric.setResult(null);
-				parsedMetrics.add(parsedMetric);
-				parsedCommandResponse.setParsedMetrics(parsedMetrics);
- 				response.setFailMsg(response.getFailMsg() +
- 						"\n\nError: " + commandResponseParser.getParserName() + " parser failed to processes command response.\n" + 
- 						"Script parser failure.  Script has failed to processes a command response." +
- 						"\nServerprofile : " + serverProfileName +
- 						"\nCommand  : " + commandName +
- 						"\nParser : " + commandResponseParser.getParserName() + 
- 						"\nCommand Response : " + "\n" + commandResponseAsString + "\n" + e.getMessage() + "\n" + stackTrace.toString()); 						
- 				LOG.warn(response.getFailMsg());
- 			}
-
-		}
-		LOG.debug("ServerProfileRunner returns parsedCommandResponse : " + parsedCommandResponse);
-		return parsedCommandResponse;
 	}
 			
 
