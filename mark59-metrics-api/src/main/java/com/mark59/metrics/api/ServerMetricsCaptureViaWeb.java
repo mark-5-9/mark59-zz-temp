@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
@@ -44,6 +45,7 @@ import com.mark59.core.interfaces.JmeterFunctions;
 import com.mark59.core.utils.IpUtilities;
 import com.mark59.core.utils.Log4jConfigurationHelper;
 import com.mark59.core.utils.Mark59Constants.JMeterFileDatatypes;
+import com.mark59.core.utils.Mark59Utils;
 import com.mark59.metrics.api.utils.AppConstantsServerMetrics;
 import com.mark59.metrics.controller.ServerMetricRestController;
 import com.mark59.metrics.pojos.ParsedCommandResponse;
@@ -51,7 +53,6 @@ import com.mark59.metrics.pojos.ParsedMetric;
 import com.mark59.metrics.pojos.WebServerMetricsResponsePojo;
 import com.mark59.metrics.utils.AppConstantsServerMetricsWeb;
 import com.mark59.metrics.utils.ServerMetricsWebUtils;
-import com.mark59.core.utils.Mark59Utils;
 
 /**
  * @author Philip Webb
@@ -70,7 +71,10 @@ public class ServerMetricsCaptureViaWeb  extends AbstractJavaSamplerClient {
 	public static final String DEFAULT_MARK59_METRICS_URL 	= "http://localhost:8085/mark59-metrics";
 
 	public static final String SERVER_PROFILE_NAME 	= "SERVER_PROFILE_NAME";
-
+	public static final String PRINT_ERROR_MESSAGES	= "PRINT_ERROR_MESSAGES";
+	
+	public static final String FULL	= "full";
+	public static final String NO	= "no";
 
 	protected String tgName = null;
 	protected AbstractThreadGroup tg = null;
@@ -83,15 +87,20 @@ public class ServerMetricsCaptureViaWeb  extends AbstractJavaSamplerClient {
 	
 		staticMap.put(MARK59_METRICS_URL, DEFAULT_MARK59_METRICS_URL );
 		staticMap.put(SERVER_PROFILE_NAME, "" );
-
-		staticMap.put("______________________ miscellaneous: ____________________", "");				
+		
+		staticMap.put(".", "");	
+		staticMap.put("_________________________ logging settings: _______________", "Expected values: 'short' (default), 'full', 'no'");
+		staticMap.put(PRINT_ERROR_MESSAGES, "short" );
+		
+		staticMap.put("_________________________ miscellaneous: __________________", "");				
 		staticMap.put(IpUtilities.RESTRICT_TO_ONLY_RUN_ON_IPS_LIST, "");	
 		
-		staticMap.put("______________________ notes: _________________________________", "");	
+		staticMap.put("_________________________ notes: __________________________", "");	
 		staticMap.put("__","- please replace the default url with your actual.");	
-		staticMap.put("_", "- server profile of 'localhost' only reports metrics of the mark59-metrics machine!");	
-		staticMap.put("-", "   use actual machine name or (better) via Excel 'localhost..' entry instead (see Mark59 User Guide)");	
-		staticMap.put(".", "");		
+		staticMap.put("_", "- server profile of 'localhost' reports metrics for the machine hosting the 'mark59-metrics' application!");	
+		staticMap.put("-",
+				"   to capture injector metrics use the machine name or an Excel 'localhost..' entry instead (see Mark59 User Guide)");
+		staticMap.put("___________________", "");		
 		staticMap.put("build information: ", "mark59-metrics-api version " + AppConstantsServerMetrics.MARK59_SERVER_METRICS_VERSION);			
 		
 		defaultArgumentsMap = Collections.unmodifiableMap(staticMap);
@@ -166,25 +175,51 @@ public class ServerMetricsCaptureViaWeb  extends AbstractJavaSamplerClient {
 			if ( response.getFailMsg().startsWith(AppConstantsServerMetricsWeb.SERVER_PROFILE_NOT_FOUND)){
 				throw new RuntimeException("Error : " + response.getFailMsg());
 			}
-
+			
 			for (ParsedCommandResponse parsedCommandResponse : response.getParsedCommandResponses()) {
-				
-				for (ParsedMetric parsedMetric  : parsedCommandResponse.getParsedMetrics()) {
-					
-					if (parsedMetric.getSuccess()) {
-						jm.userDatatypeEntry(parsedMetric.getLabel(), parsedMetric.getResult().longValue(), JMeterFileDatatypes.valueOf(parsedMetric.getDataType()));
-					} else {
-						String metricFailsMsg = "Warning : Failed metric response for txn : " + parsedMetric.getLabel() + " (at: " + System.currentTimeMillis() + ")"  ; 
-						System.out.println(metricFailsMsg);
-						LOG.warn(metricFailsMsg +  "\n     command response : " + parsedCommandResponse.getCommandResponse() + "\n   api response msg  : " +  response.getFailMsg());
+						
+				if (parsedCommandResponse.isCommandFailure()){  
+					String cmdFailureMsg = parsedCommandResponse.getCommandResponse();
+
+					if (FULL.equalsIgnoreCase(context.getParameter(PRINT_ERROR_MESSAGES))) {
+						System.out.println(cmdFailureMsg);
+						LOG.warn(cmdFailureMsg );
+					} else if (!NO.equalsIgnoreCase(context.getParameter(PRINT_ERROR_MESSAGES))) { // defaults to 'short'
+						System.out.println(cmdFailureMsg );
+						LOG.warn(StringUtils.abbreviate(cmdFailureMsg, 2000));
 					}
-				}
+
+				} else {	
+					
+					for (ParsedMetric parsedMetric  : parsedCommandResponse.getParsedMetrics()) {
+						
+						if (parsedMetric.getSuccess()) {
+							jm.userDatatypeEntry(parsedMetric.getLabel(), parsedMetric.getResult().longValue(),
+									JMeterFileDatatypes.valueOf(parsedMetric.getDataType()));
+							
+						} else { // failed metric 
+
+							String metricFailsMsg = "Parser Fails for profile: " + reqServerProfileName
+									+ " command: " + parsedCommandResponse.getCommandName()
+									+ "\ndetails: "+ parsedMetric.getParseFailMsg();
+							
+							if (FULL.equalsIgnoreCase(context.getParameter(PRINT_ERROR_MESSAGES))) {
+								System.out.println(metricFailsMsg);
+								LOG.warn(metricFailsMsg);
+							} else if (!NO.equalsIgnoreCase(context.getParameter(PRINT_ERROR_MESSAGES))) { // defaults to 'short'
+								System.out.println(StringUtils.abbreviate(metricFailsMsg, 1200));
+								LOG.warn(StringUtils.abbreviate(metricFailsMsg, 1200));
+							}
+						}	
+					}
+				}				
 			}
 			
 		} catch (Exception | AssertionError e) {
 			StringWriter stackTrace = new StringWriter();
 			e.printStackTrace(new PrintWriter(stackTrace));
-			String errorMsg = "Error: Unexpected Failure calling the Server Metrics Service at " + webServiceUrl + " message : \n" + e.getMessage() + "\n" + stackTrace.toString();
+			String errorMsg = "Error: Unexpected Failure calling the Server Metrics Service at " + webServiceUrl
+					+ " message : \n" + e.getMessage() + "\n" + stackTrace.toString();
 			LOG.error(errorMsg);
 			System.out.println(errorMsg);
 			if (response != null) {
@@ -204,8 +239,13 @@ public class ServerMetricsCaptureViaWeb  extends AbstractJavaSamplerClient {
 	
 	
 	
+	/**
+	 * Quick and dirty on the spot test.
+	 * Expects server metrics web to be running on url and have profile(s) localhost_WINDOWS / localhost_LINUX 
+	 * (or properly set SCRIPT profile) 
+	 * @param args
+	 */
 	public static void main(String[] args) {
-		// expects server metrics web to be running on url and have profile(s) localhost_WINDOWS / localhost_LINUX ( or properly set SCRIPT profile)
 		Log4jConfigurationHelper.init(Level.INFO);
 		ServerMetricsCaptureViaWeb ostest = new ServerMetricsCaptureViaWeb();
 		additionalTestParametersMap.put(MARK59_METRICS_URL, "http://localhost:8085/mark59-metrics");	

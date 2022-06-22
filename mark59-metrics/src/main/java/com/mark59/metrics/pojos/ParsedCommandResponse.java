@@ -8,6 +8,7 @@ public class ParsedCommandResponse {
 	private String commandResponse;
 	private List<String> parserNames;
 	private List<ParsedMetric> parsedMetrics;
+	private boolean commandFailure;
 
 	public ParsedCommandResponse() {
 	}
@@ -44,12 +45,22 @@ public class ParsedCommandResponse {
 		this.parsedMetrics = parsedMetrics;
 	}
 
+	public boolean isCommandFailure() {
+		return commandFailure;
+	}
+
+	public void setCommandFailure(boolean commandFailure) {
+		this.commandFailure = commandFailure;
+	}
+
+	
 	@Override
     public String toString() {
         return   "[commandName" + commandName
          	   + ", commandResponse="+ commandResponse
          	   + ", parserNames="+ parserNames   
          	   + ", parsedMetrics="+ parsedMetrics  
+         	   + ", commandFailure="+ commandFailure            	   
         	   + "]";
 	}
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.4.3">
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.5">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="DataHunter Selenium Test Plan" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -338,6 +338,31 @@ return 0;</stringProp>
                 <stringProp name="Argument.value">default</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
+              <elementProp name="On_Exception_Write_Buffered_Logs" elementType="Argument">
+                <stringProp name="Argument.name">On_Exception_Write_Buffered_Logs</stringProp>
+                <stringProp name="Argument.value">true</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="On_Exception_Write_Screenshot" elementType="Argument">
+                <stringProp name="Argument.name">On_Exception_Write_Screenshot</stringProp>
+                <stringProp name="Argument.value">true</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="On_Exception_Write_Page_Source" elementType="Argument">
+                <stringProp name="Argument.name">On_Exception_Write_Page_Source</stringProp>
+                <stringProp name="Argument.value">true</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="On_Exception_Write_Perf_Log" elementType="Argument">
+                <stringProp name="Argument.name">On_Exception_Write_Perf_Log</stringProp>
+                <stringProp name="Argument.value">true</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="On_Exception_Write_Stack_Trace" elementType="Argument">
+                <stringProp name="Argument.name">On_Exception_Write_Stack_Trace</stringProp>
+                <stringProp name="Argument.value">true</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
               <elementProp name="______________________ miscellaneous: __________________________" elementType="Argument">
                 <stringProp name="Argument.name">______________________ miscellaneous: __________________________</stringProp>
                 <stringProp name="Argument.value"></stringProp>
@@ -522,6 +547,31 @@ return 0;</stringProp>
                 <stringProp name="Argument.value">default</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
+              <elementProp name="On_Exception_Write_Buffered_Logs" elementType="Argument">
+                <stringProp name="Argument.name">On_Exception_Write_Buffered_Logs</stringProp>
+                <stringProp name="Argument.value">true</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="On_Exception_Write_Screenshot" elementType="Argument">
+                <stringProp name="Argument.name">On_Exception_Write_Screenshot</stringProp>
+                <stringProp name="Argument.value">true</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="On_Exception_Write_Page_Source" elementType="Argument">
+                <stringProp name="Argument.name">On_Exception_Write_Page_Source</stringProp>
+                <stringProp name="Argument.value">true</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="On_Exception_Write_Perf_Log" elementType="Argument">
+                <stringProp name="Argument.name">On_Exception_Write_Perf_Log</stringProp>
+                <stringProp name="Argument.value">true</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="On_Exception_Write_Stack_Trace" elementType="Argument">
+                <stringProp name="Argument.name">On_Exception_Write_Stack_Trace</stringProp>
+                <stringProp name="Argument.value">true</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
               <elementProp name="______________________ miscellaneous: __________________________" elementType="Argument">
                 <stringProp name="Argument.name">______________________ miscellaneous: __________________________</stringProp>
                 <stringProp name="Argument.value"></stringProp>
@@ -589,6 +639,21 @@ return 0;</stringProp>
                 <stringProp name="Argument.value">${__property(LOCALHOST_OS)}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
+              <elementProp name="." elementType="Argument">
+                <stringProp name="Argument.name">.</stringProp>
+                <stringProp name="Argument.value"></stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="______________________ logging settings: ______________________" elementType="Argument">
+                <stringProp name="Argument.name">______________________ logging settings: ______________________</stringProp>
+                <stringProp name="Argument.value">Expected values: &apos;short&apos; (default), &apos;full&apos;, &apos;no&apos;</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="PRINT_ERROR_MESSAGES" elementType="Argument">
+                <stringProp name="Argument.name">PRINT_ERROR_MESSAGES</stringProp>
+                <stringProp name="Argument.value">short</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
               <elementProp name="______________________ miscellaneous: ____________________" elementType="Argument">
                 <stringProp name="Argument.name">______________________ miscellaneous: ____________________</stringProp>
                 <stringProp name="Argument.value"></stringProp>
@@ -619,8 +684,8 @@ return 0;</stringProp>
                 <stringProp name="Argument.value">   use actual machine name or (better) &apos;..viaExcel&apos; &apos;localhost..&apos; entry instead (see Mark59 User Guide)</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
-              <elementProp name="." elementType="Argument">
-                <stringProp name="Argument.name">.</stringProp>
+              <elementProp name="___________________" elementType="Argument">
+                <stringProp name="Argument.name">___________________</stringProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>

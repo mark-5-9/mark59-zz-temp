@@ -25,7 +25,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mark59.core.utils.Mark59Utils;
-import com.mark59.metrics.controller.ServerMetricRestController;
 import com.mark59.metrics.data.beans.Command;
 import com.mark59.metrics.data.beans.CommandParserLink;
 import com.mark59.metrics.data.beans.CommandResponseParser;
@@ -52,11 +51,12 @@ import com.mark59.metrics.utils.ServerMetricsWebUtils;
  */
 public class ServerProfileRunner {
 
-	private static final Logger LOG = LogManager.getLogger(ServerMetricRestController.class);	
+	private static final Logger LOG = LogManager.getLogger(ServerProfileRunner.class);	
 
 	private static final String indent = "<br>&nbsp;&nbsp;&nbsp;&nbsp;";
 	private static int parsingSuccessCount;
 	private static int parsingFailureCount;
+	private static int commandFailureCount;
 		
 	/**
 	 * Controls the driving and parsing of commands for a server profile and formats the responses.   
@@ -77,6 +77,7 @@ public class ServerProfileRunner {
 		List<String> logLines = new ArrayList<>();
 		parsingSuccessCount = 0;
 		parsingFailureCount = 0;		
+		commandFailureCount = 0;		
 		
 		try {
 	
@@ -109,26 +110,33 @@ public class ServerProfileRunner {
 				CommandDriverResponse commandDriverResponse = driver.executeCommand(command); 
 	
 				logLines.add("<b><a href=./editCommand?&reqCommandName=" + command.getCommandName() + ">"
-						+ command.getCommandName() + "</a></b> command invoked:");		
+						+ command.getCommandName() + "</a></b> command invoked:");
+				
+				ParsedCommandResponse parsedCommandResponse = new ParsedCommandResponse(); 
+				parsedCommandResponse.setCommandName(command.getCommandName());
+				parsedCommandResponse.setParserNames(new ArrayList<String>());  				
+				parsedCommandResponse.setCommandFailure(commandDriverResponse.isCommandFailure());  				
 
-				if (commandDriverResponse.isCommandFailure()){      // on command failure on any driver type just log the error 
+				if (commandDriverResponse.isCommandFailure()){      
 					
-					String failureMsg = "server profile " + reqServerProfileName + "<br> command "
+					commandFailureCount++;
+					
+					String failureMsg = "Server Profile " + reqServerProfileName + "<br> command "
 							+ command.getCommandName() + " has failed." + "<br> Command Log : "
 							+ commandDriverResponse.getCommandLog() + ".";
+					
 					logLines.add(failureMsg);					
 					logLines.add("<br><font color='red'><b>Execution has errored. </b></font><br><br>" );
+
+					parsedCommandResponse.setParsedMetrics(new ArrayList<ParsedMetric>() );
+					parsedCommandResponse.setCommandResponse(failureMsg.replace("<br>", "\n"));
+					parsedCommandResponses.add(parsedCommandResponse);
+					
 					LOG.warn(StringUtils.abbreviate(failureMsg.replace("<br>", "\n"), 2000));
 				
 				} else if  (CommandExecutorDatatypes.GROOVY_SCRIPT.getExecutorText().equalsIgnoreCase(command.getExecutor())){
 					// Groovy script command responses don't need to invoke a 'Parser'. 
 					// The metrics just need to be copied from the 'driver' command response into the response parsed metrics list    
-					
-					LOG.debug("ServerProfileRunner commandDriverResponse : " + commandDriverResponse   );
-					
-					ParsedCommandResponse parsedCommandResponse = new ParsedCommandResponse(); 
-					parsedCommandResponse.setCommandName(command.getCommandName());
-					parsedCommandResponse.setParserNames(new ArrayList<>());  // no parsers for Groovy
 					
 					for (ParsedMetric parsedMetric : commandDriverResponse.getParsedMetrics() ) {	
 						if ( parsedMetric.getSuccess())	{				
@@ -151,14 +159,11 @@ public class ServerProfileRunner {
 						logLines.add("<br>" + command.getCommand() + "<br>");
 						logLines.add(commandDriverResponse.getCommandLog());
 					}	
-					
-					List<CommandParserLink> commandParserLinks = commandParserLinksDAO.findCommandParserLinksForCommand(command.getCommandName());
 	
-					ParsedCommandResponse parsedCommandResponse = new ParsedCommandResponse();
 					String commandResponseAsString = ServerMetricsWebUtils.createMultiLineLiteral(commandDriverResponse.getRawCommandResponseLines());
 					parsedCommandResponse.setCommandResponse(commandResponseAsString);
-					parsedCommandResponse.setCommandName(command.getCommandName());
-					List<ParsedMetric> parsedMetrics = new ArrayList<>();
+					List<ParsedMetric> parsedMetrics = new ArrayList<>(); 
+					List<CommandParserLink> commandParserLinks = commandParserLinksDAO.findCommandParserLinksForCommand(command.getCommandName());
 
 					for (CommandParserLink commandParserLink : commandParserLinks) {
 					
@@ -181,8 +186,8 @@ public class ServerProfileRunner {
 
 						}
 						if (!parsedMetric.getSuccess()) {
-							LOG.warn("Parser Fails for profile: " + reqServerProfileName + " command: " + command.getCommandName() 
-									+ "\ndetails: " +  StringUtils.abbreviate(parsedMetric.getParseFailMsg(), 1000)); 
+							LOG.warn(StringUtils.abbreviate("Parser Fails for profile: " + reqServerProfileName + " command: " + command.getCommandName() 
+									+ "\ndetails: " +  parsedMetric.getParseFailMsg(), 1200)); 
 						}
 						parsedMetrics.add(parsedMetric);
 					}
@@ -299,12 +304,13 @@ public class ServerProfileRunner {
 	private static String summariseResponse(boolean testMode) {
 		String testModeResult= "";
 		if (testMode){
-			if (parsingSuccessCount == 0) {
+			if (parsingSuccessCount == 0 ){
 				testModeResult = "<font color='red'> You have not received any metrics back!  "
-						+ "Please check your connectivity and other settings.</font>";
-			} else if (parsingFailureCount > 0) {
+						+ "Please check your commands (" + commandFailureCount + " failures recorded), "
+						+ "connectivity and other settings.</font>";
+			} else if (parsingFailureCount > 0  || commandFailureCount > 0 ){
 				testModeResult = "<font color='orange'> " + parsingFailureCount + " out of " + (parsingSuccessCount + parsingFailureCount)
-						+ " attempts to parse a command repsonse have failed.</font>";
+						+ " command response parser(s) have failed, " + commandFailureCount + " command(s) failed.</font>";
 			} else {
 				testModeResult = "<font color='green'> You have received metrics results!  "
 						+ "Please check the values are as you expect.</font>";
