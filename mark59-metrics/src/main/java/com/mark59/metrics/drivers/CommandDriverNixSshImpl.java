@@ -116,7 +116,7 @@ public class CommandDriverNixSshImpl implements CommandDriver {
 			commandDriverResponse.setCommandLog("<br>A failure has occured attempting to connect : " + jschX.getMessage() + "<br>");			
 			commandDriverResponse.setCommandFailure(true);
 			sesConnection = null;
-			LOG.warn("A failure has occured attempting to connect : " + serverProfile  + " : " + jschX.getMessage());
+			LOG.warn("A failure has occured attempting to connect. Server profile : " + serverProfile );
 		}
 		return commandDriverResponse;
 	}	
@@ -158,7 +158,7 @@ public class CommandDriverNixSshImpl implements CommandDriver {
 			StringWriter stackTrace = new StringWriter();
 			e.printStackTrace(new PrintWriter(stackTrace));
 			commandDriverResponse.setCommandLog("<br>A faiure has occured attempting to execute the command : " + e.getMessage() + "<br>" + stackTrace.toString() + "<br>");			
-			LOG.warn("Command failure : " + runtimeCommand + ":\n" + e.getMessage() + stackTrace.toString());
+			LOG.debug("Command failure : " + runtimeCommand + ":\n" + e.getMessage() + stackTrace.toString());
 		}
 
 		commandDriverResponse.setRawCommandResponseLines(rawCommandResponseLines);

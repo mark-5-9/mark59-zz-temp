@@ -81,7 +81,7 @@ public class CommandDriverGroovyScriptImpl implements CommandDriver {
 			commandLog+= "<br>Failure attempting to execute groovy script command : " + e.getMessage() + "<br>" + stackTrace.toString() 
 						+ "<br><br>" + groovyScriptResult.getCommandLog();
 
-			LOG.warn("Command failure on script : " + command.getCommandName() + ":\n" + e.getMessage());
+			LOG.debug("Command failure on script : " + command.getCommandName() + ":\n" + e.getMessage());
 		}
 		commandDriverResponse.setCommandLog(commandLog);
 		

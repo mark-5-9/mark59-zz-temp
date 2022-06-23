@@ -136,7 +136,7 @@ public interface CommandDriver {
 			StringWriter stackTrace = new StringWriter();
 			e.printStackTrace(new PrintWriter(stackTrace));
 			commandLog+= "<br>A faiure has occured attempting to execute the command : " + e.getMessage() + "<br>" + stackTrace.toString() + "<br>";
-			LOG.warn("Command failure : " + runtimeCommand + ":\n" + e.getMessage() + stackTrace.toString());
+			LOG.debug("Command failure : " + runtimeCommand + ":\n" + e.getMessage() + stackTrace.toString());
 			try {Objects.requireNonNull(errors).close();} catch (Exception ignored){}
 			try {Objects.requireNonNull(reader).close();} catch (Exception ignored){}
 			try {Objects.requireNonNull(p).destroy();} catch (Exception ignored){}

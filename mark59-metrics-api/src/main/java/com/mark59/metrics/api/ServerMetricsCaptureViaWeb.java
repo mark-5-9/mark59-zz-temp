@@ -185,7 +185,7 @@ public class ServerMetricsCaptureViaWeb  extends AbstractJavaSamplerClient {
 						System.out.println(cmdFailureMsg);
 						LOG.warn(cmdFailureMsg );
 					} else if (!NO.equalsIgnoreCase(context.getParameter(PRINT_ERROR_MESSAGES))) { // defaults to 'short'
-						System.out.println(cmdFailureMsg );
+						System.out.println(StringUtils.abbreviate(cmdFailureMsg, 2000));
 						LOG.warn(StringUtils.abbreviate(cmdFailureMsg, 2000));
 					}
 
@@ -250,14 +250,16 @@ public class ServerMetricsCaptureViaWeb  extends AbstractJavaSamplerClient {
 		ServerMetricsCaptureViaWeb ostest = new ServerMetricsCaptureViaWeb();
 		additionalTestParametersMap.put(MARK59_METRICS_URL, "http://localhost:8085/mark59-metrics");	
 		additionalTestParametersMap.put(SERVER_PROFILE_NAME, "localhost_" + ServerMetricsWebUtils.obtainOperatingSystemForLocalhost());			
+//		additionalTestParametersMap.put(SERVER_PROFILE_NAME, "remoteWinServer");   // 3 commands should fail			
+		additionalTestParametersMap.put(PRINT_ERROR_MESSAGES,"short");   // 'short' 'full' 'no'			
 		JavaSamplerContext context = new JavaSamplerContext( ostest.getDefaultParameters()  );
 		ostest.setupTest(context);
 		ostest.runTest(context);
 		
 		ServerMetricsCaptureViaWeb groovyscripttest = new ServerMetricsCaptureViaWeb();
 		additionalTestParametersMap.put(MARK59_METRICS_URL, "http://localhost:8085/mark59-metrics");	
-//		additionalTestParametersMap.put(SERVER_PROFILE_NAME, "NewRelicTestProfile");			
-		additionalTestParametersMap.put(SERVER_PROFILE_NAME, "SimpleScriptSampleRunner");			
+		additionalTestParametersMap.put(SERVER_PROFILE_NAME, "SimpleScriptSampleRunner");		
+		additionalTestParametersMap.put(PRINT_ERROR_MESSAGES,"short");   // 'short' 'full' 'no'	
 		JavaSamplerContext groovyscriptcontext = new JavaSamplerContext( groovyscripttest.getDefaultParameters()  );
 		groovyscripttest.setupTest(groovyscriptcontext);
 		groovyscripttest.runTest(groovyscriptcontext);	

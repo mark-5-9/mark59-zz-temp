@@ -6,7 +6,6 @@ public class ParsedCommandResponse {
 	
 	private String commandName;
 	private String commandResponse;
-	private List<String> parserNames;
 	private List<ParsedMetric> parsedMetrics;
 	private boolean commandFailure;
 
@@ -27,14 +26,6 @@ public class ParsedCommandResponse {
 
 	public void setCommandResponse(String commandResponse) {
 		this.commandResponse = commandResponse;
-	}
-
-	public List<String> getParserNames() {
-		return parserNames;
-	}
-
-	public void setParserNames(List<String> parserNames) {
-		this.parserNames = parserNames;
 	}
 
 	public List<ParsedMetric> getParsedMetrics() {
@@ -58,7 +49,6 @@ public class ParsedCommandResponse {
     public String toString() {
         return   "[commandName" + commandName
          	   + ", commandResponse="+ commandResponse
-         	   + ", parserNames="+ parserNames   
          	   + ", parsedMetrics="+ parsedMetrics  
          	   + ", commandFailure="+ commandFailure            	   
         	   + "]";

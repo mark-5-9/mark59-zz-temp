@@ -114,7 +114,6 @@ public class ServerProfileRunner {
 				
 				ParsedCommandResponse parsedCommandResponse = new ParsedCommandResponse(); 
 				parsedCommandResponse.setCommandName(command.getCommandName());
-				parsedCommandResponse.setParserNames(new ArrayList<String>());  				
 				parsedCommandResponse.setCommandFailure(commandDriverResponse.isCommandFailure());  				
 
 				if (commandDriverResponse.isCommandFailure()){      
