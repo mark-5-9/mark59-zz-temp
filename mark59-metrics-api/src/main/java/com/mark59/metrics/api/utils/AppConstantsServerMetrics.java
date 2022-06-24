@@ -22,6 +22,11 @@ package com.mark59.metrics.api.utils;
  */
 public class AppConstantsServerMetrics {
 	
-	public static final String MARK59_SERVER_METRICS_VERSION = "5.0";	
+	public static final String MARK59_SERVER_METRICS_VERSION = "5.0";
+	
+	public static final String PRINT_ERROR_MESSAGES	= "PRINT_ERROR_MESSAGES";
+	
+	public static final boolean RUNNING_VIA_WEB = true;
+	public static final boolean RUNNING_VIA_EXCEL = false;
 
 }

@@ -17,8 +17,6 @@
 package com.mark59.metrics.api;
 
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -42,7 +40,9 @@ import com.mark59.core.JmeterFunctionsImpl;
 import com.mark59.core.interfaces.JmeterFunctions;
 import com.mark59.core.utils.IpUtilities;
 import com.mark59.core.utils.Log4jConfigurationHelper;
-import com.mark59.core.utils.Mark59Constants.JMeterFileDatatypes;
+import com.mark59.core.utils.Mark59Utils;
+import com.mark59.core.utils.PropertiesKeys;
+import com.mark59.core.utils.PropertiesReader;
 import com.mark59.metrics.api.utils.AppConstantsServerMetrics;
 import com.mark59.metrics.data.commandResponseParsers.dao.CommandResponseParsersDAO;
 import com.mark59.metrics.data.commandResponseParsers.dao.CommandResponseParsersDAOexcelWorkbookImpl;
@@ -56,13 +56,8 @@ import com.mark59.metrics.data.serverprofiles.dao.ServerProfilesDAO;
 import com.mark59.metrics.data.serverprofiles.dao.ServerProfilesDAOexcelWorkbookImpl;
 import com.mark59.metrics.drivers.ServerProfileRunner;
 import com.mark59.metrics.pojos.ParsedCommandResponse;
-import com.mark59.metrics.pojos.ParsedMetric;
 import com.mark59.metrics.pojos.WebServerMetricsResponsePojo;
-import com.mark59.metrics.utils.AppConstantsServerMetricsWeb;
 import com.mark59.metrics.utils.ServerMetricsWebUtils;
-import com.mark59.core.utils.Mark59Utils;
-import com.mark59.core.utils.PropertiesKeys;
-import com.mark59.core.utils.PropertiesReader;
 
 /**
  * This is the initiating class for server metrics capture using a (previously downloaded) server metrics excel spreadsheet.
@@ -98,10 +93,16 @@ public class ServerMetricsCaptureViaExcel extends AbstractJavaSamplerClient {
 	static {
 		Map<String,String> staticMap = new LinkedHashMap<>();
 		staticMap.put(SERVER_PROFILE_NAME, "localhost" );
+		
+		staticMap.put(".", "");	
+		staticMap.put("_________________________ logging settings: ______________", "Expected values: 'short' (default), 'full', 'no'");
+		staticMap.put(AppConstantsServerMetrics.PRINT_ERROR_MESSAGES, "short" );
+		
 		staticMap.put("______________________ miscellaneous: ____________________", "");
 		staticMap.put(OVERRIDE_PROPERTY_MARK59_SERVER_PROFILES_EXCEL_FILE_PATH, "");			
 		staticMap.put(IpUtilities.RESTRICT_TO_ONLY_RUN_ON_IPS_LIST, "");	
-		staticMap.put("______________"       , "");			
+
+		staticMap.put("___________________"       , "");			
 		staticMap.put("build information: ", "mark59-metrics (via excel) version " + AppConstantsServerMetrics.MARK59_SERVER_METRICS_VERSION);			
 		
 		defaultArgumentsMap = Collections.unmodifiableMap(staticMap);
@@ -146,7 +147,7 @@ public class ServerMetricsCaptureViaExcel extends AbstractJavaSamplerClient {
 		
 		try {
 			
-			String parmServerProfileName = context.getParameter(SERVER_PROFILE_NAME); 
+			String reqServerProfileName = context.getParameter(SERVER_PROFILE_NAME); 
 
 			String excelFilePath = context.getParameter(OVERRIDE_PROPERTY_MARK59_SERVER_PROFILES_EXCEL_FILE_PATH);
 			if (StringUtils.isAllBlank(excelFilePath)){
@@ -158,6 +159,7 @@ public class ServerMetricsCaptureViaExcel extends AbstractJavaSamplerClient {
 				excelFile = new File(excelFilePath);
 			} catch (Exception e) {
 				LOG.error("excel speadsheet " + excelFilePath + " file error. Msg : "  + e.getMessage());
+				System.out.println("excel speadsheet " + excelFilePath + " file error. Msg : "  + e.getMessage());
 				e.printStackTrace();
 			}
         	LOG.debug("File excelFile path : full path  = " + Objects.requireNonNull(excelFile).getPath() + " :"  + excelFile.getCanonicalPath() );
@@ -176,42 +178,19 @@ public class ServerMetricsCaptureViaExcel extends AbstractJavaSamplerClient {
         	CommandParserLinksDAO commandParserLinksDAO 		= new CommandParserLinksDAOexcelWorkbookImpl(commandparserlinksSheet);
         	CommandResponseParsersDAO commandResponseParsersDAO = new CommandResponseParsersDAOexcelWorkbookImpl(commandresponseparsersSheet);
 	        	
-			response = ServerProfileRunner.commandsResponse(parmServerProfileName, testModeNo, serverProfilesDAO,
-													serverCommandLinksDAO, commandsDAO, commandParserLinksDAO, commandResponseParsersDAO);
+			response = ServerProfileRunner.commandsResponse(reqServerProfileName, testModeNo, serverProfilesDAO,
+													serverCommandLinksDAO, commandsDAO, commandParserLinksDAO, commandResponseParsersDAO
+													, AppConstantsServerMetrics.RUNNING_VIA_EXCEL);
 	 		workbook.close();
 
-			if (response.getServerProfileName() == null){
-				throw new RuntimeException("Error : null server profile name returned is an Unexpected Response!");
-			}
-			if ( response.getFailMsg().startsWith(AppConstantsServerMetricsWeb.SERVER_PROFILE_NOT_FOUND)){
-				throw new RuntimeException("Error : " + response.getFailMsg());
-			}
+	 		ServerMetricsCaptureUtils.validateCommandsResponse(response);
 
 			for (ParsedCommandResponse parsedCommandResponse : response.getParsedCommandResponses()) {
-				
-				for (ParsedMetric parsedMetric  : parsedCommandResponse.getParsedMetrics()) {
-					
-					if (parsedMetric.getSuccess()) {
-						jm.userDatatypeEntry(parsedMetric.getLabel(), parsedMetric.getResult().longValue(), JMeterFileDatatypes.valueOf(parsedMetric.getDataType()));
-					} else {
-						String metricFailsMsg = "Warning : Failed metric response (via Excel) for txn : " + parsedMetric.getLabel() + " (at: " + System.currentTimeMillis() + ")"  ; 
-						System.out.println(metricFailsMsg);
-						LOG.warn(metricFailsMsg +  "\n     command response : " + parsedCommandResponse.getCommandResponse() + "\n   api response msg  : " +  response.getFailMsg());
-					}
-                }
+				ServerMetricsCaptureUtils.createJMeterTxnsUsingCommandResponse(context, jm, reqServerProfileName, parsedCommandResponse);				
 			}
 			
 		} catch (Exception | AssertionError e) {
-			StringWriter stackTrace = new StringWriter();
-			e.printStackTrace(new PrintWriter(stackTrace));
-			String errorMsg = "Error: Unexpected Failure during ServerMetricsCaptureViaExcel execution.\n" + e.getMessage() + "\n" + stackTrace.toString();
-			LOG.error(errorMsg);
-			System.out.println(errorMsg);
-			if (response != null) {
-				String erroredServerProfleMsg = "        occurred using server profile :" + response.getServerProfileName();	
-				LOG.error(erroredServerProfleMsg);	
-				System.out.println(erroredServerProfleMsg);	
-			}
+			ServerMetricsCaptureUtils.logUnexpectedException(response, e, "ServerMetricsCaptureViaExcel");
 			LOG.debug("        last response from server was  \n" + response );
 		} finally {
 			jm.tearDown();	
@@ -219,8 +198,7 @@ public class ServerMetricsCaptureViaExcel extends AbstractJavaSamplerClient {
 
 		return jm.getMainResult();
 	}
-	
-	
+
 	
 	public static void main(String[] args) { 
 		Log4jConfigurationHelper.init(Level.INFO);
@@ -230,7 +208,9 @@ public class ServerMetricsCaptureViaExcel extends AbstractJavaSamplerClient {
 		ServerMetricsCaptureViaExcel ostest = new ServerMetricsCaptureViaExcel();
 		additionalTestParametersMap.put(OVERRIDE_PROPERTY_MARK59_SERVER_PROFILES_EXCEL_FILE_PATH,
 				"./src/test/resources/simpleSheetWithLocalhostProfileForEachOs/mark59serverprofiles.xlsx");	
+		//		"./src/test/resources/duffSimpleSheetWithLocalhostProfileForEachOs/mark59serverprofiles.xlsx");	// TODO: messages test
 		additionalTestParametersMap.put(SERVER_PROFILE_NAME, "localhost_" + ServerMetricsWebUtils.obtainOperatingSystemForLocalhost());	
+		additionalTestParametersMap.put(AppConstantsServerMetrics.PRINT_ERROR_MESSAGES,"short");   // 'short' 'full' 'no'			
 		JavaSamplerContext context = new JavaSamplerContext( ostest.getDefaultParameters()  );
 		ostest.setupTest(context);
 		ostest.runTest(context);
@@ -239,6 +219,7 @@ public class ServerMetricsCaptureViaExcel extends AbstractJavaSamplerClient {
 		additionalTestParametersMap.put(OVERRIDE_PROPERTY_MARK59_SERVER_PROFILES_EXCEL_FILE_PATH,
 				"./src/test/resources/simpleSheetWithLocalhostProfileForEachOs/mark59serverprofiles.xlsx");	
 		additionalTestParametersMap.put(SERVER_PROFILE_NAME, "SimpleScriptSampleRunner");	
+		additionalTestParametersMap.put(AppConstantsServerMetrics.PRINT_ERROR_MESSAGES,"short");   // 'short' 'full' 'no'		
 		JavaSamplerContext groovyscriptcontext = new JavaSamplerContext( groovyscripttest.getDefaultParameters()  );
 		groovyscripttest.setupTest(groovyscriptcontext);
 		groovyscripttest.runTest(groovyscriptcontext);

@@ -147,6 +147,5 @@ public interface CommandDriver {
 		commandDriverResponse.setCommandLog(commandLog);
 		return commandDriverResponse;
 	}
-
 	
 }

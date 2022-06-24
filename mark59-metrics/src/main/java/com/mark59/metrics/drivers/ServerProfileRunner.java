@@ -44,7 +44,11 @@ import com.mark59.metrics.utils.AppConstantsServerMetricsWeb.CommandExecutorData
 import com.mark59.metrics.utils.ServerMetricsWebUtils;
 
 /**
- * Invokes the commands to be processed for a given Server Profile (Groovy script or on the server profile target server).  
+ * Invokes the commands to be processed for a given Server Profile 
+ * (Groovy script or on the server profile target server).  
+ * 
+ * <p>This class runs within the Mark59 'metrics' application when invoked via the Web APIs,
+ * but runs locally (on the server running JMeter) when invoked via the Excel spreadsheet.  
  * 
  * @author Philip Webb
  * Written: Australian Autumn 2020 
@@ -59,7 +63,8 @@ public class ServerProfileRunner {
 	private static int commandFailureCount;
 		
 	/**
-	 * Controls the driving and parsing of commands for a server profile and formats the responses.   
+	 * Logging is turned off for command and parser failures when running locally via the Excel spreadsheet
+	 * (ServerProfileRunner) to prevent duplicate logging of failed commands and parsers in the JMeter log and console.
 	 * 
 	 * @param reqServerProfileName server profile
 	 * @param reqTestMode  running in test mode (eg via the web app)
@@ -67,7 +72,8 @@ public class ServerProfileRunner {
 	 */
 	public static WebServerMetricsResponsePojo commandsResponse(String reqServerProfileName, String reqTestMode,
 			ServerProfilesDAO serverProfilesDAO, ServerCommandLinksDAO serverCommandLinksDAO, CommandsDAO commandsDAO,
-			CommandParserLinksDAO commandParserLinksDAO, CommandResponseParsersDAO commandResponseParsersDAO) {
+			CommandParserLinksDAO commandParserLinksDAO, CommandResponseParsersDAO commandResponseParsersDAO,
+			boolean runningViaWeb) {
 		
 		LOG.debug("ServerProfileRunner.commandsResponse profile =" + reqServerProfileName);
 
@@ -131,7 +137,9 @@ public class ServerProfileRunner {
 					parsedCommandResponse.setCommandResponse(failureMsg.replace("<br>", "\n"));
 					parsedCommandResponses.add(parsedCommandResponse);
 					
-					LOG.warn(StringUtils.abbreviate(failureMsg.replace("<br>", "\n"), 2000));
+					if (runningViaWeb) {
+						LOG.warn(StringUtils.abbreviate(failureMsg.replace("<br>", "\n"), 2000));
+					}
 				
 				} else if  (CommandExecutorDatatypes.GROOVY_SCRIPT.getExecutorText().equalsIgnoreCase(command.getExecutor())){
 					// Groovy script command responses don't need to invoke a 'Parser'. 
@@ -184,7 +192,7 @@ public class ServerProfileRunner {
 							logLines.addAll(logParsedMetric(parsedMetric));							
 
 						}
-						if (!parsedMetric.getSuccess()) {
+						if (!parsedMetric.getSuccess()  &&  runningViaWeb ) {
 							LOG.warn(StringUtils.abbreviate("Parser Fails for profile: " + reqServerProfileName + " command: " + command.getCommandName() 
 									+ "\ndetails: " +  parsedMetric.getParseFailMsg(), 1200)); 
 						}

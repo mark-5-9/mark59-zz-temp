@@ -74,22 +74,22 @@ public class ServerMetricRestController {
 		
 	
 	/**
-	 *  Service call to profile.
+	 *  Invoke Server Profile execution
 	 *  <p>Calls a functions which controls and executed commands on the target servers, and returns the formatted response.
-	 *  <p>With the mark59 framework, will be called by implementation(s) of JMeter Java Samplers designed to cater for 
+	 *  <p>Will be used by implementation(s) of JMeter Java Samplers designed to cater for 
 	 *  metrics capture directly via this API call (refer to com.mark59.metrics.api.ServerMetricsCaptureViaWeb).
 	 *  <p> For example using profile localhost_HOSTID, and from default setting localhost, the url used would be <br>
 	 *  http://localhost:8085/mark59-metrics/api/metric?reqServerProfileName=localhost_HOSTID
 	 *  
 	 * @param reqServerProfileName  profile name
-	 * @param reqTestMode whether running as a 'test' (eg directly from the web application)
+	 * @param reqTestMode whether running as a 'test' (eg directly from the web application UI)
 	 * @return org.springframework.http.ResponseEntity (Json format)
 	 */
 	@GetMapping(path =  "/metric")
 	public ResponseEntity<Object> apiMetric(@RequestParam String reqServerProfileName, @RequestParam(required=false) String reqTestMode){
 	
 		return ResponseEntity.ok(ServerProfileRunner.commandsResponse(reqServerProfileName, reqTestMode, 
-				serverProfilesDAO, serverCommandLinksDAO, commandsDAO, commandParserLinksDAO, commandResponseParsersDAO));	
+				serverProfilesDAO, serverCommandLinksDAO, commandsDAO, commandParserLinksDAO, commandResponseParsersDAO, true));	
 	}
 
 

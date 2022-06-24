@@ -157,7 +157,7 @@ public class CommandDriverNixSshImpl implements CommandDriver {
 			try {Objects.requireNonNull(channelExec).getSession().disconnect();channelExec.disconnect();} catch (Exception ignored){}
 			StringWriter stackTrace = new StringWriter();
 			e.printStackTrace(new PrintWriter(stackTrace));
-			commandDriverResponse.setCommandLog("<br>A faiure has occured attempting to execute the command : " + e.getMessage() + "<br>" + stackTrace.toString() + "<br>");			
+			commandLog += "<br>A faiure has occured attempting to execute the command : " + e.getMessage() + "<br>" + stackTrace.toString() + "<br>";			
 			LOG.debug("Command failure : " + runtimeCommand + ":\n" + e.getMessage() + stackTrace.toString());
 		}
 
