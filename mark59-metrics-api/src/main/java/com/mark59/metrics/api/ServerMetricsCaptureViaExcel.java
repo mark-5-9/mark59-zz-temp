@@ -179,8 +179,8 @@ public class ServerMetricsCaptureViaExcel extends AbstractJavaSamplerClient {
         	CommandResponseParsersDAO commandResponseParsersDAO = new CommandResponseParsersDAOexcelWorkbookImpl(commandresponseparsersSheet);
 	        	
 			response = ServerProfileRunner.commandsResponse(reqServerProfileName, testModeNo, serverProfilesDAO,
-													serverCommandLinksDAO, commandsDAO, commandParserLinksDAO, commandResponseParsersDAO
-													, AppConstantsServerMetrics.RUNNING_VIA_EXCEL);
+					serverCommandLinksDAO, commandsDAO, commandParserLinksDAO, commandResponseParsersDAO,
+					AppConstantsServerMetrics.RUNNING_VIA_EXCEL);
 	 		workbook.close();
 
 	 		ServerMetricsCaptureUtils.validateCommandsResponse(response);
@@ -204,11 +204,11 @@ public class ServerMetricsCaptureViaExcel extends AbstractJavaSamplerClient {
 		Log4jConfigurationHelper.init(Level.INFO);
 		org.apache.logging.log4j.core.config.Configurator.setLevel("org.apache.poi.util.XMLHelper", Level.ERROR);
 		
-		//copy of test case..		 
+		//from test cases..		 
 		ServerMetricsCaptureViaExcel ostest = new ServerMetricsCaptureViaExcel();
 		additionalTestParametersMap.put(OVERRIDE_PROPERTY_MARK59_SERVER_PROFILES_EXCEL_FILE_PATH,
 				"./src/test/resources/simpleSheetWithLocalhostProfileForEachOs/mark59serverprofiles.xlsx");	
-		//		"./src/test/resources/duffSimpleSheetWithLocalhostProfileForEachOs/mark59serverprofiles.xlsx");	// TODO: messages test
+		//		"./src/test/resources/duffSimpleSheetWithLocalhostProfileForEachOs/mark59serverprofiles.xlsx");	
 		additionalTestParametersMap.put(SERVER_PROFILE_NAME, "localhost_" + ServerMetricsWebUtils.obtainOperatingSystemForLocalhost());	
 		additionalTestParametersMap.put(AppConstantsServerMetrics.PRINT_ERROR_MESSAGES,"short");   // 'short' 'full' 'no'			
 		JavaSamplerContext context = new JavaSamplerContext( ostest.getDefaultParameters()  );
@@ -218,6 +218,7 @@ public class ServerMetricsCaptureViaExcel extends AbstractJavaSamplerClient {
 		ServerMetricsCaptureViaExcel groovyscripttest = new ServerMetricsCaptureViaExcel();
 		additionalTestParametersMap.put(OVERRIDE_PROPERTY_MARK59_SERVER_PROFILES_EXCEL_FILE_PATH,
 				"./src/test/resources/simpleSheetWithLocalhostProfileForEachOs/mark59serverprofiles.xlsx");	
+		//		"./src/test/resources/duffSimpleSheetWithLocalhostProfileForEachOs/mark59serverprofiles.xlsx");	// TODO: messages test		
 		additionalTestParametersMap.put(SERVER_PROFILE_NAME, "SimpleScriptSampleRunner");	
 		additionalTestParametersMap.put(AppConstantsServerMetrics.PRINT_ERROR_MESSAGES,"short");   // 'short' 'full' 'no'		
 		JavaSamplerContext groovyscriptcontext = new JavaSamplerContext( groovyscripttest.getDefaultParameters()  );

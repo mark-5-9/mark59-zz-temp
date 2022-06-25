@@ -63,12 +63,21 @@ public class ServerProfileRunner {
 	private static int commandFailureCount;
 		
 	/**
-	 * Logging is turned off for command and parser failures when running locally via the Excel spreadsheet
+	 * Builds and returns a response object  holding the results of executing a server profile. 
+	 * 
+	 * <p>Logging is turned off for command and parser failures when running locally via the Excel spreadsheet
 	 * (ServerProfileRunner) to prevent duplicate logging of failed commands and parsers in the JMeter log and console.
 	 * 
 	 * @param reqServerProfileName server profile
-	 * @param reqTestMode  running in test mode (eg via the web app)
-	 * @return  WebServerMetricsResponsePojo  response
+	 * @param reqTestMode if running in test mode (eg via the web app UI) - populates the response 'testModeResult'
+	 * @param serverProfilesDAO  serverProfilesDAO
+	 * @param serverCommandLinksDAO  serverCommandLinksDAO
+	 * @param commandsDAO  commandsDAO
+	 * @param commandParserLinksDAO  commandParserLinksDAO
+	 * @param commandResponseParsersDAO  commandResponseParsersDAO
+	 * @param runningViaWeb  'false' will will switch log4j Warn messages off for command and parser fails
+	 * 
+	 * @return WebServerMetricsResponsePojo  response
 	 */
 	public static WebServerMetricsResponsePojo commandsResponse(String reqServerProfileName, String reqTestMode,
 			ServerProfilesDAO serverProfilesDAO, ServerCommandLinksDAO serverCommandLinksDAO, CommandsDAO commandsDAO,

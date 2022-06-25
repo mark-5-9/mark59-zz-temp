@@ -309,7 +309,7 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 	 *    
 	 * @see #userActionsOnScriptFailure(JavaSamplerContext, JmeterFunctionsForSeleniumScripts, WebDriver)
 	 * @param context the current JavaSamplerContext  
-	 * @param jmeterRuntimeArgumentsMap 
+	 * @param jmeterRuntimeArgumentsMap  map of JMeter (Java Request) parameters 
 	 * @param e can be an exception or Assertion error
 	 */
 	protected void scriptExceptionHandling(JavaSamplerContext context, Map<String, String> jmeterRuntimeArgumentsMap, Throwable e) {
