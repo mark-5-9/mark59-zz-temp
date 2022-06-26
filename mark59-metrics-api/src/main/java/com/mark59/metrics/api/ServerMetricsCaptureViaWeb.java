@@ -84,10 +84,10 @@ public class ServerMetricsCaptureViaWeb  extends AbstractJavaSamplerClient {
 		staticMap.put(".", "");	
 		staticMap.put("_________________________ logging settings: _______________", "Expected values: 'short' (default), 'full', 'no'");
 		staticMap.put(AppConstantsServerMetrics.PRINT_ERROR_MESSAGES, "short" );
-		
-		staticMap.put("_________________________ miscellaneous: __________________", "");				
+		staticMap.put("..", "");			
+		staticMap.put("_________________________ miscellaneous: __________________", "");
 		staticMap.put(IpUtilities.RESTRICT_TO_ONLY_RUN_ON_IPS_LIST, "");	
-		
+		staticMap.put("...", "");			
 		staticMap.put("_________________________ notes: __________________________", "");	
 		staticMap.put("__","- please replace the default url with your actual.");	
 		staticMap.put("_", "- server profile of 'localhost' reports metrics for the machine hosting the 'mark59-metrics' application!");	
@@ -138,11 +138,11 @@ public class ServerMetricsCaptureViaWeb  extends AbstractJavaSamplerClient {
 		Integer repsonseCode = null;
 		WebServerMetricsResponsePojo response = null;
 		String webServiceUrl = null;
-		
+
 		try {
 			
 			String reqServerProfileName  = context.getParameter(SERVER_PROFILE_NAME); 
-			
+						
 			webServiceUrl = context.getParameter(MARK59_METRICS_URL) 	+ "/api/metric?reqServerProfileName=" + reqServerProfileName;
 			LOG.debug("webServiceUrl : " + webServiceUrl);
 			

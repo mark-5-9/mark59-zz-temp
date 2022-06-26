@@ -83,7 +83,7 @@ public class ServerMetricsCaptureViaExcel extends AbstractJavaSamplerClient {
 	private static final Logger LOG = LogManager.getLogger(ServerMetricsCaptureViaExcel.class);
 	
 	public static final String SERVER_PROFILE_NAME 	= "SERVER_PROFILE_NAME";
-	public static final String OVERRIDE_PROPERTY_MARK59_SERVER_PROFILES_EXCEL_FILE_PATH = "OVERRIDE_PROPERTY_MARK59_SERVER_PROFILES_EXCEL_FILE_PATH";
+	public static final String OVERRIDE_PROPERTY_MARK59_SERVER_PROFILES_EXCEL_FILE_PATH = "OVERRIDE_PROPERTY_MARK59_SERVER_PROFILES_EXCEL_FILE_PATH";	
 
 	protected String tgName = null;
 	protected AbstractThreadGroup tg = null;
@@ -97,11 +97,11 @@ public class ServerMetricsCaptureViaExcel extends AbstractJavaSamplerClient {
 		staticMap.put(".", "");	
 		staticMap.put("_________________________ logging settings: ______________", "Expected values: 'short' (default), 'full', 'no'");
 		staticMap.put(AppConstantsServerMetrics.PRINT_ERROR_MESSAGES, "short" );
-		
+		staticMap.put("-", "");			
 		staticMap.put("______________________ miscellaneous: ____________________", "");
 		staticMap.put(OVERRIDE_PROPERTY_MARK59_SERVER_PROFILES_EXCEL_FILE_PATH, "");			
 		staticMap.put(IpUtilities.RESTRICT_TO_ONLY_RUN_ON_IPS_LIST, "");	
-
+		staticMap.put("_", "");
 		staticMap.put("___________________"       , "");			
 		staticMap.put("build information: ", "mark59-metrics (via excel) version " + AppConstantsServerMetrics.MARK59_SERVER_METRICS_VERSION);			
 		
@@ -148,6 +148,7 @@ public class ServerMetricsCaptureViaExcel extends AbstractJavaSamplerClient {
 		try {
 			
 			String reqServerProfileName = context.getParameter(SERVER_PROFILE_NAME); 
+			
 
 			String excelFilePath = context.getParameter(OVERRIDE_PROPERTY_MARK59_SERVER_PROFILES_EXCEL_FILE_PATH);
 			if (StringUtils.isAllBlank(excelFilePath)){
@@ -162,7 +163,7 @@ public class ServerMetricsCaptureViaExcel extends AbstractJavaSamplerClient {
 				System.out.println("excel speadsheet " + excelFilePath + " file error. Msg : "  + e.getMessage());
 				e.printStackTrace();
 			}
-        	LOG.debug("File excelFile path : full path  = " + Objects.requireNonNull(excelFile).getPath() + " :"  + excelFile.getCanonicalPath() );
+        	LOG.debug("File excelFile path: " + Objects.requireNonNull(excelFile).getPath()+":"+excelFile.getCanonicalPath() );
         	 
         	Workbook workbook = WorkbookFactory.create(excelFile, null, true);    // Factory class necessary to avoid excel file being 'touched' 
             

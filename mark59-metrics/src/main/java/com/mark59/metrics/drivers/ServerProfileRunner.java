@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mark59.core.utils.Mark59Utils;
+import com.mark59.core.utils.SafeSleep;
 import com.mark59.metrics.data.beans.Command;
 import com.mark59.metrics.data.beans.CommandParserLink;
 import com.mark59.metrics.data.beans.CommandResponseParser;
@@ -58,9 +59,10 @@ public class ServerProfileRunner {
 	private static final Logger LOG = LogManager.getLogger(ServerProfileRunner.class);	
 
 	private static final String indent = "<br>&nbsp;&nbsp;&nbsp;&nbsp;";
+	private static int commandCount;
+	private static int commandFailureCount;
 	private static int parsingSuccessCount;
 	private static int parsingFailureCount;
-	private static int commandFailureCount;
 		
 	/**
 	 * Builds and returns a response object  holding the results of executing a server profile. 
@@ -90,9 +92,10 @@ public class ServerProfileRunner {
 		response.setServerProfileName(reqServerProfileName);
 		response.setLogLines("");
 		List<String> logLines = new ArrayList<>();
+		commandCount = 0;		
+		commandFailureCount = 0;		
 		parsingSuccessCount = 0;
 		parsingFailureCount = 0;		
-		commandFailureCount = 0;		
 		
 		try {
 	
@@ -118,10 +121,13 @@ public class ServerProfileRunner {
 			
 			// execute each command linked to the server profile
 			
-			for (ServerCommandLink serverCommandLink : serverCommandLinks) { 
+			for (ServerCommandLink serverCommandLink : serverCommandLinks) {
+				commandCount++;
 				
 				Command command = commandsDAO.findCommand(serverCommandLink.getCommandName());
-				CommandDriver driver =  CommandDriver.init(command.getExecutor(), serverProfile);	
+				CommandDriver driver =  CommandDriver.init(command.getExecutor(), serverProfile);
+				ShortPauseBetweenOScommands(commandCount); 
+				
 				CommandDriverResponse commandDriverResponse = driver.executeCommand(command); 
 	
 				logLines.add("<b><a href=./editCommand?&reqCommandName=" + command.getCommandName() + ">"
@@ -233,6 +239,16 @@ public class ServerProfileRunner {
 	}
 
 
+	/**
+	 * A short 100ms pause between Nix and Win commands could assist command stability under load. 
+	 * Not relevant for Groovy Server Profiles as they only run a single command.
+	 * @param commandCount the current command count
+	 **/
+	private static void ShortPauseBetweenOScommands(int commandCount) {
+		if (commandCount > 1) {
+			   SafeSleep.sleep(100L);
+		}
+	}
 
 
 	private static ParsedMetric RunParser(CommandResponseParser commandResponseParser,	String commandResponseAsString, ParsedMetric parsedMetric) {
