@@ -1,11 +1,12 @@
 
 -- *************************************************************************************
 -- **
--- **   from 4.2 to 5.0.xx   
+-- **   from 4.2.x to 5.0   
+-- **
 -- **
 -- **   RENAME OF DATABASES
 -- **   ------------------
--- **   Rename the databases as below (we suggest also doing a backup): 
+-- **   See suggestion below for sql to do the rename: 
 -- **
 -- **       datahunterdb               to mark59datahunterdb 
 -- **       mark59servermetricswebdb   to mark59metricsdb
@@ -13,17 +14,55 @@
 -- **
 -- *************************************************************************************
 
---  Updates for the mark59metricsdb (ex mark59servermetricswebdb) tables
---  --------------------------------------------------------------------
---  Due to code and name changes the following changes may be needed depending on your requirements.
---  The changes assume you want/have the sample Profiles as originally provided in 4.2, and have followed similar
---   patterns  when creating additional Profiles.  Please review before execution.        
-
-
 SET SQL_SAFE_UPDATES = 0;
 
--- as the RunCheck program is now called TrendsLoad, and directory /metrics is renamed to /mark59-trends-load. 
+-- *************************************************************************************
+-- database rename  - DO A BACKUP FIRST !! -
+-- *************************************************************************************
+-- DROP DATABASE IF EXISTS mark59datahunterdb;
+CREATE DATABASE mark59datahunterdb CHARACTER SET utf8mb4  COLLATE utf8mb4_bin; 
+RENAME TABLE datahunterdb.POLICIES TO mark59datahunterdb.POLICIES;
+RENAME TABLE datahunterdb.REFERENCE TO mark59datahunterdb.REFERENCE;
+DROP DATABASE datahunterdb;
 
+-- DROP DATABASE IF EXISTS mark59metricsdb;
+CREATE DATABASE mark59metricsdb CHARACTER SET utf8mb4  COLLATE utf8mb4_bin; 
+RENAME TABLE mark59servermetricswebdb.SERVERPROFILES TO mark59metricsdb.SERVERPROFILES;
+RENAME TABLE mark59servermetricswebdb.COMMANDS TO mark59metricsdb.COMMANDS;
+RENAME TABLE mark59servermetricswebdb.SERVERCOMMANDLINKS TO mark59metricsdb.SERVERCOMMANDLINKS;
+RENAME TABLE mark59servermetricswebdb.COMMANDRESPONSEPARSERS TO mark59metricsdb.COMMANDRESPONSEPARSERS;
+RENAME TABLE mark59servermetricswebdb.COMMANDPARSERLINKS TO mark59metricsdb.COMMANDPARSERLINKS;
+DROP DATABASE mark59servermetricswebdb;
+
+-- DROP DATABASE IF EXISTS mark59trendsdb;
+CREATE DATABASE mark59trendsdb CHARACTER SET utf8mb4  COLLATE utf8mb4_bin; 
+RENAME TABLE metricsdb.APPLICATIONS TO mark59trendsdb.APPLICATIONS;
+RENAME TABLE metricsdb.EVENTMAPPING TO mark59trendsdb.EVENTMAPPING;
+RENAME TABLE metricsdb.GRAPHMAPPING TO mark59trendsdb.GRAPHMAPPING;
+RENAME TABLE metricsdb.METRICSLA TO mark59trendsdb.METRICSLA;
+RENAME TABLE metricsdb.RUNS TO mark59trendsdb.RUNS;
+RENAME TABLE metricsdb.SLA TO mark59trendsdb.SLA;
+RENAME TABLE metricsdb.TESTTRANSACTIONS TO mark59trendsdb.TESTTRANSACTIONS;
+RENAME TABLE metricsdb.TRANSACTION TO mark59trendsdb.TRANSACTION;
+DROP DATABASE metricsdb;
+
+
+-- *************************************************************************************
+-- table changes
+-- *************************************************************************************
+ALTER TABLE mark59metricsdb.commandparserlinks CHANGE COLUMN SCRIPT_NAME PARSER_NAME VARCHAR(64) NOT NULL;
+ALTER TABLE mark59metricsdb.commandresponseparsers CHANGE COLUMN SCRIPT_NAME PARSER_NAME VARCHAR(64) NOT NULL ;
+
+
+-- *************************************************************************************
+--  Row updates for the mark59metricsdb (ex mark59servermetricswebdb) tables
+--  --------------------------------------------------------------------
+--  Due to code and name changes the following changes may be needed depending on your requirements.
+--  The changes assume you want/have the sample Profiles as originally provided in 4.2 / 4.2.1, and have followed similar
+--   patterns  when creating additional Profiles.  Please review before execution.      
+--
+-- as the RunCheck program is now called TrendsLoad, and directory /metrics is renamed to /mark59-trends-load... 
+-- *************************************************************************************
 DELETE FROM mark59metricsdb.SERVERPROFILES WHERE SERVER_PROFILE_NAME = 'DemoLINUX-DataHunterSeleniumRunCheck';
 DELETE FROM mark59metricsdb.SERVERPROFILES WHERE SERVER_PROFILE_NAME = 'DemoWIN-DataHunterSeleniumRunCheck';
 INSERT INTO mark59metricsdb.SERVERPROFILES VALUES ('DemoLINUX-DataHunterSeleniumTrendsLoad','SSH_LINIX_UNIX','localhost','','','','','22','60000','Loads Trend Analysis (MYSQL database).  See:<br>http://localhost:8083/mark59-trends/trending?reqApp=DataHunter',NULL);
