@@ -226,8 +226,8 @@ public class ResultsSplitterTest     extends TestCase
 		int fieldPosdataType  		= csvHeaderFieldsList.indexOf("dataType");
 		csvDataLineFields = csvReader.readNext();						// 1st data line
 	   	while ( csvDataLineFields != null ) { 
-	   		System.out.println("label = " + csvDataLineFields[fieldPoslabel]);
-	   		System.out.println("type  = " + csvDataLineFields[fieldPosdataType]);
+	   		// System.out.println("label = " + csvDataLineFields[fieldPoslabel]);
+	   		// System.out.println("type  = " + csvDataLineFields[fieldPosdataType]);
 	   		assertNotEquals("label should not end with (CDP)", " (CDP)", StringUtils.right(csvDataLineFields[fieldPoslabel], 6));
 	   		assertNotEquals("should be not be CDP type", "CDP", csvDataLineFields[fieldPosdataType]);
 	   		csvDataLineFields = csvReader.readNext();

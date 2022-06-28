@@ -118,10 +118,7 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	public JmeterFunctionsImpl(JavaSamplerContext context) {
 		threadName =Thread.currentThread().getName();
 		loggingConfig = Mark59LoggingConfig.getInstance();
-		
 		leadingPartOfLogNames = formLeadingPartOfLogNames(loggingConfig.getLogNamesFormat(), context);
-		System.out.println("************ leadingPartOfLogNames = " + leadingPartOfLogNames  );	
-		
 		mainResult.sampleStart();
 	}
 

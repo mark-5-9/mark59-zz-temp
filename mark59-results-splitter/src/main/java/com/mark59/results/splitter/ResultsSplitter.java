@@ -673,7 +673,6 @@ public class ResultsSplitter {
 	    		String transactionNameLabel = csvDataLineFields[fieldPoslabel];
 	    		String inputFileDatatype    = csvDataLineFields[fieldPosdataType];
 	    		String success 				= csvDataLineFields[fieldPossuccess];
-	    		System.out.println("at :  " + inputFileDatatype + " - " +  transactionNameLabel  );
 
 				if (!( transactionNameLabel.startsWith(IGNORE)
 						|| (inputFileDatatype.equals(JMeterFileDatatypes.PARENT.getDatatypeText())
