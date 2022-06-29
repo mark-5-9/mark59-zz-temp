@@ -1,4 +1,4 @@
-
+-- in pgadmin run from 'postgres' db 
 -- >  comment/uncomment as required 
 CREATE USER admin SUPERUSER PASSWORD 'admin';
 -- DROP DATABASE mark59trendsdb;
@@ -8,6 +8,7 @@ CREATE DATABASE mark59trendsdb WITH ENCODING='UTF8' OWNER=admin TEMPLATE=templat
 --   The utf8/C ecoding/collation is more in line with other mark59 database options (and how Java/JS sorts work). 
 --   if you use the pgAdmin tool to load data, remember to hit the 'commit' icon to save the changes! 
 
+-- in pgadmin run from 'mark59trendsdb' db query  panel 
 
 CREATE TABLE IF NOT EXISTS APPLICATIONS (
   APPLICATION varchar(32) NOT NULL DEFAULT '',

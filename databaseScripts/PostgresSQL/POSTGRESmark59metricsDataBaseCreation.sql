@@ -1,4 +1,4 @@
-
+-- in pgadmin run from 'postgres' db 
 -- >  comment/uncomment as required
  
 CREATE USER admin SUPERUSER PASSWORD 'admin';
@@ -6,6 +6,8 @@ CREATE USER admin SUPERUSER PASSWORD 'admin';
 -- DROP DATABASE mark59metricsdb;
 CREATE DATABASE mark59metricsdb WITH ENCODING='UTF8' OWNER=admin TEMPLATE=template0 LC_COLLATE='C' LC_CTYPE='C';
  
+-- in pgadmin run from 'mark59metricsdb' db query  panel 
+
 DROP TABLE IF EXISTS  SERVERPROFILES;
 DROP TABLE IF EXISTS  COMMANDS;
 DROP TABLE IF EXISTS  SERVERCOMMANDLINKS;
@@ -13,7 +15,6 @@ DROP TABLE IF EXISTS  COMMANDRESPONSEPARSERS;
 DROP TABLE IF EXISTS  COMMANDPARSERLINKS;
 
 -- <
-
 --   The utf8/C ecoding/collation is more in line with other mark59 database options (and how Java/JS sorts work). 
 --   if you use the pgAdmin tool to load data, remember to hit the 'commit' icon to save the changes! 
 
@@ -53,20 +54,20 @@ CREATE TABLE IF NOT EXISTS SERVERCOMMANDLINKS  (
 
 
 CREATE TABLE IF NOT EXISTS COMMANDRESPONSEPARSERS  (
-   SCRIPT_NAME  varchar(64) NOT NULL,
+   PARSER_NAME  varchar(64) NOT NULL,
    METRIC_TXN_TYPE  varchar(64) NOT NULL,
    METRIC_NAME_SUFFIX  varchar(64) NOT NULL,
    SCRIPT  varchar(4096) NOT NULL,
    COMMENT  varchar(1024) NOT NULL,
    SAMPLE_COMMAND_RESPONSE  varchar(1024) NOT NULL,
-  PRIMARY KEY ( SCRIPT_NAME )
+  PRIMARY KEY ( PARSER_NAME )
 ); 
 
 
 CREATE TABLE IF NOT EXISTS COMMANDPARSERLINKS  (
    COMMAND_NAME  varchar(64) NOT NULL,
-   SCRIPT_NAME  varchar(64) NOT NULL,
-  PRIMARY KEY ( COMMAND_NAME , SCRIPT_NAME )
+   PARSER_NAME  varchar(64) NOT NULL,
+  PRIMARY KEY ( COMMAND_NAME , PARSER_NAME )
 ); 
 
 

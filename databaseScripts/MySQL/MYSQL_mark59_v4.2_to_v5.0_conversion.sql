@@ -50,8 +50,8 @@ DROP DATABASE metricsdb;
 -- *************************************************************************************
 -- table changes
 -- *************************************************************************************
-ALTER TABLE mark59metricsdb.commandparserlinks CHANGE COLUMN SCRIPT_NAME PARSER_NAME VARCHAR(64) NOT NULL;
-ALTER TABLE mark59metricsdb.commandresponseparsers CHANGE COLUMN SCRIPT_NAME PARSER_NAME VARCHAR(64) NOT NULL ;
+ALTER TABLE mark59metricsdb.COMMANDPARSERLINKS CHANGE COLUMN SCRIPT_NAME PARSER_NAME VARCHAR(64) NOT NULL;
+ALTER TABLE mark59metricsdb.COMMANDRESPONSEPARSERS CHANGE COLUMN SCRIPT_NAME PARSER_NAME VARCHAR(64) NOT NULL ;
 
 
 -- *************************************************************************************

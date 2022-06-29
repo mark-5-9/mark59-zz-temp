@@ -1,11 +1,12 @@
 
 -- *************************************************************************************
 -- **
--- **   from 4.2 to 5.0.xx   
+-- **   from 4.2.x to 5.0   
+-- **
 -- **
 -- **   RENAME OF DATABASES
 -- **   ------------------
--- **   Rename the databases as below (we suggest also doing a backup): 
+-- **   See suggestion below for sql to do the rename: 
 -- **
 -- **       datahunterdb               to mark59datahunterdb 
 -- **       mark59servermetricswebdb   to mark59metricsdb
@@ -13,14 +14,32 @@
 -- **
 -- *************************************************************************************
 
---  Updates for the mark59metricsdb (ex mark59servermetricswebdb) tables
+
+-- *************************************************************************************
+-- database rename  - DO A BACKUP FIRST !! -
+--  (In pgamin, 'Disconnect Database...'s, and run the ALTER command from 'postgres' dbe) 
+-- *************************************************************************************
+ALTER DATABASE datahunterdb RENAME TO mark59datahunterdb;
+ALTER DATABASE mark59servermetricswebdb RENAME TO mark59metricsdb;
+ALTER DATABASE metricsdb RENAME TO mark59trendsdb;
+
+
+-- *************************************************************************************
+-- table changes mark59metricsdb (ex mark59servermetricswebdb))
+-- *************************************************************************************
+ALTER TABLE COMMANDPARSERLINKS RENAME SCRIPT_NAME TO PARSER_NAME;
+ALTER TABLE COMMANDRESPONSEPARSERS RENAME SCRIPT_NAME TO PARSER_NAME;
+
+
+-- *************************************************************************************
+--  Row updates for the mark59metricsdb (ex mark59servermetricswebdb) tables
 --  --------------------------------------------------------------------
 --  Due to code and name changes the following changes may be needed depending on your requirements.
---  The changes assume you want/have the sample Profiles as originally provided in 4.2, and have followed similar
---   patterns  when creating additional Profiles.  Please review before execution.        
-
-
--- as the RunCheck program is now called TrendsLoad, and directory /metrics is renamed to /mark59-trends-load. 
+--  The changes assume you want/have the sample Profiles as originally provided in 4.2 / 4.2.1, and have followed similar
+--   patterns  when creating additional Profiles.  Please review before execution.      
+--
+-- as the RunCheck program is now called TrendsLoad, and directory /metrics is renamed to /mark59-trends-load... 
+-- *************************************************************************************
 
 DELETE FROM SERVERPROFILES WHERE SERVER_PROFILE_NAME = 'DemoLINUX-DataHunterSeleniumRunCheck';
 DELETE FROM SERVERPROFILES WHERE SERVER_PROFILE_NAME = 'DemoWIN-DataHunterSeleniumRunCheck';
