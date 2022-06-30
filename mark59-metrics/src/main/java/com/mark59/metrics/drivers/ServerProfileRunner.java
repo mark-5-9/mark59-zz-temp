@@ -90,6 +90,7 @@ public class ServerProfileRunner {
 
 		WebServerMetricsResponsePojo response = new WebServerMetricsResponsePojo();
 		response.setServerProfileName(reqServerProfileName);
+		response.setParsedCommandResponses(new ArrayList<>());
 		response.setLogLines("");
 		List<String> logLines = new ArrayList<>();
 		commandCount = 0;		
@@ -226,11 +227,12 @@ public class ServerProfileRunner {
 		} catch (Exception e) {
 			StringWriter stackTrace = new StringWriter();
 			e.printStackTrace(new PrintWriter(stackTrace));
-			String failureMsg = "Error: Unexpected Failure executing server profile command on the target server. \n" +
+			String failureMsg = "Error: Unexpected Failure attempting to execute server profile. \n" +
 								"reqServerProfileName : " + reqServerProfileName + "\n" + e.getMessage() + "\n" + stackTrace.toString();
 			response.setFailMsg(failureMsg);
 			response.setLogLines(response.getLogLines() + failureMsg.replaceAll("\\R", "<br>"));
-			response.setTestModeResult("<font color='red'>Error: Unexpected Failure executing server profile command on the target server.</font>");
+			response.setTestModeResult("<font color='red'>Error: Unexpected Failure attempting to execute server profile."
+					+ "<br>Server Profile : " + reqServerProfileName + "<br>Error Message : " + e.getMessage()); 
 			LOG.warn(failureMsg);
 			LOG.debug("    loglines : " + response.getLogLines());
 		}
