@@ -29,11 +29,12 @@ import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chromium.ChromiumDriver;
 import org.openqa.selenium.devtools.DevTools;
-import com.mark59.selenium.corejmeterimpl.JmeterFunctionsForSeleniumScripts;
-
 import org.openqa.selenium.devtools.v102.network.Network;
 import org.openqa.selenium.devtools.v102.network.model.RequestWillBeSent;
 import org.openqa.selenium.devtools.v102.network.model.ResponseReceived;
+import org.openqa.selenium.devtools.v102.network.model.LoadingFinished;
+
+import com.mark59.selenium.corejmeterimpl.JmeterFunctionsForSeleniumScripts;
 
 
 
@@ -136,6 +137,36 @@ public class DevToolsDSL  {
 					}
 	            });
 	}
+	
+
+	
+	
+	public void addListenerLoadingFinished(JmeterFunctionsForSeleniumScripts jm, Predicate<LoadingFinished> responseFilter ) {
+		 
+	    devTools.addListener(Network.loadingFinished(),
+	            loadingFinished -> {  
+					if (LOG.isDebugEnabled()) {LOG.debug("addListenerLoadingFinished Request (id) : (" + loadingFinished.getRequestId() + ") ts = " + loadingFinished.getTimestamp());}
+					
+					RequestWillBeSent request = cdpRequests.get(loadingFinished.getRequestId() .toString());
+					
+					if (request != null && responseFilter.test(loadingFinished)
+							&& NumberUtils.isCreatable(request.getTimestamp().toString())
+							&& NumberUtils.isCreatable(loadingFinished.getTimestamp().toString())) {
+						
+						String  responseBody = devTools.send(Network.getResponseBody(loadingFinished.getRequestId())).getBody();
+						System.out.println(loadingFinished.getRequestId() + "   body >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " );
+						System.out.println(responseBody)  ;
+						System.out.println(loadingFinished.getRequestId() + "   body <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< \n\n" );
+						//whatever magic you want to do with the response body goes here 
+					} else {
+						if (LOG.isDebugEnabled()) {LOG.debug("No txn for ReqId : (" + loadingFinished.getRequestId() + ") has not been found on prev mapped requests");}
+					}
+	            });
+	}
+	
+	
+	
+	
 	
 	
 	public DevTools getDevTools() {

@@ -97,7 +97,8 @@ public class DataHunterLifecyclePvtScript  extends SeleniumAbstractJavaSamplerCl
 		jmeterAdditionalParameters.put("DATAHUNTER_URL", "http://localhost:8081/mark59-datahunter");
 		jmeterAdditionalParameters.put("DATAHUNTER_APPLICATION_ID", "DATAHUNTER_PV_TEST");
 		jmeterAdditionalParameters.put("FORCE_TXN_FAIL_PERCENT", "20");
-		jmeterAdditionalParameters.put("START_CDP_LISTENERS", String.valueOf(false));
+		//jmeterAdditionalParameters.put("START_CDP_LISTENERS", String.valueOf(false));
+		jmeterAdditionalParameters.put("START_CDP_LISTENERS", String.valueOf(true));
 		jmeterAdditionalParameters.put("USER", "default_user");				
 
 		// optional selenium driver related settings (defaults apply)
@@ -305,12 +306,16 @@ public class DataHunterLifecyclePvtScript  extends SeleniumAbstractJavaSamplerCl
 	}
 
 
+	
+	
+	
 	/**
-	 *	Alternative code for the addListenerResponseReceived method below, splitting out a long lambda into a separate function
-	 *  (forces explicit import statements for ..devtools.vxx ... classes) 
+	 *	Alternative code for the addListenerResponseReceived method below, showing how to split out a long lambda into a separate 
+	 *  function, arguably more readable (forces explicit import statements for ..devtools.vxxx ... classes) 
 	 *  
 	 *	//  import java.util.function.BiFunction;	
-	 *	//  import org.openqa.selenium.devtools.v95.network.model.ResponseReceived;  // 'v95' will change over devtools releases)
+	 *	//  import org.openqa.selenium.devtools.v102.network.model.ResponseReceived;  // 'v102' will change over devtools releases)
+	 *  //  import org.openqa.selenium.devtools.v102.network.model.RequestWillBeSent;
 	 *	
 	 *	BiFunction<RequestWillBeSent, ResponseReceived, String> computeTxnId = (req, res) -> {
 	 *		String urlAction = StringUtils.substringBeforeLast(StringUtils.substringAfter(res.getResponse().getUrl(), "dataHunter/"), "?");
@@ -340,6 +345,9 @@ public class DataHunterLifecyclePvtScript  extends SeleniumAbstractJavaSamplerCl
 					String[] splitCurrTxn = StringUtils.split(jm.getMostRecentTransactionStarted(), "_", 4);
 					return splitCurrTxn[0] + "_" + splitCurrTxn[1] + "_" + splitCurrTxn[2] + "__net_" + urlAction;
 				});
+		
+		// this listener can be used to interrogate the loaded response body - would not be expected to be in general use for a performance test.    
+		devToolsDsl.addListenerLoadingFinished(jm, loadingFinished -> true);
 	}
 
 

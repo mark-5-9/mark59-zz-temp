@@ -46,8 +46,8 @@ public class DataHunterRestApiClient {
 	private static final Logger LOG = LogManager.getLogger(DataHunterRestApiClient.class);	
 	private static final String UTF_8 =  StandardCharsets.UTF_8.toString();
 	
-
 	String dataHunterUrl;
+	
 	
 	/**
 	 * @param dataHunterUrl target datahunter url (eg http://localhost:8081/mark59-datahunter)
@@ -205,8 +205,10 @@ public class DataHunterRestApiClient {
 	public DataHunterRestApiResponsePojo useNextPolicy(String application, String lifecycle,String useability, String selectOrder ){
 		String webServiceUrl = dataHunterUrl + "/api/useNextPolicy?application=" + encode(application)	+ "&lifecycle=" + encode(lifecycle) + 
 				"&useability=" + encode(useability) + "&selectOrder=" + encode(selectOrder);
+		System.out.println("DHRAC useNextPolicy url = " + webServiceUrl); 		
 		return invokeDataHunterRestApi(webServiceUrl);
 	}
+	
 	
 	/**
 	 * 	Lookup Next Item
@@ -275,7 +277,6 @@ public class DataHunterRestApiClient {
 	}	
 	
 	
-	
 	/**
 	 * Call to the DataHunter Rest controller, returning a DataHunterRestApiResponsePojo
 	 * 
@@ -318,7 +319,6 @@ public class DataHunterRestApiClient {
 		return responsePojo;
 	}
 
-
 	
 	private String encode(String uriParm) {
 		try {
@@ -328,6 +328,7 @@ public class DataHunterRestApiClient {
 			throw new RuntimeException("UnsupportedEncodingException in policyToUrlQueryString using " + uriParm );
 		}
 	}
+	
 	
 	private String nullToEmpty(String str) {
 		return null == str ? "" : str;

@@ -639,7 +639,7 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	 * Capture and immediately output a screenshot (.jpg) log. Use with caution in a Performance and Volume 
 	 * test as misuse of this method may produce many more screenshots than intended. 
 	 * <p>Instead, you could use {@link #bufferScreenshot(String)} and {@link #writeBufferedArtifacts()}.
-	 * @param imageName last part of the log filename (excluding extension)  
+	 * @param imageName last part of the log filename (but excluding extension - which is set as '.jpg')  
 	 */
 	@Override		
 	public void writeScreenshot(String imageName) {
@@ -650,7 +650,7 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	/**
 	 * Stores a screenshot (.jpg) log in memory, ready to be written to file later.  
 	 * If you want to immediately write a screenshot to file, use {@link #writeScreenshot(String)}  instead.
-	 * @param imageName last part of the log filename (excluding extension)   
+	 * @param imageName last part of the log filename (but excluding extension - which is set as '.jpg')   
 	 */
 	@Override	
 	public void bufferScreenshot(String imageName) {
@@ -662,7 +662,7 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	 * Capture and immediately output a page source (.html) log. Use with caution in a Performance and Volume 
 	 * test as misuse of this method may produce many more screenshots than intended. 
 	 * <p>Instead, you could use {@link #bufferPageSource(String)} and {@link #writeBufferedArtifacts()}.
-	 * @param imageName last part of the log filename (excluding extension)  
+	 * @param imageName last part of the log filename (but excluding extension - which is set as '.html')
 	 */
 	public void writePageSource(String imageName) {
 		writeLog(imageName, "html", mark59SeleniumDriver.captureCurrentUrlAndtHtmlPageSource().getBytes());
@@ -672,7 +672,7 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 	/**
 	 * Stores a page source (.html) log in memory, ready to be written to file later.  
 	 * If you want to immediately write a screenshot to file, use {@link #writePageSource(String)} instead.
-	 * @param imageName last part of the log filename (excluding extension)   
+	 * @param imageName last part of the log filename (but excluding extension - which is set as '.html')   
 	 */
 	public void bufferPageSource(String imageName) {
 		bufferLog(imageName, "html", mark59SeleniumDriver.captureCurrentUrlAndtHtmlPageSource().getBytes());
@@ -680,8 +680,8 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 
 
 	/**
-	 * Note Performance logging is only implemented for selenium chrom(ium) drivers
-	 * @param textFileName last part of the log filename (excluding extension) 
+	 * Note Performance logging is only implemented for selenium chrom(ium) drivers.
+	 * @param textFileName last part of the log filename (but excluding extension - which is set as '.txt') 
 	 */
 	public void writeDriverPerfLogs(String textFileName) {
 		writeLog(textFileName, "txt", mark59SeleniumDriver.captureDriverPerfLogs());
