@@ -61,23 +61,25 @@ import com.mark59.selenium.corejmeterimpl.KeepBrowserOpen;
 import com.mark59.selenium.corejmeterimpl.SeleniumAbstractJavaSamplerClient;
 import com.mark59.selenium.driversimpl.SeleniumDriverFactory;
 
-
 /**
- * This selenium script uses a style of DSL which we suggest would be usable for most performance tests.<br><br>
- * For simple html pages a DSL not having element "wait until"s may suffice.
- * 
- * <p>Note the use of a <b>PAGE_LOAD_STRATEGY</b> of <b>NONE</b>.  This means you must control all page load timing in the script, usually
+ * <p>This sample is meant to demonstrate how to structure a Mark59 selenium script (not how to use use DataHunter in a performance test -
+ * see below). It uses a style of DSL which we suggest would be usable for most performance tests. For simple html pages a DSL not having element 
+ * "wait until"s may suffice.
+ *        
+ * <p>** Note 1.  The use of a <b>PAGE_LOAD_STRATEGY</b> of <b>NONE</b>.  This means you must control all page load timing in the script, usually
  * by waiting for an element on the next page to become available (for example by waiting for the first item on the page that you 
  * intend to click on becoming clickable).  
  * 
- * <p>**Note 1 and 2: the  waitUntilClickable(..) or thenSleep() methods are not necessary here, the simplicity of the pages don't require it.
- * Also, for Note 1, the <code>checkSqlOk</code> already has a wait built into it (<code>getText</code> for the SQL result, so that would give
- * you the correct timing). Included to demonstrate what would be required in more difficult situations, such as on pages where you need
- * to wait for async processes to execute.
- * <br>
+ * <p>**Note 2 and 3.  The <code>waitUntilClickable(..)</code> or <code>thenSleep()</code> methods are not necessary here, the simplicity of the 
+ * pages don't require it. Also, for Note 2, the <code>checkSqlOk</code> already has a wait built into it (<code>getText</code> for the SQL result,
+ * so that would give you the correct timing anyway). Included to demonstrate what would be required in more complex situations, such as on pages 
+ * where you need to wait for async processes to execute.
  * 
- * <p>Also note, when you require DataHunter functionality in a script, we suggest to use DataHunter Rest Api calls rather than using selenium
- * as done in this sample.
+ * <p>In a performance test, DataHunter should be invoked using it's API. Review 
+ * {@link com.mark59.datahunter.api.rest.samples.DataHunterRestApiClientSampleUsage}, and 
+ * DataHunterLifecyclePvtScriptUsingApiViaHttpRequestsTestPlan.jmx (the test-plans folder in this project).  These samples replicate the basic 
+ * functionality of this script, giving a three way comparison of the DataHunter HTML pages, the DataHunter Java API Client, and direct http 
+ * invocation of the API.     
  * 
  * @see SeleniumAbstractJavaSamplerClient
  * 
@@ -104,7 +106,7 @@ public class DataHunterLifecyclePvtScript  extends SeleniumAbstractJavaSamplerCl
 		// optional selenium driver related settings (defaults apply)
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.DRIVER, Mark59Constants.CHROME);
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.HEADLESS_MODE, String.valueOf(false));
-		jmeterAdditionalParameters.put(SeleniumDriverFactory.PAGE_LOAD_STRATEGY, PageLoadStrategy.NONE.toString());
+		jmeterAdditionalParameters.put(SeleniumDriverFactory.PAGE_LOAD_STRATEGY, PageLoadStrategy.NONE.toString());				// ** note 1
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.BROWSER_DIMENSIONS, Mark59Constants.DEFAULT_BROWSER_DIMENSIONS);
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.PROXY, "");
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.ADDITIONAL_OPTIONS, "");
@@ -177,7 +179,7 @@ public class DataHunterLifecyclePvtScript  extends SeleniumAbstractJavaSamplerCl
 		DeleteMultiplePoliciesActionPage deleteMultiplePoliciesActionPage = new DeleteMultiplePoliciesActionPage(driver);
 		
 		jm.startTransaction("DH_lifecycle_0100_deleteMultiplePolicies");		
-		deleteMultiplePoliciesPage.submit().submit().waitUntilClickable( deleteMultiplePoliciesActionPage.backLink() );   // ** note 1
+		deleteMultiplePoliciesPage.submit().submit().waitUntilClickable( deleteMultiplePoliciesActionPage.backLink() );   // ** note 2
 		waitForSqlResultsTextOnActionPageAndCheckOk(deleteMultiplePoliciesActionPage);
 		jm.endTransaction("DH_lifecycle_0100_deleteMultiplePolicies");	
 	
@@ -197,11 +199,11 @@ public class DataHunterLifecyclePvtScript  extends SeleniumAbstractJavaSamplerCl
 			
 			jm.startTransaction("DH_lifecycle_0200_addPolicy");
 			SafeSleep.sleep(200);  // Mocking a 200 ms txn delay
-			addPolicyPage.submit().submit().waitUntilClickable( addPolicyActionPage.backLink() );   // ** note 1;	
+			addPolicyPage.submit().submit().waitUntilClickable( addPolicyActionPage.backLink() );   // ** note 2;	
 			waitForSqlResultsTextOnActionPageAndCheckOk(addPolicyActionPage);
 			jm.endTransaction("DH_lifecycle_0200_addPolicy");
 			
-			addPolicyActionPage.backLink().click().waitUntilClickable( addPolicyPage.submit() ).thenSleep();    // ** note 1 & note 2
+			addPolicyActionPage.backLink().click().waitUntilClickable( addPolicyPage.submit() ).thenSleep();    // ** note 2 & note 3
 		} 
 	
 //		dummy transaction just to test transaction failure behavior
@@ -215,7 +217,7 @@ public class DataHunterLifecyclePvtScript  extends SeleniumAbstractJavaSamplerCl
 		
 		driver.get(dataHunterUrl + DslConstants.COUNT_POLICIES_URL_PATH + "?application=" + application);
 		CountPoliciesPage countPoliciesPage = new CountPoliciesPage(driver); 
-		countPoliciesPage.useability().selectByVisibleText(DslConstants.UNUSED).thenSleep();   // ** note 2
+		countPoliciesPage.useability().selectByVisibleText(DslConstants.UNUSED).thenSleep();   // ** note 3
 		
 		CountPoliciesActionPage countPoliciesActionPage = new CountPoliciesActionPage(driver);	
 
@@ -347,7 +349,7 @@ public class DataHunterLifecyclePvtScript  extends SeleniumAbstractJavaSamplerCl
 				});
 		
 		// this listener can be used to interrogate the loaded response body - would not be expected to be in general use for a performance test.    
-		devToolsDsl.addListenerLoadingFinished(jm, loadingFinished -> true);
+		// devToolsDsl.addListenerLoadingFinished(jm, loadingFinished -> true);
 	}
 
 

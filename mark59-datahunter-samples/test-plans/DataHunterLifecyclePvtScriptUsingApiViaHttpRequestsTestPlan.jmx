@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.5">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="DataHunterApiViaHttpRequestsTestPlan" enabled="true">
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="DataHunterLifecyclePvtScriptUsingApiViaHttpRequestsTestPlan" enabled="true">
       <stringProp name="TestPlan.comments">demonstates the DataHunter API over http by replicating the basic logic of the DataHunterLifecyclePvtScript.Selenium script.  Please see: https://github.com/mark-5-9/mark59/blob/master/mark59-datahunter-samples/src/main/java/com/mark59/datahunter/samples/scripts/DataHunterLifecyclePvtScript.java</stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
@@ -713,7 +713,7 @@ println(&quot;test completed.&quot;);</stringProp>
             <connectTime>true</connectTime>
           </value>
         </objProp>
-        <stringProp name="filename">C:/Mark59_Runs/Jmeter_Results/DataHunterApiViaHttpRequests/DataHunterApiViaHttpRequestsResults.csv</stringProp>
+        <stringProp name="filename">C:/Mark59_Runs/Jmeter_Results/${application}/${application}TestResults.csv</stringProp>
         <stringProp name="TestPlan.comments">  ** For LINUX Gui run, remove &quot;C:/&quot; in the Filename (you get a strange C: named directory otherwise!)  </stringProp>
       </ResultCollector>
       <hashTree/>
