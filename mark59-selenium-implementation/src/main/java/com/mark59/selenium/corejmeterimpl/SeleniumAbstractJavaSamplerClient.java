@@ -239,7 +239,6 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 	 */
 	@Override
 	public SampleResult runTest(JavaSamplerContext context) {
-		System.out.println("*********************** this.getClass().getName() = " + this.getClass().getName()  );
 		if (LOG.isDebugEnabled()) LOG.debug(this.getClass().getName() +  " : executing runTest" );
 		
 		AbstractThreadGroup tg = null;

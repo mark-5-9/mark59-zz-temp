@@ -205,7 +205,6 @@ public class DataHunterRestApiClient {
 	public DataHunterRestApiResponsePojo useNextPolicy(String application, String lifecycle,String useability, String selectOrder ){
 		String webServiceUrl = dataHunterUrl + "/api/useNextPolicy?application=" + encode(application)	+ "&lifecycle=" + encode(lifecycle) + 
 				"&useability=" + encode(useability) + "&selectOrder=" + encode(selectOrder);
-		System.out.println("DHRAC useNextPolicy url = " + webServiceUrl); 		
 		return invokeDataHunterRestApi(webServiceUrl);
 	}
 	

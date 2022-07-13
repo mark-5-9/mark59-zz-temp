@@ -271,8 +271,7 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 
 		if (!transactionMap.containsKey(transactionLabel))
 			throw new NoSuchElementException(
-					"could not find SampleResult in transactionMap as it does not contain a key matching the expected value : "
-							+ transactionLabel);
+					"Could not find a transactionn to end matching the passed label : "	+ transactionLabel);
 
 		if (StringUtils.isBlank(responseCode)) 
 			responseCode = result.getOutcomeResponseCode();

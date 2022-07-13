@@ -229,8 +229,8 @@ public class DataHunterLifecyclePvtScript  extends SeleniumAbstractJavaSamplerCl
 		long countPolicies = Long.parseLong(countPoliciesActionPage.rowsAffected().getText());
 		LOG.debug( "countPolicies : " + countPolicies); 
 		jm.userDataPoint(application + "_Total_Unused_Policy_Count", countPolicies);
-		
-// 		count breakdown (count for unused DATAHUNTER_PV_TEST policies for this thread )
+
+//	 	count breakdown - count for unused DATAHUNTER_PV_TEST policies  (by lifecycle) 	
 		driver.get(dataHunterUrl + DslConstants.COUNT_POLICIES_BREAKDOWN_URL_PATH + "?application=" + application);		
 		CountPoliciesBreakdownPage countPoliciesBreakdownPage = new CountPoliciesBreakdownPage(driver);
 		countPoliciesBreakdownPage.applicationStartsWithOrEquals().selectByVisibleText(DslConstants.EQUALS);
@@ -243,7 +243,7 @@ public class DataHunterLifecyclePvtScript  extends SeleniumAbstractJavaSamplerCl
 		waitForSqlResultsTextOnActionPageAndCheckOk(countPoliciesBreakdownActionPage);		
 		jm.endTransaction("DH_lifecycle_0400_countUnusedPoliciesCurrentThread");				
 		
-		// direct access to required row-column table element by computing the id:
+		// direct access to required row-column table element by computing the id - to get the current thread (lifecycle) row :
 		int countUsedPoliciesCurrentThread = countPoliciesBreakdownActionPage.getCountForBreakdown(application, lifecycle, DslConstants.UNUSED); 
 		LOG.debug( "countUsedPoliciesCurrentThread : " + countUsedPoliciesCurrentThread); 
 		jm.userDataPoint(application + "_This_Thread_Unused_Policy_Count", countUsedPoliciesCurrentThread);	
@@ -265,9 +265,6 @@ public class DataHunterLifecyclePvtScript  extends SeleniumAbstractJavaSamplerCl
 		if (LOG.isDebugEnabled() ) {LOG.debug("useNextPolicy: " + application + "-" + lifecycle + " : " + nextPolicyActionPage.identifier() );	}
 		
 		//HTML table demo.
-		long used=0;
-		long unused=0;
-		
 		driver.get(dataHunterUrl + DslConstants.PRINT_SELECTED_POLICIES_URL_PATH  + "?application=" + application);
 		PrintSelectedPoliciesPage printSelectedPoliciesPage = new PrintSelectedPoliciesPage(driver);
 		printSelectedPoliciesPage.submit().waitUntilClickable();
@@ -282,6 +279,8 @@ public class DataHunterLifecyclePvtScript  extends SeleniumAbstractJavaSamplerCl
 		
 		LOG.debug("Transaction " + sr_0600.getSampleLabel() + " ran at " + sr_0600.getTimeStamp() + " and took " + sr_0600.getTime() + " ms." );
 		
+		long used=0;
+		long unused=0;
 		HtmlTable printSelectedPoliciesTable = printSelectedPoliciesActionPage.printSelectedPoliciesTable();
 		for (HtmlTableRow tableRow : printSelectedPoliciesTable.getHtmlTableRows()) {
 			if (tableRow.getColumnNumberOfExpectedColumns(4, 8).getText().equals("USED"))   used++;

@@ -30,8 +30,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Defines the Mark59 Logginh Directory and lognames formatter.
- * A Singleton pattern is used so that 'deleteDirectory' cannot be called twice
+ * Defines the Mark59 Logging Directory and log names formatter.
+ * A Singleton pattern is used so initialization and the log names formatter are only executed oncee
  * 
  * @author Michael Cohen
  * @author Philip Webb Written: Australian Winter 2019
@@ -121,8 +121,7 @@ public class Mark59LoggingConfig {
 			LOG.info("Clearing any existing data from Mark59 log directory " + logDirectory.getPath());
 			FileUtils.deleteDirectory(logDirectory);
 		} else {
-			LOG.warn(
-					"   As no Mark59 log directory has been set, attempts to write logs will fail.");
+			LOG.warn("   As no Mark59 log directory has been set, attempts to write logs will fail.");
 		}
 		return logDirectory;
 	}
