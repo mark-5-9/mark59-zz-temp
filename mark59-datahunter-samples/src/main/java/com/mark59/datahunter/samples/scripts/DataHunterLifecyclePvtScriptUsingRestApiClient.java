@@ -74,7 +74,7 @@ public class DataHunterLifecyclePvtScriptUsingRestApiClient extends AbstractJava
 
 	protected static final Map<String,String> defaultArgumentsMap; 	
 	static {
-		Map<String,String> staticMap = new LinkedHashMap<>();
+		Map<String,String> staticMap = new LinkedHashMap<>(); 
 		staticMap.put("build information: ", "using mark59-core version " + Mark59Constants.MARK59_VERSION);	
 		defaultArgumentsMap = Collections.unmodifiableMap(staticMap);
 	}
@@ -86,6 +86,7 @@ public class DataHunterLifecyclePvtScriptUsingRestApiClient extends AbstractJava
 		jmeterAdditionalParameters.put("DATAHUNTER_APPLICATION_ID_CLIENT_API", "DATAHUNTER_PV_TEST_CLIENT_API");
 		jmeterAdditionalParameters.put("FORCE_TXN_FAIL_PERCENT", "20");
 		jmeterAdditionalParameters.put("USER", "user");				
+		jmeterAdditionalParameters.put(JmeterFunctionsImpl.PRINT_RESULTS_SUMMARY, String.valueOf(true));   
 		return jmeterAdditionalParameters;			
 	}	
 
@@ -96,9 +97,13 @@ public class DataHunterLifecyclePvtScriptUsingRestApiClient extends AbstractJava
 	
 	@Override
 	public SampleResult runTest(JavaSamplerContext context) {
+		
+		JmeterFunctionsImpl jm = new JmeterFunctionsImpl(context);
+		if ("true".equalsIgnoreCase(context.getParameter(JmeterFunctionsImpl.PRINT_RESULTS_SUMMARY,String.valueOf(false)))){
+			jm.printResultSummary(true);
+		}
 		String lifecycle = "thread_" + Thread.currentThread().getName();
 
-		JmeterFunctionsImpl jm = new JmeterFunctionsImpl(context);
 		String dataHunterUrl        = context.getParameter("DATAHUNTER_URL");
 		String applicationClientApi = context.getParameter("DATAHUNTER_APPLICATION_ID_CLIENT_API");
 		int forceTxnFailPercent     = Integer.parseInt(context.getParameter("FORCE_TXN_FAIL_PERCENT").trim());
@@ -207,6 +212,8 @@ public class DataHunterLifecyclePvtScriptUsingRestApiClient extends AbstractJava
 		response = dhApiClient.deleteMultiplePolicies(applicationClientApi, null, null);
 		jm.endTransaction("DH_lifecycle_0100_deleteMultiplePolicies_clientApi");	
 		confirmValidResponse(response, jm);
+		
+		jm.tearDown();
 		
 		return jm.getMainResult();
 	}

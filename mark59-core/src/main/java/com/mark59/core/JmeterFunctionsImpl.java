@@ -41,11 +41,10 @@ import org.apache.logging.log4j.Logger;
 import com.mark59.core.interfaces.DriverFunctions;
 import com.mark59.core.interfaces.JmeterFunctions;
 import com.mark59.core.utils.Mark59Constants;
-import com.mark59.core.utils.Mark59LogLevels;
 import com.mark59.core.utils.Mark59Constants.JMeterFileDatatypes;
-import com.mark59.core.utils.Mark59Utils;
-import com.mark59.core.utils.StaticCounter;
+import com.mark59.core.utils.Mark59LogLevels;
 import com.mark59.core.utils.Mark59LoggingConfig;
+import com.mark59.core.utils.StaticCounter;
 
 
 
@@ -73,6 +72,13 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 
 	private static final Logger LOG = LogManager.getLogger(JmeterFunctionsImpl.class);
 	
+	/**
+	 * Intention is that this string is used as a JMeter Parameter to flag if Transaction Results Summary should be printed.
+	 * Also see {@link #isPrintResultsSummary}     
+	 */
+	public static final String PRINT_RESULTS_SUMMARY = "PRINT_RESULTS_SUMMARY";
+	
+	
 	protected static Mark59LoggingConfig loggingConfig;	
 
 	/**
@@ -81,7 +87,9 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	protected SampleResult mainResult = new SampleResult();
 	
 	/**
-	 * the executed and in-flight transactions   
+	 * The executed and in-flight transactions
+	 * Intended as an internal key tracking mechanism to prevent multiple transactions with the
+	 * same name being started and running concurrently within the one script    
 	 */
 	protected Map<String, SampleResult> transactionMap = new ConcurrentHashMap<>();
 	
@@ -96,9 +104,15 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	protected String threadName;
 
 	/**
-	 * used to the the result of a test as a failure
+	 * used to force the outcome of test script to Failed
 	 */
 	protected boolean isForcedFail;
+
+	/**
+	 * Used to flag if Transaction Results Summary should be printed. 
+	 * The default is not to print. Also see {@link #isPrintResultsSummary}     
+	 */
+	protected boolean isPrintResultsSummary = false;
 
 	/**
 	 * map of captured logs as a byte array 
@@ -453,7 +467,7 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	/**
 	 * Called upon completion of the test run.
 	 * 
-	 * <p>Traverses the internal created transactionMap, looking for any transactions that had been
+	 * <p>Traverses the internal created transactions Map, looking for any transactions that had been
 	 * started but not completed. If incomplete transactions are encountered then they are ended and flagged as
 	 * "failed".</p>
 	 * 
@@ -483,7 +497,9 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 			tearDownMainResult(Outcome.FAIL);
 		}
 		
-		logThreadTransactionResults();
+		if (isPrintResultsSummary) {
+			logThreadTransactionResults();
+		}
 	}
 	
 	
@@ -524,6 +540,14 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 		isForcedFail = true;
 	}
 
+	
+	/**
+	 * used to flag if Transaction Results Summary should be printed. 
+	 */
+	public void printResultSummary(boolean isPrintResultsSummary) {
+		this.isPrintResultsSummary = isPrintResultsSummary;
+	}
+		
 	
 	/**
 	 * @return a map of the buffered logs (keyed by name) 
@@ -690,27 +714,28 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	
 	
 	/**
-	 * Fetches the SampleResult from the transactionMap that matches the supplied label.
-	 * The transactionMap is primarily intended as an internal key tracking mechanism to prevent multiple 
-	 * transactions with the same name being started and running concurrently within the one script  
+	 * <p>Intended for internal testing purposes.
 	 * 
-	 * <p>If it fails to find a SampleResult it either means no such label had been added to the transactionMap, 
+	 * <p>Fetches the SampleResult from the transactionMap that matches the supplied label.
+	 * If it fails to find a SampleResult it either means no such label had been added to the transactionMap, 
 	 * or the SampleResult has already been finalized and added to the main result.</p>
 	 * 
 	 * @param label the transaction label for the SampleResult to locate.
 	 * @return SampleResult belonging to the supplied label.
 	 */
 	public SampleResult getSampleResultWithLabel(String label) {
-		System.out.println( ">> transactionMap");
-		System.out.println( Mark59Utils.prettyPrintMap(transactionMap)  );
-		System.out.println( "<< transactionMap");
+		//	System.out.println( ">> transactionMap");
+		//	System.out.println( Mark59Utils.prettyPrintMap(transactionMap)  );
+		//	System.out.println( "<< transactionMap");
 		return transactionMap.get(label);
 	}
 	
 	
 	/**
-	 * Searches the main result for all instances of the supplied label, collating the SampleResults into a List and returning all of them.
-	 * Note: primary purpose is as a helper method for junit testing. 
+	 * <p>Intended for internal testing purposes.
+	 * 
+	 *  <p>Searches the main result for all instances of the supplied label, collating the SampleResults into a List 
+	 * and returning all of them.
 	 *  
 	 * @param label the transaction label for the SampleResults to locate.
 	 * @return  a list of sample results
@@ -726,16 +751,16 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 		SampleResult[] sampleResult = mainResult.getSubResults();
 		LOG.info("");
 		LOG.info(Thread.currentThread().getName() + " result  (" + mainResult.getResponseMessage() + ")"   ) ; 
-		LOG.info(String.format("%-40s%-10s%-60s%-20s%-20s", "Thread", "#", "txn name", "Resp Message", "resp time"));
+		LOG.info(String.format("%-40s%-10s%-70s%-20s%-20s", "Thread", "#", "txn name", "Resp Message", "resp time"));
 
 		for (int i = 0; i < sampleResult.length; i++) {
 			SampleResult subSR = sampleResult[i];
 			
 			if (StringUtils.isBlank(subSR.getDataType())) {
-				LOG.info(String.format("%-40s%-10s%-60s%-20s%-20s", threadName, i, subSR.getSampleLabel(),
+				LOG.info(String.format("%-40s%-10s%-70s%-20s%-20s", threadName, i, subSR.getSampleLabel(),
 						subSR.getResponseMessage(), subSR.getTime()));				
 			} else {
-				LOG.info(String.format("%-40s%-10s%-60s%-20s%-20s", threadName, i, subSR.getSampleLabel(),
+				LOG.info(String.format("%-40s%-10s%-70s%-20s%-20s", threadName, i, subSR.getSampleLabel(),
 						subSR.getResponseMessage() + " (" + subSR.getDataType() + ")" , subSR.getTime()));
 			}
 		}

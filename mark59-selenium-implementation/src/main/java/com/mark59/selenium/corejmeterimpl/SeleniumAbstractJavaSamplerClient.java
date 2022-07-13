@@ -47,6 +47,7 @@ import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 
+import com.mark59.core.JmeterFunctionsImpl;
 import com.mark59.core.Outcome;
 import com.mark59.core.utils.IpUtilities;
 import com.mark59.core.utils.Log4jConfigurationHelper;
@@ -161,6 +162,7 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 		staticMap.put(ON_EXCEPTION_WRITE_STACK_TRACE, 	String.valueOf(true));
 		
 		staticMap.put("______________________ miscellaneous: __________________________", "");				
+		staticMap.put(JmeterFunctionsImpl.PRINT_RESULTS_SUMMARY, String.valueOf(false));	   
 		staticMap.put(IpUtilities.RESTRICT_TO_ONLY_RUN_ON_IPS_LIST, "");
 		staticMap.put(SeleniumDriverFactory.EMULATE_NETWORK_CONDITIONS, "");		
 		

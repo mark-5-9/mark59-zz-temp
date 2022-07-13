@@ -117,9 +117,12 @@ public class JmeterFunctionsForSeleniumScripts extends JmeterFunctionsImpl {
 			Map<String, String> jmeterRuntimeArgumentsMap) {		
 		super(context);
 		this.mark59SeleniumDriver = mark59SeleniumDriver;
-		
 		setDefaultTxnLoggingBehaviourBasedOnLog4j();
 		overrideTxnLoggingBehaviourUsingJmeterParameters(jmeterRuntimeArgumentsMap);
+		
+		if (String.valueOf(true).equalsIgnoreCase(context.getParameter(JmeterFunctionsImpl.PRINT_RESULTS_SUMMARY,String.valueOf(false)))){
+			printResultSummary(true);
+		}
 	}
 
 

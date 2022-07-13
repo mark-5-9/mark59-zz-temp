@@ -29,6 +29,7 @@ import org.apache.logging.log4j.Level;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 
+import com.mark59.core.JmeterFunctionsImpl;
 import com.mark59.core.Outcome;
 import com.mark59.core.utils.IpUtilities;
 import com.mark59.core.utils.Log4jConfigurationHelper;
@@ -99,7 +100,8 @@ public class DataHunterLifecycleIteratorPvtScript  extends SeleniumIteratorAbstr
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.WRITE_FFOX_BROWSER_LOGFILE, 	String.valueOf(false));
 		jmeterAdditionalParameters.put(IpUtilities.RESTRICT_TO_ONLY_RUN_ON_IPS_LIST, "");
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.EMULATE_NETWORK_CONDITIONS, "");	
-//		jmeterAdditionalParameters.put(SeleniumDriverFactory.BROWSER_EXECUTABLE, "C:/win_chrom_ium_install_path/chrome.exe");		
+//		jmeterAdditionalParameters.put(SeleniumDriverFactory.BROWSER_EXECUTABLE, "C:/win_chrom_ium_install_path/chrome.exe");
+		jmeterAdditionalParameters.put(JmeterFunctionsImpl.PRINT_RESULTS_SUMMARY, String.valueOf(true));				
 		return jmeterAdditionalParameters;			
 	}
 	

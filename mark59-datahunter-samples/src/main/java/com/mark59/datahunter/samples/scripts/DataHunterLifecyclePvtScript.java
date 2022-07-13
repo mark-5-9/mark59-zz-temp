@@ -33,6 +33,7 @@ import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import com.mark59.core.JmeterFunctionsImpl;
 import com.mark59.core.Outcome;
 import com.mark59.core.utils.IpUtilities;
 import com.mark59.core.utils.Log4jConfigurationHelper;
@@ -92,6 +93,13 @@ public class DataHunterLifecyclePvtScript  extends SeleniumAbstractJavaSamplerCl
 	private static final Logger LOG = LogManager.getLogger(DataHunterLifecyclePvtScript.class);	
 	
 	
+	/**
+	 *  Construct the parameter map seen in the JMeter Java Request panel.  These values can be overridden in that panel.
+	 *  <p>For example, it would be usual to have <code>HEADLESS_MODE</code> set to <code>false</code> here, so you can run the script 
+	 *  in the IDE and see the browser, but the override the <code>HEADLESS_MODE</code> value to <code>true</code> in the JMeter test plan.
+	 *  <p>Similarly for <code>PRINT_RESULTS_SUMMARY</code>.  You may want to see the results when running in the IDE, but set it to
+	 *  <code>false</code> (which is also the default) when executing in JMeter, to minimize logging.       
+	 */
 	@Override
 	protected Map<String, String> additionalTestParameters() {
 		Map<String, String> jmeterAdditionalParameters = new LinkedHashMap<>();
@@ -126,7 +134,8 @@ public class DataHunterLifecyclePvtScript  extends SeleniumAbstractJavaSamplerCl
 		jmeterAdditionalParameters.put(ON_EXCEPTION_WRITE_PERF_LOG,			String.valueOf(true));
 		jmeterAdditionalParameters.put(ON_EXCEPTION_WRITE_STACK_TRACE,		String.valueOf(true));
 		
-		// optional miscellaneous settings (defaults apply) 	
+		// optional miscellaneous settings (defaults apply) 
+		jmeterAdditionalParameters.put(JmeterFunctionsImpl.PRINT_RESULTS_SUMMARY, String.valueOf(true));		
 		jmeterAdditionalParameters.put(IpUtilities.RESTRICT_TO_ONLY_RUN_ON_IPS_LIST, "");			
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.EMULATE_NETWORK_CONDITIONS, "");			
 	

@@ -35,6 +35,7 @@ import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 
+import com.mark59.core.JmeterFunctionsImpl;
 import com.mark59.core.utils.Log4jConfigurationHelper;
 import com.mark59.core.utils.SafeSleep;
 import com.mark59.datahunter.samples.dsl.helpers.DslPageFunctions;
@@ -70,6 +71,7 @@ public class DataHunterBasicRegressionScript  extends SeleniumAbstractJavaSample
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.DRIVER, "CHROME");
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.HEADLESS_MODE, String.valueOf(false));
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.PAGE_LOAD_STRATEGY, PageLoadStrategy.NONE.toString());
+		jmeterAdditionalParameters.put(JmeterFunctionsImpl.PRINT_RESULTS_SUMMARY, String.valueOf(false));				
 		return jmeterAdditionalParameters;			
 	}
 	
