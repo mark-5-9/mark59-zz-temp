@@ -10,7 +10,7 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
 <p>Release 5.0<br>
 
   <ul>  
-	<li>Change project, URL and database URL names.  This is a planned to be once-off change :)
+	<li>Change project, URL and database URL names.  This is planned to be once-off change :)
 	  <ul>
 	    <li>Web application Urls context path changes
 	       	<ul>
