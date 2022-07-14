@@ -7,7 +7,7 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
 
 ## Releases 
 
-<p>Release 5.x<br>
+<p>Release 5.0<br>
 
   <ul>  
 	<li>Change project, URL and database URL names.  This is a planned to be once-off change :)
@@ -35,16 +35,26 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
 	    </li>
 	  </ul>  
 	</li>
-	<li>new property mark59.log.directory renames mark59.screenshot.directory (flagged as redundant)</li>
-	<li>new property mark59.logname.format : formatter for log names output to the log directory</li>
-	<li>new property mark59.log.directory.suffix : log directory suffix (a local 'date' or 'datetime')</li>	
-	<li>mark59 logs types can be disabled on script exception</li>	
-	<li>filter for CDP markers on results splitter for Transactions Report</li>	
-	<li>selenium to 4.2.2 (chrome102+), H2 to 2.1.212, spring-boot to 2.7.0</li>
-	<li>improved error handling for the mark59-metrics appllcation</li>
-	<li>mark59metricsdb (ex mark59servermetricswebdb) database column nanme SCRIPT_NAME changed to PARSER_NAME 
+	<li>New property mark59.log.directory renames mark59.screenshot.directory (flagged as redundant)</li>
+	<li>New property mark59.logname.format : formatter for log names output to the log directory</li>
+	<li>New property mark59.log.directory.suffix : log directory suffix (a local 'date' or 'datetime')</li>	
+	<li>Mark59 logs types can be disabled on script exception</li>	
+	<li>Filter for CDP markers on results splitter for Transactions Report</li>	
+	<li>JMeter to 5.5, Selenium to 4.2.2 (chrome102+), H2 to 2.1.212, spring-boot to 2.7.0</li>
+	<li>Improved error handling for the mark59-metrics application</li>
+	<li>Improved logging in mark59-metrics appllcation</li>
+	<li>mark59metricsdb (ex mark59servermetricswebdb) database column name SCRIPT_NAME changed to PARSER_NAME 
 		on tables COMMANDRESPONSEPARSERS and COMMANDPARSERLINKS<br>
-		(review conversion files in the mark59 zip download databaseScripts folder)</li>	
+		(review conversion files in the mark59 zip download databaseScripts folder for details)</li>
+	<li>New script JMeter parameter PRINT_RESULTS_SUMMARY to to flag if Transaction Results Summary should be printed</li>	
+	<li>New DataHunter API Samples: Direct API httprequest access in JMeter, and same logic repeated using the Java API Client:
+		<ul>
+			<li>DataHunterLifecyclePvtScriptUsingApiViaHttpRequestsTestPlan.jmx replaces DataHunterHttpTestPlan.jmx</li> 
+			<li>new sample script DataHunterLifecyclePvtScriptUsingRestApiClient</li>
+	    </ul> 
+	</li>
+	<li>iframe type added to sample DSL</li>
+	<li>Improve Mac useability: 'Quick starts' can be executed on Mac  [todo]  	
   </ul>
 
   

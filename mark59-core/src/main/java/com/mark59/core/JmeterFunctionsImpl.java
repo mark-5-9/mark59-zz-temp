@@ -74,11 +74,16 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	
 	/**
 	 * Intention is that this string is used as a JMeter Parameter to flag if Transaction Results Summary should be printed.
+	 * <p>Typical usage would be to set the parameter to 'true' in the script so that the Results Summary prints when running from
+	 * an IDE, but to override the parameter in the JMeter test plan to 'false', to prevent the Summary printing during test 
+	 * execution.    
 	 * Also see {@link #isPrintResultsSummary}     
 	 */
 	public static final String PRINT_RESULTS_SUMMARY = "PRINT_RESULTS_SUMMARY";
 	
-	
+	/**
+	 * see {@link Mark59LoggingConfig}
+	 */	
 	protected static Mark59LoggingConfig loggingConfig;	
 
 	/**
