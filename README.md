@@ -40,7 +40,7 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
 	<li>New property mark59.log.directory.suffix : log directory suffix (a local 'date' or 'datetime')</li>	
 	<li>Mark59 logs types can be disabled on script exception</li>	
 	<li>Filter for CDP markers on results splitter for Transactions Report</li>	
-	<li>JMeter to 5.5, Selenium to 4.2.2 (chrome102+), H2 to 2.1.212, spring-boot to 2.7.0</li>
+	<li>JMeter to 5.5, Selenium to 4.3 (chrome103+), H2 to 2.1.212, spring-boot to 2.7.0</li>
 	<li>Improved error handling for the mark59-metrics application</li>
 	<li>Improved logging in mark59-metrics appllcation</li>
 	<li>mark59metricsdb (ex mark59servermetricswebdb) database column name SCRIPT_NAME changed to PARSER_NAME 
