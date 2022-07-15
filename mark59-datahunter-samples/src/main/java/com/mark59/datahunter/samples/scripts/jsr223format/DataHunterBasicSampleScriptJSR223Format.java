@@ -2,6 +2,7 @@ package com.mark59.datahunter.samples.scripts.jsr223format;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.logging.log4j.Level;
 import org.openqa.selenium.By;
@@ -10,9 +11,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
-import com.mark59.core.JmeterFunctionsImpl;
-import com.mark59.core.utils.*;
-import com.mark59.selenium.corejmeterimpl.*;
+import com.mark59.core.utils.IpUtilities;
+import com.mark59.core.utils.Log4jConfigurationHelper;
+import com.mark59.selenium.corejmeterimpl.JmeterFunctionsForSeleniumScripts;
+import com.mark59.selenium.corejmeterimpl.KeepBrowserOpen;
+import com.mark59.selenium.corejmeterimpl.SeleniumAbstractJavaSamplerClient;
 import com.mark59.selenium.driversimpl.SeleniumDriverFactory;
 
 
@@ -52,7 +55,6 @@ class ThisScript extends SeleniumAbstractJavaSamplerClient {
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.WRITE_FFOX_BROWSER_LOGFILE, 	String.valueOf(false));
 		jmeterAdditionalParameters.put(IpUtilities.RESTRICT_TO_ONLY_RUN_ON_IPS_LIST, "");
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.EMULATE_NETWORK_CONDITIONS, "");
-		jmeterAdditionalParameters.put(JmeterFunctionsImpl.PRINT_RESULTS_SUMMARY, String.valueOf(true));				
 		return jmeterAdditionalParameters;			
 	}
 	
@@ -131,7 +133,7 @@ SampleResult.sampleStart();
 Log4jConfigurationHelper.init(Level.INFO) ;
 // << 
 
-org.apache.jmeter.samplers.SampleResult testResults = new ThisScript().runSeleniumTest(KeepBrowserOpen.NEVER);
+org.apache.jmeter.samplers.SampleResult testResults = new ThisScript().runSeleniumTest(KeepBrowserOpen.NEVER, true); 
 if (testResults != null) {
 	for (org.apache.jmeter.samplers.SampleResult subResult : testResults.getSubResults()) {
 		SampleResult.addSubResult(subResult, false);

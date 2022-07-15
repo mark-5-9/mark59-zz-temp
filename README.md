@@ -40,13 +40,14 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
 	<li>New property mark59.log.directory.suffix : log directory suffix (a local 'date' or 'datetime')</li>	
 	<li>Mark59 logs types can be disabled on script exception</li>	
 	<li>Filter for CDP markers on results splitter for Transactions Report</li>	
-	<li>JMeter to 5.5, Selenium to 4.3 (chrome103+), H2 to 2.1.212, spring-boot to 2.7.0</li>
+	<li>JMeter to 5.5, Selenium to 4.3.0 (chrome103+), H2 to 2.1.214, spring-boot to 2.7.10, groovy to 3.0.11</li>
 	<li>Improved error handling for the mark59-metrics application</li>
 	<li>Improved logging in mark59-metrics appllcation</li>
 	<li>mark59metricsdb (ex mark59servermetricswebdb) database column name SCRIPT_NAME changed to PARSER_NAME 
 		on tables COMMANDRESPONSEPARSERS and COMMANDPARSERLINKS<br>
 		(review conversion files in the mark59 zip download databaseScripts folder for details)</li>
-	<li>New script JMeter parameter PRINT_RESULTS_SUMMARY to to flag if Transaction Results Summary should be printed</li>	
+	<li>New script JMeter parameter PRINT_RESULTS_SUMMARY flags if Transaction Results Summary should be printed
+		during JMeter execution</li>	
 	<li>New DataHunter API Samples: Direct API httprequest access in JMeter, and same logic repeated using the Java API Client:
 		<ul>
 			<li>DataHunterLifecyclePvtScriptUsingApiViaHttpRequestsTestPlan.jmx replaces DataHunterHttpTestPlan.jmx</li> 
@@ -54,6 +55,8 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
 	    </ul> 
 	</li>
 	<li>iframe type added to sample DSL</li>
+	<li>Breaking Change : some internal class name changes may affect you if you have used a Groovy jsr223 as a Mark59
+	 selenium script. <br>Please review DataHunterBasicSampleScriptJSR223Format in the mark59-datahunter-samples project </li>	
 	<li>Improve Mac useability: 'Quick starts' can be executed on Mac  [todo]  	
   </ul>
 

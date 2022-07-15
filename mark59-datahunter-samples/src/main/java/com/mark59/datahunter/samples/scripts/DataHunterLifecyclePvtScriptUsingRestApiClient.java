@@ -84,8 +84,9 @@ public class DataHunterLifecyclePvtScriptUsingRestApiClient extends AbstractJava
 		// user defined parameters
 		jmeterAdditionalParameters.put("DATAHUNTER_URL", "http://localhost:8081/mark59-datahunter");
 		jmeterAdditionalParameters.put("DATAHUNTER_APPLICATION_ID_CLIENT_API", "DATAHUNTER_PV_TEST_CLIENT_API");
-		jmeterAdditionalParameters.put("FORCE_TXN_FAIL_PERCENT", "20");
-		jmeterAdditionalParameters.put("USER", "user");				
+		jmeterAdditionalParameters.put("FORCE_TXN_FAIL_PERCENT", "20");		
+		jmeterAdditionalParameters.put("USER", "user");			
+		jmeterAdditionalParameters.put("CLEAN_DATA_AT_SCRIPT_END", String.valueOf(true));				
 		jmeterAdditionalParameters.put(JmeterFunctionsImpl.PRINT_RESULTS_SUMMARY, String.valueOf(true));   
 		return jmeterAdditionalParameters;			
 	}	
@@ -99,15 +100,17 @@ public class DataHunterLifecyclePvtScriptUsingRestApiClient extends AbstractJava
 	public SampleResult runTest(JavaSamplerContext context) {
 		
 		JmeterFunctionsImpl jm = new JmeterFunctionsImpl(context);
-		if ("true".equalsIgnoreCase(context.getParameter(JmeterFunctionsImpl.PRINT_RESULTS_SUMMARY,String.valueOf(false)))){
+		if (String.valueOf(true).equalsIgnoreCase(context.getParameter(JmeterFunctionsImpl.PRINT_RESULTS_SUMMARY))){
 			jm.printResultSummary(true);
 		}
+
 		String lifecycle = "thread_" + Thread.currentThread().getName();
 
-		String dataHunterUrl        = context.getParameter("DATAHUNTER_URL");
-		String applicationClientApi = context.getParameter("DATAHUNTER_APPLICATION_ID_CLIENT_API");
-		int forceTxnFailPercent     = Integer.parseInt(context.getParameter("FORCE_TXN_FAIL_PERCENT").trim());
-		String user                 = context.getParameter("USER");
+		String dataHunterUrl         = context.getParameter("DATAHUNTER_URL");
+		String applicationClientApi  = context.getParameter("DATAHUNTER_APPLICATION_ID_CLIENT_API");
+		int forceTxnFailPercent      = Integer.parseInt(context.getParameter("FORCE_TXN_FAIL_PERCENT").trim());
+		String user                  = context.getParameter("USER");
+		Boolean cleanDataAtScriptEnd = Boolean.valueOf(context.getParameter("CLEAN_DATA_AT_SCRIPT_END"));
 				
 		DataHunterRestApiClient dhApiClient = new DataHunterRestApiClient(dataHunterUrl	);
 		DataHunterRestApiResponsePojo response;
@@ -207,12 +210,15 @@ public class DataHunterLifecyclePvtScriptUsingRestApiClient extends AbstractJava
 		jm.userDataPoint("UNUSED_count_html_demo", unused );	
 		LOG.info("Client API demo: USED=" + used + ", UNUSED=" + unused); 
 		
-//	 	delete multiple policies (test cleanup - a duplicate of the initial delete policies transactions)
-		jm.startTransaction("DH_lifecycle_0100_deleteMultiplePolicies_clientApi");
-		response = dhApiClient.deleteMultiplePolicies(applicationClientApi, null, null);
-		jm.endTransaction("DH_lifecycle_0100_deleteMultiplePolicies_clientApi");	
-		confirmValidResponse(response, jm);
 		
+		if (cleanDataAtScriptEnd) {
+//	 		delete multiple policies (test cleanup - a duplicate of the initial delete policies transactions)
+			jm.startTransaction("DH_lifecycle_0100_deleteMultiplePolicies_clientApi");
+			response = dhApiClient.deleteMultiplePolicies(applicationClientApi, null, null);
+			jm.endTransaction("DH_lifecycle_0100_deleteMultiplePolicies_clientApi");	
+			confirmValidResponse(response, jm);
+		}
+
 		jm.tearDown();
 		
 		return jm.getMainResult();
@@ -229,13 +235,16 @@ public class DataHunterLifecyclePvtScriptUsingRestApiClient extends AbstractJava
 	
 	
 	/**
-	 * a main method to allow for execution of this JMeter/Mark59 (but non-selenium) script directly in the IDE       
+	 * a main method to allow for execution of this JMeter/Mark59 (but non-selenium) script directly in the IDE 
+	 * (and forcing the results summary to print)      
 	 * For logging details see @Log4jConfigurationHelper 
 	 */
 	public static void main(String[] args) {
 		Log4jConfigurationHelper.init(Level.INFO ) ;
 		DataHunterLifecyclePvtScriptUsingRestApiClient thisTest = new DataHunterLifecyclePvtScriptUsingRestApiClient();
 		Arguments jmeterParameters = thisTest.getDefaultParameters();
+		jmeterParameters.removeArgument(JmeterFunctionsImpl.PRINT_RESULTS_SUMMARY);
+		jmeterParameters.addArgument(JmeterFunctionsImpl.PRINT_RESULTS_SUMMARY, String.valueOf(true));		
 		thisTest.runTest(new JavaSamplerContext( jmeterParameters));
 	}
 

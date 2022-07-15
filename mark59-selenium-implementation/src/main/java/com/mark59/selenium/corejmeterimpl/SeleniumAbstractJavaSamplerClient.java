@@ -432,12 +432,31 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 
 	
 	/**
-	 * Convenience method to a single-threaded script execution (rather than needing to use JMeter).  
+	 * Convenience method to a single-threaded script execution (ie from the IDE, rather than needing to use JMeter).
+	 * Browser will stay open only on script failure.
+	 *   
+	 * @see #runSeleniumTest(KeepBrowserOpen)
+	 * 
+	 * @see #runMultiThreadedSeleniumTest(int, int)
+	 * @see #runMultiThreadedSeleniumTest(int, int, KeepBrowserOpen) 
+	 * @see #runMultiThreadedSeleniumTest(int, int, Map) 
+	 * @see #runMultiThreadedSeleniumTest(int, int, Map, KeepBrowserOpen) 
+	 * @see #runMultiThreadedSeleniumTest(int, int, Map, KeepBrowserOpen, int, int, boolean, File) 
+	 * @return {@link SampleResult}
+	 */
+	public SampleResult runSeleniumTest() {
+		return runSeleniumTest(KeepBrowserOpen.ONFAILURE, true);
+	}
+	
+	
+	/**
+	 * Convenience method to a single-threaded script execution (ie from the IDE, rather than needing to use JMeter).  
 	 * <p>It can also be used in a JRS223 sampler in order to execute a script written directly in JMeter. See  the 
 	 * DataHunterLifecyclePvtScriptAsSingleJSR223 thread group in the the DataHunterSeleniumTestPlan.jmx test plan and
 	 * com.mark59.datahunter.samples.scripts.jsr223format package in the mark59-datahunter-samples project.    
 	 * <p>See method runMultiThreadedSeleniumTest to executed a multi-thread test
 	 * <p>You can control if the browser closes at the end of the test. 
+	 * <p>The results summary is always printed. 
 	 * EG: <b>KeepBrowserOpen.ONFAILURE</b> will keep the browser open at test end if the test fails (unless running in headless mode). 
 	 * 
 	 * @see #runSeleniumTest()
@@ -449,12 +468,35 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 	 * 
 	 * @see com.mark59.selenium.corejmeterimpl.KeepBrowserOpen
 	 * @see Log4jConfigurationHelper
-	 * @param keepBrowserOpen  see KeepBrowserOpen
+	 * @param keepBrowserOpen  {@link KeepBrowserOpen}
 	 * @return {@link SampleResult} 
 	 */
 	public SampleResult runSeleniumTest(KeepBrowserOpen keepBrowserOpen ) {
+		return runSeleniumTest(keepBrowserOpen, true);
+	}
+
+
+
+	/**
+	 * As per {@link #runSeleniumTest(KeepBrowserOpen)}, but allowing an option for the results summary not to be printed 	 
+	 *  
+	 * @see #runSeleniumTest(KeepBrowserOpen)
+	 * @see #runMultiThreadedSeleniumTest(int, int)
+	 * @see #runMultiThreadedSeleniumTest(int, int, KeepBrowserOpen) 
+	 * @see #runMultiThreadedSeleniumTest(int, int, Map) 
+	 * @see #runMultiThreadedSeleniumTest(int, int, Map, KeepBrowserOpen) 
+	 * @see #runMultiThreadedSeleniumTest(int, int, Map, KeepBrowserOpen, int, int, boolean, File) 
+	 * @param keepBrowserOpen see {@link KeepBrowserOpen}
+	 * @param isPrintResulsSummary see {@link JmeterFunctionsImpl#PRINT_RESULTS_SUMMARY}
+	 * @return {@link SampleResult}
+	 */
+
+	public SampleResult runSeleniumTest(KeepBrowserOpen keepBrowserOpen, boolean isPrintResulsSummary) {
 		mockJmeterProperties();
-		JavaSamplerContext context = new JavaSamplerContext( getDefaultParameters()  );
+		Arguments jmeterParameters =  getDefaultParameters();
+		jmeterParameters.removeArgument(JmeterFunctionsImpl.PRINT_RESULTS_SUMMARY);
+		jmeterParameters.addArgument(JmeterFunctionsImpl.PRINT_RESULTS_SUMMARY, String.valueOf(isPrintResulsSummary));
+		JavaSamplerContext context = new JavaSamplerContext(jmeterParameters);
 		
 		this.keepBrowserOpen = keepBrowserOpen;
 		if (String.valueOf(true).equalsIgnoreCase(context.getParameter(SeleniumDriverFactory.HEADLESS_MODE))) {
@@ -466,22 +508,11 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 		return runTest(context);
 	}
 
+	
+	
 
 	/**
-	 * @see #runSeleniumTest(KeepBrowserOpen)
-	 * @see #runMultiThreadedSeleniumTest(int, int)
-	 * @see #runMultiThreadedSeleniumTest(int, int, KeepBrowserOpen) 
-	 * @see #runMultiThreadedSeleniumTest(int, int, Map) 
-	 * @see #runMultiThreadedSeleniumTest(int, int, Map, KeepBrowserOpen) 
-	 * @see #runMultiThreadedSeleniumTest(int, int, Map, KeepBrowserOpen, int, int, boolean, File) 
-	 * @return {@link SampleResult}
-	 */
-	protected SampleResult runSeleniumTest() {
-		return runSeleniumTest(KeepBrowserOpen.ONFAILURE);
-	}
-
-	/**
-	 * Convenience method to directly execute multiple script threads (rather than needing to use JMeter).  
+	 * Convenience method to directly execute multiple script threads (ie from the IDE, rather than needing to use JMeter).  
 	 * For example: <br><br>
 	 * <code>thisTest.runMultiThreadedSeleniumTest(2, 2000);</code>
 	 * 
@@ -495,12 +526,12 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 	 * @param numberOfThreads number Of Java Threads
 	 * @param threadStartGapMs time between start of each thread in milliseconds
 	 */
-	protected void runMultiThreadedSeleniumTest(int numberOfThreads, int threadStartGapMs) {
+	public void runMultiThreadedSeleniumTest(int numberOfThreads, int threadStartGapMs) {
 		runMultiThreadedSeleniumTest(numberOfThreads, threadStartGapMs, new HashMap<>(), KeepBrowserOpen.NEVER, 1, 0, false, null);
 	}
 
 	/**
-	 * Convenience method to directly execute multiple script threads (rather than needing to use JMeter).  
+	 * Convenience method to directly execute multiple script threads (ie from the IDE, rather than needing to use JMeter).  
 	 * For example: <br><br>
 	 * <code>thisTest.runMultiThreadedSeleniumTest(2, 2000, KeepBrowserOpen.ONFAILURE);</code>
 	 * 
@@ -515,14 +546,14 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 	 * @param threadStartGapMs time between start of each thread in milliseconds
 	 * @param keepBrowserOpen  see KeepBrowserOpen
 	 */
-	protected void runMultiThreadedSeleniumTest(int numberOfThreads, int threadStartGapMs, KeepBrowserOpen keepBrowserOpen) {
+	public void runMultiThreadedSeleniumTest(int numberOfThreads, int threadStartGapMs, KeepBrowserOpen keepBrowserOpen) {
 		runMultiThreadedSeleniumTest(numberOfThreads, threadStartGapMs, new HashMap<>(), keepBrowserOpen, 1, 0, false, null);
 		
 	}
 	
 	
 	/**
-	 * Convenience method to directly execute multiple script threads (rather than needing to use JMeter).  For example,
+	 * Convenience method to directly execute multiple script threads (from the IDE rather than needing to use JMeter).  For example,
 	 * if you want to user a user-defined parameter called "<code>USER</code>", and switch off headless mode for one of four threads running:  
 	 * <br><br><code>
 	 *  Map&lt;String, java.util.List&lt;String&gt;&gt;threadParameters = new java.util.LinkedHashMap&lt;String,java.util.List&lt;String&gt;&gt;();<br>
@@ -542,13 +573,13 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 	 * @param threadStartGapMs  time between start of each thread in milliseconds
 	 * @param threadParameters  parameter key and list of values to be passed to each thread (needs to be at least as many entries as number of threads) 
 	 */
-	protected void runMultiThreadedSeleniumTest(int numberOfThreads, int threadStartGapMs, Map<String, List<String>>threadParameters) {
+	public void runMultiThreadedSeleniumTest(int numberOfThreads, int threadStartGapMs, Map<String, List<String>>threadParameters) {
 		runMultiThreadedSeleniumTest(numberOfThreads, threadStartGapMs, threadParameters, KeepBrowserOpen.NEVER, 1, 0, false, null );
 	}	
 	
 	
 	/**
-	 * Convenience method to directly execute multiple script threads (rather than needing to use JMeter).  For example,
+	 * Convenience method to directly execute multiple script threads (from the IDE rather than needing to use JMeter).  For example,
 	 * if you want to user a user-defined parameter called "<code>USER</code>", and switch off headless mode for one of four threads running:  
 	 * <br><br><code>
 	 *  Map&lt;String, java.util.List&lt;String&gt;&gt;threadParameters = new java.util.LinkedHashMap&lt;String,java.util.List&lt;String&gt;&gt;();<br>
@@ -569,14 +600,14 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 	 * @param threadParameters  parameter key and list of values to be passed to each thread (needs to be at least as many entries as number of threads) 
 	 * @param keepBrowserOpen  see KeepBrowserOpen	 
 	 */
-	protected void runMultiThreadedSeleniumTest(int numberOfThreads, int threadStartGapMs, Map<String, List<String>>threadParameters, KeepBrowserOpen keepBrowserOpen) {
+	public void runMultiThreadedSeleniumTest(int numberOfThreads, int threadStartGapMs, Map<String, List<String>>threadParameters, KeepBrowserOpen keepBrowserOpen) {
 		runMultiThreadedSeleniumTest(numberOfThreads, threadStartGapMs, threadParameters, KeepBrowserOpen.NEVER, 1, 0, false, null);
 	}
 
 	
 	
 	/**
-	 * 'Full Monty' convenience method to directly execute multiple script threads.  The threads can be set to run a given number of iterations, 
+	 * 'Full Monty' convenience method to directly execute multiple script threads (from the IDE). The threads can be set to run a given number of iterations, 
 	 * with a timed gap between each iteration.   Additionally you can print a transactions summary table, and/or output a CSV file with the results
 	 * of the run. 
 	 * <p>As the CSV file is in JMeter format, you can use it to generate a JMeter report or load into Trend Analysis. Note the intention here is not 
@@ -612,7 +643,7 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 	 * @param printResultsSummary <code>true</code> to print the summary report, <code>false</code> to not.	  
 	 * @param jmeterResultsFile  output file name.  Set to <code>null</code> if a file is not required.    
 	 */
-	protected void runMultiThreadedSeleniumTest(int numberOfThreads, int threadStartGapMs, Map<String, List<String>>threadParameters, KeepBrowserOpen keepBrowserOpen,
+	public void runMultiThreadedSeleniumTest(int numberOfThreads, int threadStartGapMs, Map<String, List<String>>threadParameters, KeepBrowserOpen keepBrowserOpen,
 			int iterateEachThreadCount, int iteratePacingGapMs, boolean printResultsSummary, File jmeterResultsFile) {
 		
 		mockJmeterProperties();
@@ -685,7 +716,7 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 	 * If JMeter properties become relevant to a particular script for some reason, it is suggested the required 
 	 * 'jmeter.properties' file be included in the root of the project.
 	 */
-	protected void mockJmeterProperties() { 
+	public void mockJmeterProperties() { 
 		File f = new File("./jmeter.properties");
 		if(f.exists() && !f.isDirectory()) { 
 			LOG.debug("loading supplied jmeter.properties file");
@@ -739,7 +770,8 @@ public abstract class SeleniumAbstractJavaSamplerClient extends AbstractJavaSamp
 			} catch (Exception e) {	e.printStackTrace(); System.out.println(" Error " + e.getMessage()); } 
 			
 			Arguments thisThreadParameterAuguments = Mark59Utils.mergeMapWithAnOverrideMap(getDefaultParameters().getArgumentsAsMap(), thisThreadParametersOverride);
-			
+			thisThreadParameterAuguments.removeArgument(JmeterFunctionsImpl.PRINT_RESULTS_SUMMARY);
+			thisThreadParameterAuguments.addArgument(JmeterFunctionsImpl.PRINT_RESULTS_SUMMARY, String.valueOf(true));
 			JavaSamplerContext context = new JavaSamplerContext( thisThreadParameterAuguments  );
 			
 			if (String.valueOf(true).equalsIgnoreCase(context.getParameter(SeleniumDriverFactory.HEADLESS_MODE))) {

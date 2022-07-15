@@ -14,12 +14,22 @@ import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import com.mark59.core.JmeterFunctionsImpl;
 import com.mark59.core.Outcome;
-import com.mark59.core.utils.*;
+import com.mark59.core.utils.IpUtilities;
+import com.mark59.core.utils.Log4jConfigurationHelper;
+import com.mark59.core.utils.Mark59Constants;
+import com.mark59.core.utils.SafeSleep;
 import com.mark59.dsl.samples.seleniumDSL.core._GenericPage;
-import com.mark59.dsl.samples.seleniumDSL.pageElements.*;
-import com.mark59.selenium.corejmeterimpl.*;
+import com.mark59.dsl.samples.seleniumDSL.pageElements.DropdownList;
+import com.mark59.dsl.samples.seleniumDSL.pageElements.HtmlTable;
+import com.mark59.dsl.samples.seleniumDSL.pageElements.HtmlTableRow;
+import com.mark59.dsl.samples.seleniumDSL.pageElements.InputTextElement;
+import com.mark59.dsl.samples.seleniumDSL.pageElements.Link;
+import com.mark59.dsl.samples.seleniumDSL.pageElements.PageTextElement;
+import com.mark59.dsl.samples.seleniumDSL.pageElements.SubmitBtn;
+import com.mark59.selenium.corejmeterimpl.JmeterFunctionsForSeleniumScripts;
+import com.mark59.selenium.corejmeterimpl.KeepBrowserOpen;
+import com.mark59.selenium.corejmeterimpl.SeleniumAbstractJavaSamplerClient;
 import com.mark59.selenium.driversimpl.SeleniumDriverFactory;
 
 
@@ -153,7 +163,6 @@ class ThisScript extends SeleniumAbstractJavaSamplerClient {
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.WRITE_FFOX_BROWSER_LOGFILE, String.valueOf(false));
 		jmeterAdditionalParameters.put(IpUtilities.RESTRICT_TO_ONLY_RUN_ON_IPS_LIST, "");			
 		jmeterAdditionalParameters.put(SeleniumDriverFactory.EMULATE_NETWORK_CONDITIONS, "");
-		jmeterAdditionalParameters.put(JmeterFunctionsImpl.PRINT_RESULTS_SUMMARY, String.valueOf(true));				
 		return jmeterAdditionalParameters;			
 	}
 	
@@ -327,7 +336,7 @@ SampleResult.sampleStart();
 Log4jConfigurationHelper.init(Level.INFO) ;
 // << 
 
-org.apache.jmeter.samplers.SampleResult testResults = new ThisScript().runSeleniumTest(KeepBrowserOpen.NEVER);
+org.apache.jmeter.samplers.SampleResult testResults = new ThisScript().runSeleniumTest(KeepBrowserOpen.NEVER, true);
 if (testResults != null) {
 	for (org.apache.jmeter.samplers.SampleResult subResult : testResults.getSubResults()) {
 		SampleResult.addSubResult(subResult, false);
