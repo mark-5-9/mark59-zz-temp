@@ -82,7 +82,7 @@
      <tr>
       <td></td>   
       <td></td>
-      <td><input type="file" name="file" /></td>  <%-- set via @RequestParam --%>
+      <td><input type="file" name="myfile" /></td>  <%-- set via @RequestParam --%>
      </tr>   
    
      <tr>

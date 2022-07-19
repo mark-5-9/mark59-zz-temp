@@ -58,6 +58,8 @@
 		    <artifactId>commons-lang3</artifactId>
 		</dependency>
 
+
+
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -75,6 +77,18 @@
         	<version>2.1.214</version><!--$NO-MVN-MAN-VER$-->
 		</dependency>	
 	
+		<!-- large files upload -->
+		<dependency>
+		    <groupId>commons-fileupload</groupId>
+		    <artifactId>commons-fileupload</artifactId>
+		    <version>1.4</version><!--$NO-MVN-MAN-VER$-->
+		</dependency>
+		<dependency>
+		    <groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>2.11.0</version>
+		</dependency><!--$NO-MVN-MAN-VER$-->
+
 		<!-- the following only required for testing -->
 	
 		<dependency>

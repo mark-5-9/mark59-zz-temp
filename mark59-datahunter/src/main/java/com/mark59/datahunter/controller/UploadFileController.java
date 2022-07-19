@@ -17,10 +17,13 @@
 package com.mark59.datahunter.controller;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,6 +39,20 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
+import org.apache.commons.io.IOUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
 
 import com.mark59.datahunter.application.DataHunterConstants;
 import com.mark59.datahunter.application.DataHunterUtils;
@@ -60,7 +77,127 @@ public class UploadFileController implements HandlerExceptionResolver  {
 	}
 
 
-	@PostMapping("/upload_action")
+	@PostMapping("/upload_action")	
+	public ModelAndView fileUpload(Model model,HttpServletRequest httpServletRequest) throws FileUploadException, IOException {
+		
+		System.out.println("at start of upload_action !!!!!!!");
+		DataHunterUtils.expireSession(httpServletRequest, 1200); 
+		if (!ServletFileUpload.isMultipartContent(httpServletRequest)){
+			throw new RuntimeException("System error: Invalid load file");
+		};
+
+		UploadFile uploadFile = new UploadFile();
+		uploadFile.setUseability(DataHunterConstants.UNUSED);
+		uploadFile.setUpdateOrBypassExisting(DataHunterConstants.UPDATE_USEABILITY_ON_EXISTING_ENTRIES);
+		
+		PolicySelectionCriteria policySelectionCriteria = new PolicySelectionCriteria();
+		policySelectionCriteria.setUseability(null);  // select for any use state
+		policySelectionCriteria.setSelectClause(" count(*)  as counter ");
+		policySelectionCriteria.setSelectOrder(DataHunterConstants.SELECT_UNORDERED);
+		
+		int lineCount=0; int rowsInserted=0; int rowsUpdated=0; 
+		String filename = "not valid!";
+	
+		ServletFileUpload upload = new ServletFileUpload();
+		
+		try {
+			FileItemIterator iterStream = upload.getItemIterator(httpServletRequest);
+
+			while (iterStream.hasNext()) {
+				
+				FileItemStream item = iterStream.next();
+				String name = item.getFieldName();
+//				String name = item.getName();
+				if (item.isFormField()) {
+					String formFieldValue = Streams.asString(item.openStream());
+					System.out.println("Form field " + name	+ " with value " + formFieldValue + " detected.");
+					
+					if ("application".equals(name)) {
+						uploadFile.setApplication(formFieldValue);
+						policySelectionCriteria.setApplication(uploadFile.getApplication());
+					} else if ("lifecycle".equals(name)) {
+						uploadFile.setLifecycle(formFieldValue);
+						policySelectionCriteria.setLifecycle(uploadFile.getLifecycle());
+					} else if ("useability".equals(name)) {
+						uploadFile.setUseability(formFieldValue);
+						policySelectionCriteria.setUseability(formFieldValue);
+					} else if ("updateOrBypassExisting".equals(name)) {
+						uploadFile.setUpdateOrBypassExisting(formFieldValue);
+					}
+					
+				} else {
+					System.out.println("File field " + name + " with file name " + item.getName() + " detected.");
+					filename = item.getName();
+
+					BufferedReader br = null;
+
+					try {
+						String line;
+						br = new BufferedReader(new InputStreamReader(item.openStream()));
+						
+						while ((line = br.readLine()) != null) {
+
+							lineCount++;
+							policySelectionCriteria.setIdentifier(line.replace("'", "''"));    // generic database char escaping
+//							System.out.println("line: " + line + ", uploadFile" + uploadFile );
+
+							if (DataHunterConstants.UPDATE_USEABILITY_ON_EXISTING_ENTRIES.equals(uploadFile.getUpdateOrBypassExisting())){
+								
+								if (policyAlreadyExsits(policySelectionCriteria)) {
+									rowsUpdated = rowsUpdated + updatePolicyUseState(policySelectionCriteria, uploadFile.getUseability());
+								} else {
+									addNewPolicy(policySelectionCriteria, uploadFile.getUseability() );
+									rowsInserted++;
+								}
+								
+							} else {  // LEAVE_EXISTING_ENTRIES_UNCHANGED
+								
+								if ( ! policyAlreadyExsits(policySelectionCriteria)) {
+									addNewPolicy(policySelectionCriteria, uploadFile.getUseability());
+									rowsInserted++;
+								}
+							}
+						}
+						br.close();
+
+					} catch (Exception e) {
+						System.err.println(e.getMessage());
+						model.addAttribute("filename", filename);
+						model.addAttribute("sql", "n/a");
+						model.addAttribute("sqlResult", e.getMessage());
+						model.addAttribute("rowsAffected", "error occured around line " + lineCount);
+						try {br.close();} catch (Exception e1){System.err.println(e1.getMessage());}
+						return new ModelAndView("/upload_action", "model", model);
+					}
+
+					model.addAttribute("filename", filename);
+					model.addAttribute("sql", "(multiple)");
+					model.addAttribute("sqlResult", "PASS");
+					model.addAttribute("rowsAffected", (rowsInserted+rowsUpdated) + 
+							" (" + rowsInserted + " inserts, " + rowsUpdated + " updates)");	
+
+					if (rowsInserted+rowsUpdated == 0 ){
+						model.addAttribute("sqlResultText", "sql execution OK, but no rows where affected.");
+					} else {
+						model.addAttribute("sqlResultText", "sql execution OK");
+					}
+
+				}		
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("System error: Failed to process file stream!");
+		}
+
+		if (!model.containsAttribute("myfile")) {
+			model.addAttribute("myfile", "System Error: No  File Found?");
+		}		
+		return new ModelAndView("/upload_action", "model", model);		
+	}	
+	
+	
+	
+	@PostMapping("/upload_actionx")
 	public ModelAndView fileUpload(@RequestParam("file") MultipartFile file,@ModelAttribute UploadFile uploadFile, 
 			Model model,RedirectAttributes redirectAttributes,HttpServletRequest httpServletRequest) {
 
