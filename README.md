@@ -54,6 +54,7 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
 			<li>new sample script DataHunterLifecyclePvtScriptUsingRestApiClient</li>
 	    </ul> 
 	</li>
+	<li>DataHunter file upload changed from in-memory to streaming api, allowing for large file uploads</li>
 	<li>iframe type added to sample DSL</li>
 	<li>Breaking Change : some internal class name changes may affect you if you have used a Groovy jsr223 as a Mark59
 	 selenium script. <br>Please review DataHunterBasicSampleScriptJSR223Format in the mark59-datahunter-samples project </li>	

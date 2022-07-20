@@ -51,8 +51,7 @@
      <tr>
       <td></td>   
       <td></td>
-      <td style="font-size: 12px" ><br>Lifecycle is optional. Generally should be left <b>blank</b> 
-      		<br>(can act as a tie-breaker if your data has multiple rows that use the same Identifier).</td> 
+      <td style="font-size: 12px" ><br>Lifecycle is optional. If unsure just leave blank.</td> 
      </tr>     
      <tr>     
      <tr>
@@ -76,8 +75,10 @@
      <tr>
       <td><br></td>   
       <td></td>
-      <td style="font-size: 12px" ><br><br>Note that files with a large number of lines (over 100K) may take several minutes to load <br>
-       Application MaxFileSize = 50MB, but you may hit network capacity limits below this.<br><br></td> 
+      <td style="font-size: 12px"><br>
+      	<br>The contents of the file should contain one identifier per line. 
+      	<br>The other key values are taken from the Application and Lifecycle fields, and Useability set from the field above. 
+      	<br>Note that files with a large number of lines (over 100K) may take several minutes to load.<br><br></td> 
       </tr>     
      <tr>
       <td></td>   
