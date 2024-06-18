@@ -32,6 +32,7 @@ import com.mark59.core.Outcome;
 import com.mark59.core.utils.IpUtilities;
 import com.mark59.core.utils.Log4jConfigurationHelper;
 import com.mark59.core.utils.Mark59Constants;
+import com.mark59.core.utils.Mark59LogLevels;
 import com.mark59.core.utils.SafeSleep;
 import com.mark59.datahunter.samples.dsl.datahunterSpecificPages.AddPolicyActionPage;
 import com.mark59.datahunter.samples.dsl.datahunterSpecificPages.AddPolicyPage;
@@ -141,6 +142,7 @@ public class DataHunterLifecycleIteratorPvtScript  extends SeleniumIteratorAbstr
 //		jm.logPerformanceLogAtEndOfTransactions(Mark59LogLevels.WRITE);
 //		// you need to use jm.writeBufferedArtifacts to output BUFFERed data (see end of this method)		
 //		jm.logAllLogsAtEndOfTransactions(Mark59LogLevels.BUFFER);
+		jm.logAllLogsAtEndOfTransactions(Mark59LogLevels.OFF);
 		
 		lifecycle 	= "thread_" + Thread.currentThread().getName().replace(" ", "_").replace(".", "_");
 //		System.out.println("Thread " + lifecycle + " is running with LOG level " + LOG.getLevel());
@@ -177,7 +179,7 @@ public class DataHunterLifecycleIteratorPvtScript  extends SeleniumIteratorAbstr
 	 */
 	@Override
 	protected void iterateSeleniumTest(JavaSamplerContext context, JmeterFunctionsForSeleniumScripts jm,  WebDriver driver) {
-
+		jm.startTransaction("DH_lifecycle_0000_timeEntireInteration");
 		_Navigation _navigation = new _Navigation(driver); 
 
 //		add one policy 
@@ -276,6 +278,7 @@ public class DataHunterLifecycleIteratorPvtScript  extends SeleniumIteratorAbstr
 		waitForSqlResultsTextOnActionPageAndCheckOk(multiplePoliciesActionPage);
 		jm.endTransaction("DH_lifecycle_0100_deleteMultiplePolicies");
 		
+		jm.endTransaction("DH_lifecycle_0000_timeEntireInteration");		
 //		jm.writeBufferedArtifacts();
 	}
 
@@ -339,7 +342,7 @@ public class DataHunterLifecycleIteratorPvtScript  extends SeleniumIteratorAbstr
 	 * For logging details see @Log4jConfigurationHelper 
 	 */
 	public static void main(String[] args) {
-		Log4jConfigurationHelper.init(Level.INFO) ;
+		Log4jConfigurationHelper.init(Level.DEBUG) ;
 		DataHunterLifecycleIteratorPvtScript thisTest = new DataHunterLifecycleIteratorPvtScript();
 
 		//1: single

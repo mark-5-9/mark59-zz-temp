@@ -1,11 +1,19 @@
 
 This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT always be in a completely consistent state.<br><br>
 
-## Mark59 Documention, Guides, Downloads and More ..
+## Mark59 Guides, Downloads and More ..
 
 <p>Available at the https://www.mark59.com website
 
 ## Releases 
+
+<p>Release 6.1<br>
+
+  <ul>
+	<li>Bug/Enhance: Cater for html links within Run Comments on Trends Graphic
+	<li>Dependencies Updated: spring-boot to 3.?.?, selenium to 4.?.? (to chrome v122), playwright to 1.?.?</li>  
+  </ul>
+
 
 <p>Release 6.0<br>
 

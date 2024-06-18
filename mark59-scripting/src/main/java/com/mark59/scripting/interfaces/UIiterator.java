@@ -116,13 +116,18 @@ public interface UIiterator  {
 			Integer iterateNumberOfTimes, Integer alreadyIterated, Long jMeterTestStartMs, Long stopThreadAfterTestStartMs, Logger LOG ) {
 		
 		if ( iterateNumberOfTimes > 0 && alreadyIterated >= iterateNumberOfTimes ){
+			if (LOG.isDebugEnabled()) LOG.debug(Thread.currentThread().getName() + ": tgName = " + tgName + " inter End Cond : " 
+					+ "\n | alreadyIterated = " + alreadyIterated + " >=  iterNumberOfTimes = " + iterateNumberOfTimes );
 			return true;
 		}
-		if ( iterateForPeriodMs > 0 &&  System.currentTimeMillis() > scriptStartTimeMs + iterateForPeriodMs ){
+		if ( iterateForPeriodMs > 0 &&  System.currentTimeMillis() > (scriptStartTimeMs+iterateForPeriodMs) ){
+			if (LOG.isDebugEnabled()) LOG.debug(Thread.currentThread().getName() + ": tgName = " + tgName + " inter End Cond -" 
+					+ "\n | System.currentTimeMillis() = " + System.currentTimeMillis() 
+					+ " > scriptStartTimeMs+iterPeriodMs = "+scriptStartTimeMs+"+"+iterateForPeriodMs+"="+(scriptStartTimeMs+iterateForPeriodMs));
 			return true;
 		}
 		if (isStopThreadAfterTestStartMsConditionMet(jMeterTestStartMs, stopThreadAfterTestStartMs)) {
-			LOG.info("Thread Group " + tgName + " will be stopped on any further Thread Loops ('STOP_THREAD_AFTER_TEST_START_IN_SECS' has been reached)" );
+			LOG.info("Thread Group " + tgName + " iterations stop ('STOP_THREAD_AFTER_TEST_START_IN_SECS' has been reached)" );
 			return true;
 		}
 		return false;

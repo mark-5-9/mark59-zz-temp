@@ -207,8 +207,9 @@ public abstract class SeleniumIteratorAbstractJavaSamplerClient extends Selenium
 			long scriptIterationStartTimeMs;
 			long delay = 0;
 			
-			if (LOG.isDebugEnabled()) LOG.debug(Thread.currentThread().getName() + ": tgName = " + tgName + ", scriptStartTimeMs = " + scriptStartTimeMs 
-					+ ", iteratePeriodMs = " + iterateForPeriodMs + ", iterateNumberOfTimes = " + iterateNumberOfTimes );
+			if (LOG.isDebugEnabled()) LOG.debug(Thread.currentThread().getName() + ": tgName = " + tgName + " scriptStartTimeMs = " + scriptStartTimeMs	
+					+ "\n | iterPeriodMs = " + iterateForPeriodMs + "\n | iterNumberOfTimes = " + iterateNumberOfTimes 
+					+ "\n | iterPacingMs = " + iterationPacingMs  + "\n | stopThreadAfterTestStartMs = " + stopThreadAfterTestStartMs );
 		
 			if (iterateForPeriodMs==0 && iterateNumberOfTimes==0 && stopThreadAfterTestStartMs==0 ) {
 				LOG.info("Thread Group " + tgName + " is stopping (none of ITERATE_FOR_PERIOD_IN_SECS or ITERATE_FOR_NUMBER_OF_TIMES or "
@@ -220,7 +221,7 @@ public abstract class SeleniumIteratorAbstractJavaSamplerClient extends Selenium
 			
 			while (!isAnyIterateEndConditionMet(tgName, scriptStartTimeMs, iterateForPeriodMs, iterateNumberOfTimes, i, jMeterTestStartMs,  stopThreadAfterTestStartMs, LOG)){
 				i++;
-				LOG.debug(">> iterateSeleniumTest (" + i + ")");
+				LOG.debug(">> iterateSeleniumTest (#" + i + ")");
 				scriptIterationStartTimeMs =  System.currentTimeMillis();
 				
 				iterateSeleniumTest(context, jm, driver);
