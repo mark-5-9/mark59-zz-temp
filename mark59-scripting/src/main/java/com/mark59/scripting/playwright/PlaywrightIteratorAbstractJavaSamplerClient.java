@@ -192,6 +192,7 @@ public abstract class PlaywrightIteratorAbstractJavaSamplerClient extends Playwr
 		}
 		
 		jm = new JmeterFunctionsForPlaywrightScripts(context, playwrightPage, jmeterRuntimeArgumentsMap);   	
+		boolean forceStop = false;
  				
 		try {
 			LOG.debug(">> initiatePlaywrightTest");			
@@ -217,29 +218,39 @@ public abstract class PlaywrightIteratorAbstractJavaSamplerClient extends Playwr
 			}
 			int i=0;
 			
-			while (!isAnyIterateEndConditionMet(tgName, scriptStartTimeMs, iterateForPeriodMs, iterateNumberOfTimes, i, jMeterTestStartMs,  stopThreadAfterTestStartMs, LOG)){
+			while (!isAnyIterateEndConditionMet(tgName, scriptStartTimeMs, iterateForPeriodMs, iterateNumberOfTimes, i, jMeterTestStartMs,  stopThreadAfterTestStartMs, forceStop, LOG)){
 				i++;
 				LOG.debug(">> iteratePlaywrightTest (#" + i + ")");
 				scriptIterationStartTimeMs =  System.currentTimeMillis();
-				
-				iteratePlaywrightTest(context, jm, playwrightPage);
-				
-				if (iterationPacingMs > 0) {
-					delay =	iterationPacingMs + scriptIterationStartTimeMs - System.currentTimeMillis();
-				    if (delay < 0){
-				         LOG.info("  script execution time exceeded pacing by  : " + (-delay) + " ms."  );
-				         delay = 0;
-				    }
+
+				try {
+					iteratePlaywrightTest(context, jm, playwrightPage);
+					
+					if (iterationPacingMs > 0) {
+						delay =	iterationPacingMs + scriptIterationStartTimeMs - System.currentTimeMillis();
+						if (delay < 0){
+							LOG.info("  script execution time exceeded pacing by  : " + (-delay) + " ms."  );
+							delay = 0;
+						}
+					}
+					LOG.debug("<<  iteratePlaywrightTest - script execution sleeping for : " + delay + " ms."  );
+					Thread.sleep(delay);
+
+				} catch (Exception | AssertionError e) {
+
+					scriptExceptionHandling(context, jmeterRuntimeArgumentsMap, e);	
+					
+					if ("true".equalsIgnoreCase(context.getParameter(STOP_THREAD_ON_FAILURE))){
+						LOG.info("Thread Group " + tgName + " is stopping (script failure, and STOP_THREAD_ON_FAILURE is set to true)" );
+						forceStop = true;
+					}
 				}
-		        LOG.debug("<<  iteratePlaywrightTest - script execution sleeping for : " + delay + " ms."  );
-			    Thread.sleep(delay);
-			}
+				
+			} // end iteration loop
 			
 			LOG.debug(">> running finalizePlaywrightTest");			
 			finalizePlaywrightTest(context, jm, playwrightPage);
 			LOG.debug("<< finished finalizePlaywrightTest" );			
-						
-			jm.tearDown();
 
 		} catch (Exception | AssertionError e) {
 
@@ -247,12 +258,17 @@ public abstract class PlaywrightIteratorAbstractJavaSamplerClient extends Playwr
 
 			if ("true".equalsIgnoreCase(context.getParameter(STOP_THREAD_ON_FAILURE))){
 				LOG.info("Thread Group " + tgName + " is stopping (script failure, and STOP_THREAD_ON_FAILURE is set to true)" );
-				context.getJMeterContext().getThreadGroup().stop();
+				forceStop = true;
 			}
 			
 		} finally {
-			if (! this.getKeepBrowserOpen().equals(KeepBrowserOpen.ALWAYS )     ) { 
+			
+			jm.tearDown();
+			if (! this.getKeepBrowserOpen().equals(KeepBrowserOpen.ALWAYS)){ 
 				driverDispose();
+			}
+			if (forceStop) {
+				jm.stopThreadGroup(context);
 			}
 		}
 		return jm.getMainResult();

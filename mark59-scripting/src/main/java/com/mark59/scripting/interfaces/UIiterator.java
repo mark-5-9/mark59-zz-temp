@@ -60,12 +60,13 @@ public interface UIiterator  {
 	/**
 	 * By default the script thread will re-start on failure (timers permitting).  This flag can be set to <b>true</b> to force the thread to stop
 	 * for the rest of the test.
+	 * <p>This is quite an extreme action - perhaps you could consider the making use  
 	 * @see SeleniumIteratorAbstractJavaSamplerClient
 	 * @see PlaywrightIteratorAbstractJavaSamplerClient 
 	 */	
 	public static final String STOP_THREAD_ON_FAILURE 				= "STOP_THREAD_ON_FAILURE";
 
-	
+
 	/**
 	 * Convert parameter to a Long, defaulting to 0L (zero Long)
 	 * @param parameterName passed for debug purposes only
@@ -109,12 +110,17 @@ public interface UIiterator  {
 	 * @param alreadyIterated current iteration count
 	 * @param jMeterTestStartMs JMeter test start time (refer JMeter variable TESTSTART.MS)
 	 * @param stopThreadAfterTestStartMs flag for total test time reached 
+	 * @param forceStop if this boolean set to true, return true (end condition met) 
 	 * @param LOG Logger
 	 * @return flag if conditions to stop iterations met
 	 */
-	public default boolean isAnyIterateEndConditionMet(String tgName, Long scriptStartTimeMs, Long iterateForPeriodMs, 
-			Integer iterateNumberOfTimes, Integer alreadyIterated, Long jMeterTestStartMs, Long stopThreadAfterTestStartMs, Logger LOG ) {
+	public default boolean isAnyIterateEndConditionMet(String tgName, Long scriptStartTimeMs, Long iterateForPeriodMs, Integer iterateNumberOfTimes, 
+			Integer alreadyIterated, Long jMeterTestStartMs, Long stopThreadAfterTestStartMs, boolean forceStop, Logger LOG ) {
 		
+		if (forceStop){
+			if (LOG.isDebugEnabled()) LOG.debug(Thread.currentThread().getName() + ": tgName = " + tgName + " inter End Cond : \n | force stop set");
+			return true;
+		}		
 		if ( iterateNumberOfTimes > 0 && alreadyIterated >= iterateNumberOfTimes ){
 			if (LOG.isDebugEnabled()) LOG.debug(Thread.currentThread().getName() + ": tgName = " + tgName + " inter End Cond : " 
 					+ "\n | alreadyIterated = " + alreadyIterated + " >=  iterNumberOfTimes = " + iterateNumberOfTimes );
