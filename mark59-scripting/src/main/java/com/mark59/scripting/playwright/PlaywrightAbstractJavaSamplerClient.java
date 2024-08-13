@@ -506,7 +506,6 @@ public abstract class PlaywrightAbstractJavaSamplerClient extends UiAbstractJava
 		}
 		
 		jm.failTest();
-		//////////////////////////// jm.tearDown();
 		
 		if (keepBrowserOpen.equals(KeepBrowserOpen.ONFAILURE)){
 			// force browser to stay open

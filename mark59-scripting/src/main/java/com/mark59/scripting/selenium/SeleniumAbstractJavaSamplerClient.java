@@ -343,7 +343,6 @@ public abstract class SeleniumAbstractJavaSamplerClient extends UiAbstractJavaSa
 		}
 		
 		jm.failTest();
-		//////////////////////////// jm.tearDown();
 		
 		if (keepBrowserOpen.equals(KeepBrowserOpen.ONFAILURE)){
 			// force browser to stay open

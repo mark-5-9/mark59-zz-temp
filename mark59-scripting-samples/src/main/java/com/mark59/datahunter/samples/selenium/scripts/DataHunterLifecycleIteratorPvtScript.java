@@ -179,7 +179,6 @@ public class DataHunterLifecycleIteratorPvtScript  extends SeleniumIteratorAbstr
 	 */
 	@Override
 	protected void iterateSeleniumTest(JavaSamplerContext context, JmeterFunctionsForSeleniumScripts jm,  WebDriver driver) {
-		jm.startTransaction("DH_lifecycle_0000_timeEntireInteration");
 		_Navigation _navigation = new _Navigation(driver); 
 
 //		add one policy 
@@ -277,8 +276,7 @@ public class DataHunterLifecycleIteratorPvtScript  extends SeleniumIteratorAbstr
 		multiplePoliciesActionPage.multipleDeleteLink().click().waitUntilAlertisPresent().acceptAlert();
 		waitForSqlResultsTextOnActionPageAndCheckOk(multiplePoliciesActionPage);
 		jm.endTransaction("DH_lifecycle_0100_deleteMultiplePolicies");
-		
-		jm.endTransaction("DH_lifecycle_0000_timeEntireInteration");		
+
 //		jm.writeBufferedArtifacts();
 	}
 
