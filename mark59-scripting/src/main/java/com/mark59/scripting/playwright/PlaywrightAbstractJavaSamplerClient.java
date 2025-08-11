@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Path;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -62,28 +63,30 @@ import com.microsoft.playwright.options.Proxy;
  * a JMeter-ready Playwright script. 
  * 
  * <p>Implementation of abstract method {@link #runPlaywrightTest(JavaSamplerContext, JmeterFunctionsForPlaywrightScripts, Page)} 
- * should contain the test, with parameterisation handled by {@link #additionalTestParameters()}.  
+ * should contain the test, with parameterization handled by {@link #additionalTestParameters()}.  
  * See the 'DataHunter' samples provided for implementation details. 
  *      
  * <p>Includes a number of standard parameters for Playwright, logging and exception handling.</p>
  *
  * @see #additionalTestParameters() 
  * @see ScriptingConstants#HEADLESS_MODE 
- * @see ScriptingConstants#PLAYWRIGHT_ENV_VAR_PWDEBUG
- * @see ScriptingConstants#BROWSER_EXECUTABLE 
  * @see ScriptingConstants#ADDITIONAL_OPTIONS 
- * @see ScriptingConstants#EMULATE_NETWORK_CONDITIONS 
+ * @see ScriptingConstants#PLAYWRIGHT_DEFAULT_TIMEOUT
+ * @see ScriptingConstants#PLAYWRIGHT_VIEWPORT_SIZE
+ * @see ScriptingConstants#OVERRIDE_PROPERTY_MARK59_BROWSER_EXECUTABLE
  * @see ScriptingConstants#PLAYWRIGHT_DOWNLOADS_PATH
+ * @see ScriptingConstants#PLAYWRIGHT_TIMEOUT_BROWSER_INIT
+ * @see ScriptingConstants#PLAYWRIGHT_ENV_VAR_PWDEBUG
+ * @see ScriptingConstants#PLAYWRIGHT_SLOW_MO
+ * @see ScriptingConstants#PLAYWRIGHT_TRACES_DIR
  * @see ScriptingConstants#PLAYWRIGHT_OPEN_DEVTOOLS 
+ * @see ScriptingConstants#PLAYWRIGHT_HAR_FILE_CREATION
+ * @see ScriptingConstants#PLAYWRIGHT_HAR_URL_FILTER
  * @see ScriptingConstants#PLAYWRIGHT_PROXY_SERVER
  * @see ScriptingConstants#PLAYWRIGHT_PROXY_BYPASS
  * @see ScriptingConstants#PLAYWRIGHT_PROXY_USERNAME
  * @see ScriptingConstants#PLAYWRIGHT_PROXY_PASSWORD
- * @see ScriptingConstants#PLAYWRIGHT_SLOW_MO
- * @see ScriptingConstants#PLAYWRIGHT_TIMEOUT_BROWSER_INIT
- * @see ScriptingConstants#PLAYWRIGHT_TRACES_DIR
- * @see ScriptingConstants#PLAYWRIGHT_DEFAULT_TIMEOUT
- * @see ScriptingConstants#PLAYWRIGHT_VIEWPORT_SIZE
+ * @see ScriptingConstants#EMULATE_NETWORK_CONDITIONS 
  * @see IpUtilities#localIPisNotOnListOfIPaddresses(String)
  * @see IpUtilities#RESTRICT_TO_ONLY_RUN_ON_IPS_LIST 
  * @see JmeterFunctionsImpl#LOG_RESULTS_SUMMARY
@@ -131,23 +134,24 @@ public abstract class PlaywrightAbstractJavaSamplerClient extends UiAbstractJava
 		staticMap.put("______________________ playwright settings: ________________________", "Refer Mark59 User Guide : http://mark59.com");	
 		staticMap.put(ScriptingConstants.HEADLESS_MODE, 		 String.valueOf(true));
 		staticMap.put(ScriptingConstants.ADDITIONAL_OPTIONS,	 "");
-		staticMap.put(ScriptingConstants.OVERRIDE_PROPERTY_MARK59_BROWSER_EXECUTABLE, "");
-		
 		staticMap.put(ScriptingConstants.PLAYWRIGHT_DEFAULT_TIMEOUT, "");	
 		staticMap.put(ScriptingConstants.PLAYWRIGHT_VIEWPORT_SIZE, "");	
-		staticMap.put(ScriptingConstants.PLAYWRIGHT_OPEN_DEVTOOLS, String.valueOf(false));
-		staticMap.put(ScriptingConstants.PLAYWRIGHT_ENV_VAR_PWDEBUG, "");		
+		staticMap.put(ScriptingConstants.OVERRIDE_PROPERTY_MARK59_BROWSER_EXECUTABLE, "");
+		
 		staticMap.put(ScriptingConstants.PLAYWRIGHT_DOWNLOADS_PATH, "");		
-		staticMap.put(ScriptingConstants.PLAYWRIGHT_SLOW_MO, "");	
 		staticMap.put(ScriptingConstants.PLAYWRIGHT_TIMEOUT_BROWSER_INIT, "");	
+		staticMap.put(ScriptingConstants.PLAYWRIGHT_ENV_VAR_PWDEBUG, "");		
+		staticMap.put(ScriptingConstants.PLAYWRIGHT_SLOW_MO, "");	
 		staticMap.put(ScriptingConstants.PLAYWRIGHT_TRACES_DIR, "");
+		staticMap.put(ScriptingConstants.PLAYWRIGHT_OPEN_DEVTOOLS, String.valueOf(false));
+		
+		staticMap.put(ScriptingConstants.PLAYWRIGHT_HAR_FILE_CREATION, String.valueOf(false));
+		staticMap.put(ScriptingConstants.PLAYWRIGHT_HAR_URL_FILTER, "");		
 		
 		staticMap.put(ScriptingConstants.PLAYWRIGHT_PROXY_SERVER, "");		
 		staticMap.put(ScriptingConstants.PLAYWRIGHT_PROXY_BYPASS, "");		
 		staticMap.put(ScriptingConstants.PLAYWRIGHT_PROXY_USERNAME, "");		
 		staticMap.put(ScriptingConstants.PLAYWRIGHT_PROXY_PASSWORD, "");	
-		
-		
 		
 		staticMap.put("______________________ logging settings: _______________________", "Expected values: 'default', 'buffer', 'write' or 'off' ");		
 		staticMap.put(JmeterFunctionsForPlaywrightScripts.LOG_SCREENSHOTS_AT_START_OF_TRANSACTIONS,	Mark59LogLevels.DEFAULT.getName());
@@ -155,13 +159,15 @@ public abstract class PlaywrightAbstractJavaSamplerClient extends UiAbstractJava
 		staticMap.put(JmeterFunctionsForPlaywrightScripts.LOG_PAGE_SOURCE_AT_START_OF_TRANSACTIONS,	Mark59LogLevels.DEFAULT.getName());
 		staticMap.put(JmeterFunctionsForPlaywrightScripts.LOG_PAGE_SOURCE_AT_END_OF_TRANSACTIONS, 	Mark59LogLevels.DEFAULT.getName());
 
-		staticMap.put(ON_EXCEPTION_WRITE_BUFFERED_LOGS, String.valueOf(true));
-		staticMap.put(ON_EXCEPTION_WRITE_SCREENSHOT, 	String.valueOf(true));
-		staticMap.put(ON_EXCEPTION_WRITE_PAGE_SOURCE, 	String.valueOf(true));
-		staticMap.put(ON_EXCEPTION_WRITE_STACK_TRACE, 	String.valueOf(true));
+		staticMap.put(ON_EXCEPTION_WRITE_BUFFERED_LOGS, 				String.valueOf(true));
+		staticMap.put(ON_EXCEPTION_WRITE_SCREENSHOT, 					String.valueOf(true));
+		staticMap.put(ON_EXCEPTION_WRITE_PAGE_SOURCE, 					String.valueOf(true));
+		staticMap.put(ON_EXCEPTION_WRITE_STACK_TRACE, 					String.valueOf(true));
+		staticMap.put(ON_EXCEPTION_WRITE_STACK_TRACE_TO_CONSOLE,		String.valueOf(true));
+		staticMap.put(ON_EXCEPTION_WRITE_STACK_TRACE_TO_LOG4J_LOGGER,	String.valueOf(true));
 		
-		staticMap.put(JmeterFunctionsImpl.LOG_RESULTS_SUMMARY, String.valueOf(false));	   
-		staticMap.put(JmeterFunctionsImpl.PRINT_RESULTS_SUMMARY, String.valueOf(false));	   
+		staticMap.put(JmeterFunctionsImpl.LOG_RESULTS_SUMMARY, 			String.valueOf(false));	   
+		staticMap.put(JmeterFunctionsImpl.PRINT_RESULTS_SUMMARY, 		String.valueOf(false));	   
 		
 		staticMap.put("______________________ miscellaneous: __________________________", "");				
 		staticMap.put(IpUtilities.RESTRICT_TO_ONLY_RUN_ON_IPS_LIST, "");
@@ -194,21 +200,23 @@ public abstract class PlaywrightAbstractJavaSamplerClient extends UiAbstractJava
 	 * 
 	 * @see #additionalTestParameters() 
 	 * @see ScriptingConstants#HEADLESS_MODE 
-	 * @see ScriptingConstants#PLAYWRIGHT_ENV_VAR_PWDEBUG
-	 * @see ScriptingConstants#BROWSER_EXECUTABLE 
 	 * @see ScriptingConstants#ADDITIONAL_OPTIONS 
-	 * @see ScriptingConstants#EMULATE_NETWORK_CONDITIONS 
+	 * @see ScriptingConstants#PLAYWRIGHT_DEFAULT_TIMEOUT
+	 * @see ScriptingConstants#PLAYWRIGHT_VIEWPORT_SIZE
+	 * @see ScriptingConstants#OVERRIDE_PROPERTY_MARK59_BROWSER_EXECUTABLE
 	 * @see ScriptingConstants#PLAYWRIGHT_DOWNLOADS_PATH
+	 * @see ScriptingConstants#PLAYWRIGHT_TIMEOUT_BROWSER_INIT
+	 * @see ScriptingConstants#PLAYWRIGHT_ENV_VAR_PWDEBUG
+	 * @see ScriptingConstants#PLAYWRIGHT_SLOW_MO
+	 * @see ScriptingConstants#PLAYWRIGHT_TRACES_DIR
 	 * @see ScriptingConstants#PLAYWRIGHT_OPEN_DEVTOOLS 
+	 * @see ScriptingConstants#PLAYWRIGHT_HAR_FILE_CREATION
+	 * @see ScriptingConstants#PLAYWRIGHT_HAR_URL_FILTER
 	 * @see ScriptingConstants#PLAYWRIGHT_PROXY_SERVER
 	 * @see ScriptingConstants#PLAYWRIGHT_PROXY_BYPASS
 	 * @see ScriptingConstants#PLAYWRIGHT_PROXY_USERNAME
 	 * @see ScriptingConstants#PLAYWRIGHT_PROXY_PASSWORD
-	 * @see ScriptingConstants#PLAYWRIGHT_SLOW_MO
-	 * @see ScriptingConstants#PLAYWRIGHT_TIMEOUT_BROWSER_INIT
-	 * @see ScriptingConstants#PLAYWRIGHT_TRACES_DIR
-	 * @see ScriptingConstants#PLAYWRIGHT_DEFAULT_TIMEOUT
-	 * @see ScriptingConstants#PLAYWRIGHT_VIEWPORT_SIZE
+	 * @see ScriptingConstants#EMULATE_NETWORK_CONDITIONS 
 	 * @see IpUtilities#localIPisNotOnListOfIPaddresses(String)
 	 * @see IpUtilities#RESTRICT_TO_ONLY_RUN_ON_IPS_LIST 
 	 * @see JmeterFunctionsImpl#LOG_RESULTS_SUMMARY
@@ -236,8 +244,10 @@ public abstract class PlaywrightAbstractJavaSamplerClient extends UiAbstractJava
 	public JmeterFunctionsUi UiScriptExecutionAndExceptionsHandling(JavaSamplerContext context, Map<String,String> jmeterRuntimeArgumentsMap, 
 			String tgName){
 		
+		jm = new JmeterFunctionsForPlaywrightScripts(context, jmeterRuntimeArgumentsMap);   	
+
 		try {
-			playwrightPage = makePlaywrightPage(jmeterRuntimeArgumentsMap);   
+			playwrightPage = makePlaywrightPage(jmeterRuntimeArgumentsMap);
 		} catch (Exception e) {
 			LOG.error("ERROR : " + this.getClass() + ". Fatal error has occurred for Thread Group " + tgName
 					+ " while attempting to initiate playwright!" );
@@ -245,8 +255,7 @@ public abstract class PlaywrightAbstractJavaSamplerClient extends UiAbstractJava
 			e.printStackTrace();			
 			return null;
 		}
-
-		jm = new JmeterFunctionsForPlaywrightScripts(context, playwrightPage, jmeterRuntimeArgumentsMap);   	
+		jm.setPage(playwrightPage);
 		
 		try {
 			
@@ -337,10 +346,10 @@ public abstract class PlaywrightAbstractJavaSamplerClient extends UiAbstractJava
 		if (LOG.isDebugEnabled())
 			LOG.debug(pathMsg); 
 	
-		
-		// Create a warning for the now deprecated, unused BROWSER_EXECUTABLE argument		
+		// throw error for the now deprecated unused BROWSER_EXECUTABLE argument		
 		if (StringUtils.isNotBlank(arguments.get(ScriptingConstants.BROWSER_EXECUTABLE))) {
-			LOG.warn("'BROWSER_EXECUTABLE' JMeter argument is no longer in use! Please use 'OVERRIDE_PROPERTY_MARK59_BROWSER_EXECUTABLE'");			
+			LOG.error("'BROWSER_EXECUTABLE' JMeter argument is no longer in use! Please use 'OVERRIDE_PROPERTY_MARK59_BROWSER_EXECUTABLE'");
+			throw new IllegalArgumentException("'OVERRIDE_PROPERTY_MARK59_BROWSER_EXECUTABLE' has replaced 'BROWSER_EXECUTABLE'" );
 		}
 		
 		// Turn driver headless mode on or off. Default: ON
@@ -402,7 +411,22 @@ public abstract class PlaywrightAbstractJavaSamplerClient extends UiAbstractJava
 		
 		browser = playwright.chromium().launch(browserLaunchOptions);
 		
-		browserContext = browser.newContext(new Browser.NewContextOptions());
+		Browser.NewContextOptions browserContextOptions = new Browser.NewContextOptions();
+		
+		// If .har recording requested, sets the .har file name and directory (to the mark59 log directlory 
+		if (Boolean.parseBoolean(arguments.get(ScriptingConstants.PLAYWRIGHT_HAR_FILE_CREATION))){
+			String harfilename = jm.reserveFullyQualifiedLogName("harfile","har"); 
+			browserContextOptions.setRecordHarPath(new File(harfilename).toPath());
+			LOG.info(MessageFormat.format("HAR file will be written to {0}", harfilename));
+			System.out.println("[" + Thread.currentThread().getName() + "] HAR file will be written to " + harfilename);
+		}		
+
+		// Include the .har recording filter when set 
+		if (StringUtils.isNotBlank(arguments.get(ScriptingConstants.PLAYWRIGHT_HAR_URL_FILTER))){
+			browserContextOptions.setRecordHarUrlFilter(arguments.get(ScriptingConstants.PLAYWRIGHT_HAR_URL_FILTER));
+		}		
+		
+		browserContext = browser.newContext(browserContextOptions);
 		
 		playwrightPage = browserContext.newPage();
 
@@ -410,7 +434,6 @@ public abstract class PlaywrightAbstractJavaSamplerClient extends UiAbstractJava
 		if (StringUtils.isNotBlank(arguments.get(ScriptingConstants.PLAYWRIGHT_DEFAULT_TIMEOUT))){
 			playwrightPage.setDefaultTimeout(Double.parseDouble(arguments.get(ScriptingConstants.PLAYWRIGHT_DEFAULT_TIMEOUT)));
 		}	
-		
 		
 		// Set browser dimensions
 		if (StringUtils.isNotBlank(arguments.get(ScriptingConstants.PLAYWRIGHT_VIEWPORT_SIZE))) {	
@@ -437,23 +460,33 @@ public abstract class PlaywrightAbstractJavaSamplerClient extends UiAbstractJava
 	/**
 	 * Invoked when a script Exception | AssertionError is caught.
 	 * 
-	 * <p>Logs and records this script execution as a failure.  By default all available mark59 logs are output for the point of failure, 
-	 * including previously buffered logs.  
+	 * <p>Logs and records this script execution as a failure.  By default the available mark59 logs are output for the point of failure, 
+	 * including previously buffered logs. 'mark59 logs' here refers to the logs that are output to file, in the directory indicated by the mark59
+	 * property <code>mark59.log.directory</code>.  
 	 * 
-	 * <p>Logs can be suppressed by setting a parameter in additionalTestParameters controlling it's output 
-	 * to <code>false</code>: 
+	 * <p>Also, by default the exception is written to the console and the log4j log.  For instance in a non-distributed JMeter test running via
+	 * Jenkins CI, the stacktrace will be output to the console of the job executing JMeter, and the log4j log jmeter.log file in the /bin directory
+	 * of the running JMeter instance.  
+	 * 
+	 * <p>Exception logging can be suppressed by setting parameters in additionalTestParameters to <code>false</code>: 
 	 * <ul>
-	 * <li>{@link UiAbstractJavaSamplerClient#ON_EXCEPTION_WRITE_BUFFERED_LOGS} -  log buffered (during the script)</li>
-	 * <li>{@link UiAbstractJavaSamplerClient#ON_EXCEPTION_WRITE_SCREENSHOT} - screenshot(s) when exception occurred **</li>
+	 * <li><b>Mark59 Logs</b>
+	 * <li>{@link UiAbstractJavaSamplerClient#ON_EXCEPTION_WRITE_BUFFERED_LOGS} - buffered logging (during script execution)</li>
+	 * <li>{@link UiAbstractJavaSamplerClient#ON_EXCEPTION_WRITE_SCREENSHOT} - UI screenshot(s) when exception occurred **</li>
 	 * <li>{@link UiAbstractJavaSamplerClient#ON_EXCEPTION_WRITE_PAGE_SOURCE} - page source(s) when exception occurred **</li>
 	 * <li>{@link UiAbstractJavaSamplerClient#ON_EXCEPTION_WRITE_STACK_TRACE} - Exception stack trace</li>
+	 * <li><b>Console and Log4J</b>
+	 * <li>{@link UiAbstractJavaSamplerClient#ON_EXCEPTION_WRITE_STACK_TRACE_TO_CONSOLE} - Console Exception stack trace</li> 
+	 * <li>{@link UiAbstractJavaSamplerClient#ON_EXCEPTION_WRITE_STACK_TRACE_TO_LOG4J_LOGGER} - Log4J Exception stack trace</li> 
 	 * </ul>
-	 *    
-	 * <p>For Playwright each open page on the {@link #browser} object will have its page source and screenshot captured, so there may be 
-	 * multiple of each output on an exception. 
-	 *    
-	 * <p>For example, to suppress buffered logs being output when a script fails, in additionalTestParameters:<br><br>
-	 * <code>jmeterAdditionalParameters.put(ON_EXCEPTION_WRITE_BUFFERED_LOGS, String.valueOf(false));</code>      
+	 * 
+	 * <p>For example, to suppress all buffered logs being output when a script fails, in additionalTestParameters set:<br>
+	 * <code>jmeterAdditionalParameters.put(ON_EXCEPTION_WRITE_BUFFERED_LOGS, String.valueOf(false));</code>
+	 * 
+	 * <p>Note that exceptions occurring and caught within this scriptExceptionHandling routine itself will always be output to Console and Log4J.
+	 * 
+	 * <p>For a Playwright script each open page on the {@link #browser} object will have its page source and screenshot captured, so there
+	 * may be multiple of each output on an exception. 	       
 	 *    
 	 * @see #userActionsOnScriptFailure(JavaSamplerContext, JmeterFunctionsForPlaywrightScripts, Page)
 	 * @param context the current JavaSamplerContext  
@@ -468,9 +501,15 @@ public abstract class PlaywrightAbstractJavaSamplerClient extends UiAbstractJava
 		StringWriter sw = new StringWriter();
 		e.printStackTrace(new PrintWriter(sw));
 		
-		System.err.println("["+ thread + "]  ERROR : " + this.getClass() + ". See Mark59 log directory for details. Stack trace: \n  " + sw.toString());
-		LOG.error("["+ thread + "]  ERROR : " + this.getClass() + ". See Mark59 log directory for details. Stack trace: \n  " + sw.toString());
-
+		if (Boolean.parseBoolean(context.getParameter(ON_EXCEPTION_WRITE_STACK_TRACE_TO_CONSOLE))){	
+			System.err.println("["+ thread + "]  ERROR : " + this.getClass() + ". See Mark59 log directory for details. "
+					+ "Stack trace: \n  " + sw.toString());
+		}
+		if (Boolean.parseBoolean(context.getParameter(ON_EXCEPTION_WRITE_STACK_TRACE_TO_LOG4J_LOGGER))){	
+			LOG.error("["+ thread + "]  ERROR : " + this.getClass() + ". See Mark59 log directory for details. "
+					+ "Stack trace: \n  " + sw.toString());
+		}
+		
 		String lastTxnStarted = jm.getMostRecentTransactionStarted();
 		if (StringUtils.isBlank(lastTxnStarted)){
 			lastTxnStarted =  "noTxn";
@@ -490,9 +529,8 @@ public abstract class PlaywrightAbstractJavaSamplerClient extends UiAbstractJava
 			if (Boolean.parseBoolean(context.getParameter(ON_EXCEPTION_WRITE_STACK_TRACE))){	
 				jm.writeStackTrace(lastTxnStarted + "_EXCEPTION_STACKTRACE", e);
 			}
-			
 		} catch (Exception ex) {
-			LOG.error("["+ thread + "]  ERROR : " + this.getClass() + ".  An exception occurred during scriptExceptionHandling (documentExceptionState) "
+			LOG.error("["+ thread + "]  ERROR : " + this.getClass() + ".  An exception occurred during scriptExceptionHandling  "
 					+  ex.getClass().getName() +  " thrown",  e);
 			ex.printStackTrace();
 		}	
@@ -500,7 +538,8 @@ public abstract class PlaywrightAbstractJavaSamplerClient extends UiAbstractJava
 		try {
 			userActionsOnScriptFailure(context, jm, playwrightPage); 
 		} catch (Exception errorHandlingException) {
-			LOG.error("["+ thread + "]  ERROR : " + this.getClass() + ".  An exception occurred during scriptExceptionHandling (userActionsOnScriptFailure) "
+			LOG.error("["+ thread + "]  ERROR : " + this.getClass() + ".  An exception occurred during scriptExceptionHandling "
+					+ "(userActionsOnScriptFailure) "
 					+  errorHandlingException.getClass().getName() +  " thrown",  errorHandlingException);
 			errorHandlingException.printStackTrace();
 		}

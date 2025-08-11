@@ -24,8 +24,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -36,6 +37,8 @@ import com.mark59.datahunter.data.policies.dao.PoliciesDAO;
 import com.mark59.datahunter.model.CountPoliciesBreakdown;
 import com.mark59.datahunter.model.CountPoliciesBreakdownForm;
 import com.mark59.datahunter.model.PolicySelectionCriteria;
+import com.mark59.datahunter.pojo.ReindexResult;
+import com.mark59.datahunter.pojo.ValidReuseIxPojo;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -48,9 +51,8 @@ public class PoliciesBreakdownController {
 	
 	@Autowired
 	PoliciesDAO policiesDAO;	
-		
 
-	@RequestMapping("/policies_breakdown")
+	@GetMapping("/policies_breakdown")
 	public String policiesBreakdownUrl(@RequestParam(required = false) String reqApplication,
 			PolicySelectionCriteria policySelectionCriteria, Model model) {
 //		System.out.println("/policies_breakdown");
@@ -62,8 +64,23 @@ public class PoliciesBreakdownController {
 		return "/policies_breakdown";
 	}
 	
+	
+	@GetMapping("/policies_breakdown_action")
+	public ModelAndView policiesBreakdownActionGet(@RequestParam(required = false) String application,
+			@RequestParam(required = false) String applicationStartsWithOrEquals,
+			@RequestParam(required = false) String lifecycle,
+			@RequestParam(required = false) String useability,
+			Model model, HttpServletRequest httpServletRequest) {
 		
-	@RequestMapping("/policies_breakdown_action")
+		PolicySelectionCriteria policySelectionCriteria = new PolicySelectionCriteria();
+		policySelectionCriteria.setApplication(application);
+		policySelectionCriteria.setApplicationStartsWithOrEquals(applicationStartsWithOrEquals);
+		policySelectionCriteria.setLifecycle(lifecycle);
+		policySelectionCriteria.setUseability(useability);
+		return policiesBreakdownAction(policySelectionCriteria, model, httpServletRequest);	
+	}
+		
+	@PostMapping("/policies_breakdown_action")
 	public ModelAndView policiesBreakdownAction(@ModelAttribute PolicySelectionCriteria policySelectionCriteria,
 			Model model, HttpServletRequest httpServletRequest) {
 		
@@ -99,8 +116,37 @@ public class PoliciesBreakdownController {
 				"application="   + DataHunterUtils.encode(countPoliciesBreakdown.getApplication()) 
 				+ "&lifecycle="  + DataHunterUtils.encode(countPoliciesBreakdown.getLifecycle())
 				+ "&useability=" + DataHunterUtils.encode(countPoliciesBreakdown.getUseability()));
+			
+			countPoliciesBreakdownForm.setIsReusableIndexed("N");
+			countPoliciesBreakdownForm.setHoleCount(0L);
+			countPoliciesBreakdownForm.setHoleStats("");
+
+			ValidReuseIxPojo validReuseIx = policiesDAO.validateReusableIndexed(countPoliciesBreakdown);
+			if (validReuseIx.getPolicyReusableIndexed()){
+				countPoliciesBreakdownForm.setIsReusableIndexed("Y");
+				if (validReuseIx.getValidatedOk()) {
+					if (countPoliciesBreakdown.getRowCount() <= 1 ){  // only the IX row itself exists 
+						countPoliciesBreakdownForm.setHoleCount(0L);
+						countPoliciesBreakdownForm.setHoleStats("na");
+					} else {
+						Long pcHoles = 0L; 
+						sqlWithParms = policiesDAO.countValidIndexedIdsInExpectedRange(countPoliciesBreakdown, validReuseIx.getCurrentIxCount());
+						validReuseIx.setValidIdsinRangeCount(policiesDAO.runCountSql(sqlWithParms));		
+						countPoliciesBreakdown.setHoleCount(Long.valueOf(validReuseIx.getCurrentIxCount()) - validReuseIx.getValidIdsinRangeCount());						
+						if (validReuseIx.getCurrentIxCount() > 0) {
+							pcHoles = (countPoliciesBreakdown.getHoleCount()*100) / validReuseIx.getCurrentIxCount(); 
+						}
+						countPoliciesBreakdownForm.setHoleStats(countPoliciesBreakdown.getHoleCount() 
+								+ " ("+pcHoles+"%), ix="+validReuseIx.getCurrentIxCount());
+					}	
+				} else { // invalid 
+					countPoliciesBreakdownForm.setHoleCount(-1L);
+					countPoliciesBreakdownForm.setHoleStats("?");					
+				}
+			} // reusable ix
 			countPoliciesBreakdownFormList.add(countPoliciesBreakdownForm);
-		}
+		} // for
+
 		model.addAttribute("countPoliciesBreakdownFormList", countPoliciesBreakdownFormList);
 
 		model.addAttribute("sql", sqlWithParms);
@@ -115,6 +161,29 @@ public class PoliciesBreakdownController {
 		DataHunterUtils.expireSession(httpServletRequest);
 		
 		return new ModelAndView("policies_breakdown_action", "model", model);
+	}
+	
+	
+	@GetMapping("/policies_breakdown_reindex")
+	public ModelAndView policiesBreakdownReindex(@ModelAttribute PolicySelectionCriteria policySelectionCriteria,
+			Model model, HttpServletRequest httpServletRequest) {
+		DataHunterUtils.expireSession(httpServletRequest);
+
+		String navUrParms = "application=" + DataHunterUtils.encode(policySelectionCriteria.getApplication())
+			+ "&applicationStartsWithOrEquals="+DataHunterUtils.encode(policySelectionCriteria.getApplicationStartsWithOrEquals()) 
+			+ "&lifecycle="  + DataHunterUtils.encode(policySelectionCriteria.getLifecycle()) 
+			+ "&useability=" + DataHunterUtils.encode(policySelectionCriteria.getUseability());
+
+		ReindexResult result = policiesDAO.reindexReusableIndexed(
+				policySelectionCriteria.getApplication(),
+				policySelectionCriteria.getLifecycle());
+
+		model.addAttribute("navUrParms", navUrParms);			
+		model.addAttribute("reindexResultSuccess",result.getSuccess());			
+		model.addAttribute("reindexResultMessage",result.getMessage());			
+		model.addAttribute("reindexResultRowsMoved",result.getRowsMoved());			
+		model.addAttribute("reindexResulIxCount",result.getIxCount());			
+		return new ModelAndView("policies_breakkown_reindex_action", "model", model);
 	}
 	
 }

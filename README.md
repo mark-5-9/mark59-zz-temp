@@ -7,11 +7,48 @@ This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT 
 
 ## Releases 
 
+
+<p>Release 6.4<br>
+
+  <ul>
+	<li>Trends Load : New parameter 'maxNumberofruns' (n) : Maximum number of runs to be stored for this application id excluding baselines.  
+	The oldest non-baseline run(s) will be removed from the database when this count is exceeded.  Set to '-1' or '0' to deactive. 
+	Defaults to 500</li> 
+	<li>DataHunter : (Bug) Remove an unnecessary SQL when processing Reusable Indexed' data</li> 
+	<li>All Web Apps : Explicitly use GetMapping or PostMapping anotation instead of RequestMapping, plus many smaller code and JavaDocs tidy ups</li> 
+	<li>Dependencies Updated: spring-boot to 3.5.4, selenium to 4.34.0 (to chrome v138), playwright to 1.53.0</li>  
+  </ul>
+  <figure>
+    <figcaption>Summary of Changes with Potential Incompatibilities For this Release 
+	<li>For UI scripting 'BROWSER_EXECUTABLE' argument is no longer in use. Please use 'OVERRIDE_PROPERTY_MARK59_BROWSER_EXECUTABLE'"</li>
+  </figure>
+
+
+<p>Release 6.3<br>
+
+  <ul>
+	<li>DataHunter : New 'Reusable Indexed' datatype introduced</li> 
+	<li>DataHunter : Extra "Identifier Like' filter for Multiple Item Selection</li> 
+	<li>Dependencies Updated: spring-boot to 3.4.3, selenium to 4.29.0 (to chrome v133), playwright to 1.50.0,
+	jackson xmlapis to 2.16.1, okhttp to 4.12.0, org.json to 20250107, commons-beanutils to 1.10.0</li>  
+  </ul>
+
+
+<p>Release 6.2<br>
+
+  <ul>
+	<li>Playwright Scripting: Cater for creation of .HAR file recordings</li> 
+	<li>JavaDocs improvements for several Core classes</li> 	
+	<li>Dependencies Updated: spring-boot to 3.3.5, selenium to 4.26.0 (to chrome v130), playwright to 1.48.0, commons-io to 2.14.0</li>  
+  </ul>
+
+
 <p>Release 6.1<br>
 
   <ul>
-	<li>Bug/Enhance: Cater for html links within Run Comments on Trends Graphic
-	<li>Dependencies Updated: spring-boot to 3.?.?, selenium to 4.?.? (to chrome v122), playwright to 1.?.?</li>  
+	<li>Bug/Enhance: Cater for html links within Run Comments on Trends Graphic</li> 
+	<li>Bug/Enhance: Improved handling of exceptions in the Selenium and Playwright Interator classes</li> 	
+	<li>Dependencies Updated: spring-boot to 3.3.2, selenium to 4.23.0 (to chrome v127), playwright to 1.45.1</li>  
   </ul>
 
 
