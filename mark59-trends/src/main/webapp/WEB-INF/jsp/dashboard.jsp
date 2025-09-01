@@ -27,10 +27,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="css/style.css" rel="stylesheet" type="text/css" />
 <style>@font-face { font-family: "Canterbury";  src: url("fonts/Canterbury.ttf"); }</style>
+<script type="text/javascript" src="javascript/asyncDashboard.js"></script>
 
 <script>
 
-function resendDashboardURL(){
+	function resendDashboardURL(){
 		var reqAppListSelector = document.getElementById("appListSelector").value;
 		window.location.href = 	"./dashboard?reqAppListSelector=" + encodeURIComponent(reqAppListSelector);
 	}	
@@ -43,7 +44,11 @@ function resendDashboardURL(){
 </script>
 </head>
 
-<body onload="setAppListSelectorInDropdown('${map.reqAppListSelector}')">
+<body onload="
+	setAppListSelectorInDropdown('${map.reqAppListSelector}');
+	asyncPopulationOfSlaResults();">
+	
+
 
 <%-- Include navigation element --%>
 <jsp:include page="include/navigation.jsp" />
@@ -77,7 +82,8 @@ function resendDashboardURL(){
      	</c:if>				
      </td>  
      <td><a href="trending?reqApp=${app.application}" target="_blank">${app.application}</a></td>
-     <td><img src="images/${app.slaSummaryIcon}.png" style="width:25px;height:25px;"/></td>    
+<!--     <td><img id="${app.application}app.slaSummary" src="images/${app.slaSummaryIcon}.png" style="width:25px;height:25px;"/></td>    -->
+     <td><img id="${app.application}slaSummary" src="images/delete_purple.png" style="width:25px;height:25px;"/></td>    
      <td>${app.active} </td>
      <td>${app.sinceLastRun} </td>
      <td><img src="images/${app.slaTransactionResultIcon}.png" style="width:15px;height:15px;"/></td>    
@@ -89,8 +95,14 @@ function resendDashboardURL(){
   
   <p style="font-size: 12px"><b>*</b> You must 'deactivate' an application before you are permitted to delete it.</p> 
   
-
-  <input type="hidden" id="passedReqAppListSelector" value="${parmsMap.reqAppListSelector}" />
+  <textarea id="signal" name="signal">Init State</textarea>
+  <textarea id="signalix" name="signalix">NotSet</textarea>
+  
+  <input id="passedReqAppListSelector" value="${parmsMap.reqAppListSelector}" />
+  <input id="dashboardAppList" value="${map.dashboardAppList}" />  
+  
+<!--  <input type="hidden" id="passedReqAppListSelector" value="${parmsMap.reqAppListSelector}" />-->
+<!--  <input type="hidden" id="dashboardAppList" value="${map.dashboardAppList}" />  -->
 
 </div>
 

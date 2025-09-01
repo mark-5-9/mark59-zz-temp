@@ -33,9 +33,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.mark59.core.utils.SafeSleep;
 import com.mark59.trends.application.AppConstantsTrends;
+import com.mark59.trends.application.UtilsTrends;
 import com.mark59.trends.data.application.dao.ApplicationDAO;
 import com.mark59.trends.data.beans.Application;
 import com.mark59.trends.data.beans.Transaction;
@@ -80,6 +83,7 @@ public class ApplicationController {
 
 		List<Application> applicationList =  applicationDAO.findApplications(reqAppListSelector) ;
 		List<ApplicationDashboardEntry> dashboardList = new ArrayList<>();
+		List<String> dashboardAppList = new ArrayList<>();
 
 		for (Application app : applicationList) {
 	
@@ -105,6 +109,7 @@ public class ApplicationController {
 				 System.out.println(app.getApplication() + " failed to load correctly on the dashboard - it is valid?");
 			}
 			dashboardList.add(dashboardEntry);
+			dashboardAppList.add(app.getApplication());
 		}
 
 		List<String> appListSelectorList = new ArrayList<>();
@@ -113,11 +118,31 @@ public class ApplicationController {
 
 		Map<String, Object> map = new HashMap<>();
 		map.put("dashboardList",dashboardList);			
+		map.put("dashboardAppList",UtilsTrends.stringListToCommaDelimString(dashboardAppList));			
 		map.put("reqAppListSelector",reqAppListSelector);	
 		map.put("appListSelectorList",appListSelectorList);
 		return new ModelAndView("dashboard", "map", map);
 	}	
 
+	
+	
+	
+	@GetMapping("/dashboardAsyncPopulateSlaResult" )	
+	public @ResponseBody String trendingAsyncPopulateApplicationList(@RequestParam String reqApp) {  
+//		List<String> applicationList = populateApplicationDropdown(reqAppListSelector); 
+//		return  UtilsTrends.stringListToCommaDelimString(applicationList); 
+		//SafeSleep.sleep(6000);		
+		System.out.println(">> dashboardAsyncPopulateSlaResult : " + reqApp);
+		//SafeSleep.sleep(2000);
+		
+		return reqApp;
+	}
+
+	
+	
+	
+	
+	
 
 	@GetMapping("/editApplication")
 	public String editApplication(@RequestParam String reqApp, @RequestParam String reqAppListSelector, 
