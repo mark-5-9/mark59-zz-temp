@@ -88,7 +88,7 @@ public class ApplicationController {
 		for (Application app : applicationList) {
 	
 			ApplicationDashboardEntry dashboardEntry = new ApplicationDashboardEntry();
-			String lastRunDateStr = runDAO.findLastRunDate(app.getApplication());
+			String lastRunDateStr = runDAO.findLastRunDate(app.getApplication());        
 			dashboardEntry.setApplication(app.getApplication());
 			dashboardEntry.setActive(app.getActive() );
 			dashboardEntry.setComment(app.getComment());
@@ -131,11 +131,34 @@ public class ApplicationController {
 	public @ResponseBody String trendingAsyncPopulateApplicationList(@RequestParam String reqApp) {  
 //		List<String> applicationList = populateApplicationDropdown(reqAppListSelector); 
 //		return  UtilsTrends.stringListToCommaDelimString(applicationList); 
-		//SafeSleep.sleep(6000);		
+		String slaResultColours =  reqApp+",unknown,unknown,unknown";
+		SafeSleep.sleep(3000);		
 		System.out.println(">> dashboardAsyncPopulateSlaResult : " + reqApp);
-		//SafeSleep.sleep(2000);
 		
-		return reqApp;
+		
+		try {
+			String lastRunDateStr = runDAO.findLastRunDate(reqApp); 
+			
+			String slaTransactionIcon = computeSlaTransactionResultIconColour(reqApp,lastRunDateStr);
+//			dashboardEntry.setSlaTransactionResultIcon(slaTransactionIcon);
+			
+			String slaMetricsIcon = computeMetricSlasResultIconColour(reqApp,lastRunDateStr);
+//			dashboardEntry.setSlaMetricsResultIcon(slaMetricsIcon);			
+					
+			String slaSummaryIcon = computeSlaSummaryIconColour(slaTransactionIcon,slaMetricsIcon);
+//			dashboardEntry.setSlaSummaryIcon(slaSummaryIcon);
+			
+			slaResultColours = reqApp+","+slaSummaryIcon+","+slaTransactionIcon+","+slaMetricsIcon;
+		
+		} catch (Exception e) {
+			 System.out.println(reqApp + " failed to load sla results to the dashboard - is it valid?");
+		}
+		
+		System.out.println("<< dashboardAsyncPopulateSlaResult : " + reqApp + " : "+ slaResultColours);		
+		
+		SafeSleep.sleep(1500);
+		
+		return slaResultColours;
 	}
 
 	

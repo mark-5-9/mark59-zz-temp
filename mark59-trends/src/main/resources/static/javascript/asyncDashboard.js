@@ -123,18 +123,31 @@ function getAjaxResponseAndPopulateSlaResult() {
 //			dashboardAppList = document.getElementById("dashboardAppList").innerHTML;
 //			console.log("dashboardAppList:"+dashboardAppList);
 
+//			response from controller:  slaResultColours = reqApp+","+slaSummaryIcon+","+slaTransactionIcon+","+slaMetricsIcon;
 			slaResultResponse =  httpRequest.responseText;
-//			console.log("getAjaxResponseAndPopulateSlaResult for reqApp:" + reqApp  + ", slaResultResponse: "  + slaResultResponse);
-			console.log("getAjaxResponseAndPopulateSlaResult : "  + slaResultResponse);
+			console.log("slaResultResponse (js): " + slaResultResponse );			
+			var appListAry = slaResultResponse.split(",");
+			var reqApp = appListAry[0];
+			var slaSummaryIcon = appListAry[1];
+			var slaTransactionIcon = appListAry[2];
+			var slaMetricsIcon = appListAry[3];
+
 			
-			slaResultElmt = document.getElementById(slaResultResponse+"slaSummary");
-			slaResultElmt.src = "images/edit_purple.jpg";
+//			<td><img id="${app.application}slaSummaryIcon" src="images/loading_dots.gif" style="width:20px;height:20px;"/></td>    
+//			<td>${app.active} </td>
+//			<td>${app.sinceLastRun} </td>
+//			<td><img src="images/${app.slaTransactionResultIcon}.png" style="width:15px;height:15px;"/></td>    
+//			<td><img src="images/${app.slaMetricsResultIcon}.png" style="width:15px;height:15px;"/></td>  
 			
-//			applicationSelectBox = document.getElementById("application");			
-//			clearApplicationDropdownOptions(applicationSelectBox);
-//			buildApplicationDropdownOptions(applicationSelectBox, httpRequest.responseText);
+			
+			slaSummaryIconElmt = document.getElementById(reqApp+"slaSummaryIcon");
+			slaSummaryIconElmt.src = "images/"+slaSummaryIcon+".png";
+			slaTransactionIconElmt = document.getElementById(reqApp+"slaTransactionIcon");
+			slaTransactionIconElmt.src = "images/"+slaTransactionIcon+".png";
+			slaMetricsIconElmt = document.getElementById(reqApp+"slaMetricsIcon");
+			slaMetricsIconElmt.src = "images/"+slaMetricsIcon+".png";							
 		
-			isRequestInProgress = false; // Request completed
+			isRequestInProgress = false; // Request completed not reqd.............
 			console.log('request complete !!'); 
 			
 //-------->

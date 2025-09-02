@@ -83,11 +83,12 @@
      </td>  
      <td><a href="trending?reqApp=${app.application}" target="_blank">${app.application}</a></td>
 <!--     <td><img id="${app.application}app.slaSummary" src="images/${app.slaSummaryIcon}.png" style="width:25px;height:25px;"/></td>    -->
-     <td><img id="${app.application}slaSummary" src="images/delete_purple.png" style="width:25px;height:25px;"/></td>    
+<!--     <td><img id="${app.application}slaSummary" src="images/delete_purple.png" style="width:25px;height:25px;"/></td>    -->
+     <td><img id="${app.application}slaSummaryIcon" src="images/loading_dots.gif" style="width:20px;height:20px;"/></td>    
      <td>${app.active} </td>
      <td>${app.sinceLastRun} </td>
-     <td><img src="images/${app.slaTransactionResultIcon}.png" style="width:15px;height:15px;"/></td>    
-     <td><img src="images/${app.slaMetricsResultIcon}.png" style="width:15px;height:15px;"/></td>    
+     <td><img id="${app.application}slaTransactionIcon" src="images/loading_dots.gif" style="width:15px;height:15px;"/></td>    
+     <td><img id="${app.application}slaMetricsIcon" src="images/loading_dots.gif" style="width:15px;height:15px;"/></td>    
      <td>${app.comment}</td>
     </tr>
    </c:forEach>
