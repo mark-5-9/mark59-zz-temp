@@ -23,11 +23,6 @@ var urlPopulateSlaResult = "init"
 
 function asyncPopulationOfSlaResults() {
 	
-//	const event = new Event('signalEvent');
-//	signalTxtElmt.dispatchEvent(event);		
-	
-	// Attach an event listener (optional, if you also want to handle user-initiated changes)
-	// signalTxtElmt.addEventListener('signalEvent', handleTextareaChange);
 
 	var signalIxElmt = document.getElementById("signalix");
 	var signalTxtElmt = document.getElementById("signal");
@@ -53,51 +48,7 @@ function asyncPopulationOfSlaResults() {
 	console.log("firstApp="+firstApp); 
 	
 	signalTxtElmt.dispatchEvent(new Event('input', { bubbles: true })); // trigger listener
-	
-	//asyncPopulationOfSlaResult
-	
-//	for (const reqApp of appListAry) {
-//	    console.log("Now we interact with " + reqApp);
-//		if (isRequestInProgress) {
-//		    urlPopulateSlaResult = "http://" + host + "/mark59-trends/dashboardAsyncPopulateSlaResult?reqApp=" + reqApp;
-//			console.log("Request already in progress. Please wait.");
-//			//wait for a bit 
-//			alert("Request already in progress. Please wait..."+ reqApp);
-//		}	
-//		
-//		console.log("      at asyncPopulationOfSlaResults Using "+reqApp);
-//		setTimeout(ajaxRequestRegisterApplicationListChange(urlPopulateSlaResult), 3000);		
-//		console.log("   Finish with " + reqApp);				
-//	}
 }
-
-
-
-
-
-function asyncPopulationOfSlaResult() {
-	var host =  window.location.host; 
-	var appList = document.getElementById("dashboardAppList").value;
-	console.log("dashboardAppList on initial load : " + appList );
-	var appListAry = appList.split(",");
-	
-	var urlPopulateSlaResult = "init"
-	
-	for (const reqApp of appListAry) {
-	    console.log("Now we interact with " + reqApp);
-		if (isRequestInProgress) {
-		    urlPopulateSlaResult = "http://" + host + "/mark59-trends/dashboardAsyncPopulateSlaResult?reqApp=" + reqApp;
-			console.log("Request already in progress. Please wait.");
-			//wait for a bit 
-			alert("Request already in progress. Please wait..."+ reqApp);
-		}	
-		
-		console.log("      at asyncPopulationOfSlaResults Using "+reqApp);
-		setTimeout(ajaxRequestRegisterApplicationListChange(urlPopulateSlaResult), 3000);		
-		console.log("   Finish with " + reqApp);				
-	}
-}
-
 
 
 function ajaxRequestRegisterApplicationListChange(urlPopulateSlaResult) {
@@ -109,10 +60,8 @@ function ajaxRequestRegisterApplicationListChange(urlPopulateSlaResult) {
 	}
 	httpRequest.onreadystatechange = getAjaxResponseAndPopulateSlaResult
 	httpRequest.open('GET', urlPopulateSlaResult);
-	isRequestInProgress = true;
 	httpRequest.send();
 } 
-
 
 
 function getAjaxResponseAndPopulateSlaResult() {
@@ -120,37 +69,22 @@ function getAjaxResponseAndPopulateSlaResult() {
 	
 	if (httpRequest.readyState === XMLHttpRequest.DONE) {
 		if (httpRequest.status === 200) {
-//			dashboardAppList = document.getElementById("dashboardAppList").innerHTML;
-//			console.log("dashboardAppList:"+dashboardAppList);
-
-//			response from controller:  slaResultColours = reqApp+","+slaSummaryIcon+","+slaTransactionIcon+","+slaMetricsIcon;
+			// response from controller:  reqApp+","+slaSummaryIcon+","+slaTransactionIcon+","+slaMetricsIcon;
 			slaResultResponse =  httpRequest.responseText;
-			console.log("slaResultResponse (js): " + slaResultResponse );			
+			console.log("request complete : slaResultResponse (js): " + slaResultResponse );			
 			var appListAry = slaResultResponse.split(",");
 			var reqApp = appListAry[0];
 			var slaSummaryIcon = appListAry[1];
 			var slaTransactionIcon = appListAry[2];
 			var slaMetricsIcon = appListAry[3];
-
 			
-//			<td><img id="${app.application}slaSummaryIcon" src="images/loading_dots.gif" style="width:20px;height:20px;"/></td>    
-//			<td>${app.active} </td>
-//			<td>${app.sinceLastRun} </td>
-//			<td><img src="images/${app.slaTransactionResultIcon}.png" style="width:15px;height:15px;"/></td>    
-//			<td><img src="images/${app.slaMetricsResultIcon}.png" style="width:15px;height:15px;"/></td>  
-			
-			
-			slaSummaryIconElmt = document.getElementById(reqApp+"slaSummaryIcon");
+			var slaSummaryIconElmt = document.getElementById(reqApp+"slaSummaryIcon");
 			slaSummaryIconElmt.src = "images/"+slaSummaryIcon+".png";
-			slaTransactionIconElmt = document.getElementById(reqApp+"slaTransactionIcon");
+			var slaTransactionIconElmt = document.getElementById(reqApp+"slaTransactionIcon");
 			slaTransactionIconElmt.src = "images/"+slaTransactionIcon+".png";
-			slaMetricsIconElmt = document.getElementById(reqApp+"slaMetricsIcon");
+			var slaMetricsIconElmt = document.getElementById(reqApp+"slaMetricsIcon");
 			slaMetricsIconElmt.src = "images/"+slaMetricsIcon+".png";							
-		
-			isRequestInProgress = false; // Request completed not reqd.............
-			console.log('request complete !!'); 
 			
-//-------->
 			var signalIxElmt = document.getElementById("signalix");
 			var signalTxtElmt = document.getElementById("signal");
 			var appList = document.getElementById("dashboardAppList").value;
@@ -167,19 +101,15 @@ function getAjaxResponseAndPopulateSlaResult() {
 			console.log("appCount : " + appCount );
 			
 			if ( ix < appCount ){
-
 				signalTxtElmt.value = appListAry[ix];
 				console.log('signalTxtElmt value changed to ' + signalTxtElmt.value); 
 				signalTxtElmt.dispatchEvent(new Event('input', { bubbles: true })); // trigger listener
-								
 			} else {
 				console.log("we are done !!!!!!!!!! " );
 			}
-
 		} else {
 			alert('There was a problem with the request: '  + httpRequest.responseText );
 		}
-		
 	} else {
 		console.log('Not there yet: state: ' + httpRequest.readyState +" ,status:"+ httpRequest.status + " ,resp: "+ httpRequest.responseText );
 	}
@@ -188,8 +118,7 @@ function getAjaxResponseAndPopulateSlaResult() {
 
 function clearApplicationDropdownOptions(applicationSelectBox) {
     var i;
-    for (i = applicationSelectBox.options.length - 1 ; i >= 0 ; i--)
-    {
+    for (i = applicationSelectBox.options.length - 1 ; i >= 0 ; i--){
     	applicationSelectBox.remove(i);
     }
 }
@@ -206,5 +135,3 @@ function buildApplicationDropdownOptions(applicationSelectBox, optionsText) {
 	    applicationSelectBox.appendChild(optionElement);
 	}	
 }
-
-

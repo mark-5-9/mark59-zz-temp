@@ -82,8 +82,6 @@
      	</c:if>				
      </td>  
      <td><a href="trending?reqApp=${app.application}" target="_blank">${app.application}</a></td>
-<!--     <td><img id="${app.application}app.slaSummary" src="images/${app.slaSummaryIcon}.png" style="width:25px;height:25px;"/></td>    -->
-<!--     <td><img id="${app.application}slaSummary" src="images/delete_purple.png" style="width:25px;height:25px;"/></td>    -->
      <td><img id="${app.application}slaSummaryIcon" src="images/loading_dots.gif" style="width:20px;height:20px;"/></td>    
      <td>${app.active} </td>
      <td>${app.sinceLastRun} </td>
@@ -96,14 +94,9 @@
   
   <p style="font-size: 12px"><b>*</b> You must 'deactivate' an application before you are permitted to delete it.</p> 
   
-  <textarea id="signal" name="signal">Init State</textarea>
-  <textarea id="signalix" name="signalix">NotSet</textarea>
-  
-  <input id="passedReqAppListSelector" value="${parmsMap.reqAppListSelector}" />
-  <input id="dashboardAppList" value="${map.dashboardAppList}" />  
-  
-<!--  <input type="hidden" id="passedReqAppListSelector" value="${parmsMap.reqAppListSelector}" />-->
-<!--  <input type="hidden" id="dashboardAppList" value="${map.dashboardAppList}" />  -->
+  <textarea hidden id="signal">InitialState</textarea>
+  <textarea hidden id="signalix">NotSet</textarea><br>
+  <textarea hidden id="dashboardAppList">${map.dashboardAppList}</textarea>
 
 </div>
 
