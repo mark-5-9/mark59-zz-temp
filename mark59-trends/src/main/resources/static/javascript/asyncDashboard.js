@@ -23,10 +23,9 @@ var urlPopulateSlaResult = "init"
 
 function asyncPopulationOfSlaResults() {
 	
-
-	var signalIxElmt = document.getElementById("signalix");
 	var signalTxtElmt = document.getElementById("signal");
-	
+	var signalIxElmt = document.getElementById("signalix");	
+
 	signalTxtElmt.addEventListener('input', (e) => {
 		reqApp = 	e.target.value;	
 		console.log('calling addEventListener: ', reqApp);
@@ -34,8 +33,6 @@ function asyncPopulationOfSlaResults() {
 		console.log('                     url: ', urlPopulateSlaResult  );
 		ajaxRequestRegisterApplicationListChange(urlPopulateSlaResult);
 	});
-	
-
 	
 	var host =  window.location.host; 
 	var appList = document.getElementById("dashboardAppList").value;
