@@ -47,8 +47,6 @@
 <body onload="
 	setAppListSelectorInDropdown('${map.reqAppListSelector}');
 	asyncPopulationOfSlaResults();">
-	
-
 
 <%-- Include navigation element --%>
 <jsp:include page="include/navigation.jsp" />
