@@ -29,7 +29,7 @@ function asyncPopulationOfSlaResults() {
 	signalTxtElmt.addEventListener('input', (e) => {
 		reqApp = 	e.target.value;	
 		console.log('calling addEventListener: ', reqApp);
-		urlPopulateSlaResult = "http://" + host + "/mark59-trends/dashboardAsyncPopulateSlaResult?reqApp=" + reqApp;
+		urlPopulateSlaResult = "http://" + host + "/mark59-trends/api/slaIconColoursForRun?reqApp=" + reqApp;
 		console.log('                     url: ', urlPopulateSlaResult  );
 		ajaxRequestRegisterApplicationListChange(urlPopulateSlaResult);
 	});
@@ -71,9 +71,10 @@ function getAjaxResponseAndPopulateSlaResult() {
 			console.log("request complete : slaResultResponse (js): " + slaResultResponse );			
 			var appListAry = slaResultResponse.split(",");
 			var reqApp = appListAry[0];
-			var slaSummaryIcon = appListAry[1];
-			var slaTransactionIcon = appListAry[2];
-			var slaMetricsIcon = appListAry[3];
+//			var reqRunTime = appListAry[1];
+			var slaSummaryIcon = appListAry[2];
+			var slaTransactionIcon = appListAry[3];
+			var slaMetricsIcon = appListAry[4];
 			
 			var slaSummaryIconElmt = document.getElementById(reqApp+"slaSummaryIcon");
 			slaSummaryIconElmt.src = "images/"+slaSummaryIcon+".png";

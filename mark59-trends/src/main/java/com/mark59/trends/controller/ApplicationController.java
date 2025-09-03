@@ -33,25 +33,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.mark59.core.utils.SafeSleep;
 import com.mark59.trends.application.AppConstantsTrends;
 import com.mark59.trends.application.UtilsTrends;
 import com.mark59.trends.data.application.dao.ApplicationDAO;
 import com.mark59.trends.data.beans.Application;
-import com.mark59.trends.data.beans.Transaction;
 import com.mark59.trends.data.metricSla.dao.MetricSlaDAO;
 import com.mark59.trends.data.run.dao.RunDAO;
 import com.mark59.trends.data.sla.dao.SlaDAO;
 import com.mark59.trends.data.transaction.dao.TransactionDAO;
 import com.mark59.trends.form.ApplicationDashboardEntry;
 import com.mark59.trends.form.CopyApplicationForm;
-import com.mark59.trends.metricSla.MetricSlaChecker;
-import com.mark59.trends.metricSla.MetricSlaResult;
-import com.mark59.trends.sla.SlaChecker;
-import com.mark59.trends.sla.SlaTransactionResult;
 
 
 /**
@@ -107,26 +100,7 @@ public class ApplicationController {
 		map.put("appListSelectorList",appListSelectorList);
 		return new ModelAndView("dashboard", "map", map);
 	}	
-	
-	
-	@GetMapping("/dashboardAsyncPopulateSlaResult" )	
-	public @ResponseBody String trendingAsyncPopulateApplicationList(@RequestParam String reqApp) {  
-		String slaResultColours =  reqApp+",unknown,unknown,unknown";
-		System.out.println(">> dashboardAsyncPopulateSlaResult : " + reqApp);
-		try {
-			String lastRunDateStr = runDAO.findLastRunDate(reqApp); 
-			String slaTransactionIcon = computeSlaTransactionResultIconColour(reqApp,lastRunDateStr);
-			String slaMetricsIcon = computeMetricSlasResultIconColour(reqApp,lastRunDateStr);
-			String slaSummaryIcon = computeSlaSummaryIconColour(slaTransactionIcon,slaMetricsIcon);
-			slaResultColours = reqApp+","+slaSummaryIcon+","+slaTransactionIcon+","+slaMetricsIcon;
-		} catch (Exception e) {
-			 System.out.println(reqApp + " failed to load sla results to the dashboard - is it valid?");
-		}
-		System.out.println("<< dashboardAsyncPopulateSlaResult : " + reqApp + " : "+ slaResultColours);
-		SafeSleep.sleep(1000);
-		return slaResultColours;
-	}
-	
+
 
 	@GetMapping("/editApplication")
 	public String editApplication(@RequestParam String reqApp, @RequestParam String reqAppListSelector, 
@@ -251,62 +225,6 @@ public class ApplicationController {
 		}
 	}
 	
-	
-	private String computeSlaTransactionResultIconColour(String application, String lastRunDateStr) {	
-		String iconColour = "green";
-
-		List<Transaction> transactions = transactionDAO.returnListOfTransactionsToGraph(
-				application, AppConstantsTrends.TXN_90TH_GRAPH,AppConstantsTrends.SHOW_SHOW_CDP,"%", "", false, "", 
-				lastRunDateStr, false, null, AppConstantsTrends.ALL);
-		
-		List<SlaTransactionResult> slaTransactionResultList = new SlaChecker()
-				.listCdpTaggedTransactionsWithFailedSlas(application, transactions, slaDAO);
-		
-		for (SlaTransactionResult slaTransactionResult : slaTransactionResultList) {
-			if ( !slaTransactionResult.isPassedFailPercent()){
-				return "red";
-			}
-			if ( !slaTransactionResult.isPassedPassCount()){
-				return "red";
-			}
-			if ( !slaTransactionResult.isPassedAllSlas()){
-				iconColour = "yellow";
-			}			
-		}
-		
-		List<String> cdpTaggedMissingTransactions = new SlaChecker()
-				.checkForMissingTransactionsWithDatabaseSLAs(application, lastRunDateStr, slaDAO);
-		if ( ! cdpTaggedMissingTransactions.isEmpty()){
-			return "red";
-		}
-
-        return iconColour;
-	}
-	
-	
-	private String computeMetricSlasResultIconColour(String application, String lastRunDateStr) {	
-		String iconColour = "green";
-	
-		List<MetricSlaResult> metricSlaResults = new MetricSlaChecker().listFailedMetricSLAs(application,
-				lastRunDateStr, null, metricSlaDAO, transactionDAO);
-		if ( ! metricSlaResults.isEmpty()){
-			return "yellow";
-		}
-        return iconColour;
-	}
-	
-	
-	private String computeSlaSummaryIconColour(String slaTransactionIcon, String slaMetricsIcon) {
-		String iconColour = "green";
-		if (  "red".equalsIgnoreCase(slaTransactionIcon)  ||  "red".equalsIgnoreCase(slaMetricsIcon) ) {
-			return "red";			
-		}
-		if (  "yellow".equalsIgnoreCase(slaTransactionIcon)  ||  "yellow".equalsIgnoreCase(slaMetricsIcon) ) {		
-			return "yellow";			
-		}
-		return iconColour;
-	}
-
 	
 	private List<String> populateActiveYesNoDropdown( ) {
 		List<String> activeYesNo = new ArrayList<>();
