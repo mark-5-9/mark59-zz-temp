@@ -40,11 +40,11 @@ import com.mark59.trends.data.sla.dao.SlaDAO;
 import com.mark59.trends.data.transaction.dao.TransactionDAO;
 import com.mark59.trends.form.TrendingForm;
 import com.mark59.trends.graphic.data.VisGraphicDataProductionInterface;
-import com.mark59.trends.metricSla.MetricSlaChecker;
-import com.mark59.trends.metricSla.MetricSlaResult;
-import com.mark59.trends.metricSla.SlaResultTypeEnum;
-import com.mark59.trends.sla.SlaChecker;
-import com.mark59.trends.sla.SlaTransactionResult;
+import com.mark59.trends.slaMetrics.MetricSlaChecker;
+import com.mark59.trends.slaMetrics.MetricSlaResult;
+import com.mark59.trends.slaMetrics.SlaResultTypeEnum;
+import com.mark59.trends.slaTransactions.SlaChecker;
+import com.mark59.trends.slaTransactions.SlaTransactionResult;
 
 import jakarta.servlet.http.HttpServletRequest;
 
