@@ -38,12 +38,12 @@ public class TrendsRestApiController {
 
 
 	@Autowired
-	SlaIconColourCodesInterface SlaIconColourCodes;	
+	SlaIconColourCodesInterface slaIconColourCodes;	
 	
 	
 	@GetMapping("/slaIconColoursForRun")	
 	public ResponseEntity<Object> slaIconColoursForRun(@RequestParam String reqApp, @RequestParam(required=false) String reqRunTime){  
-		String slaResultColours = SlaIconColourCodes.slaIconColourCodesForRun(reqApp,reqRunTime);
+		String slaResultColours = slaIconColourCodes.slaIconColourCodesForRun(reqApp,reqRunTime);
 		return ResponseEntity.ok(slaResultColours);
 	}
 	

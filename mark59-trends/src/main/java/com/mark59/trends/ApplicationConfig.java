@@ -123,7 +123,7 @@ public class ApplicationConfig {
     }    
 
     @Bean
-    SlaIconColourCodesInterface SlaIconColourCodes() {
+    SlaIconColourCodesInterface slaIconColourCodes() {
 	    return new SlaIconColourCodes();
 	} 
     
