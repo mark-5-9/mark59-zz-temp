@@ -1,3 +1,6 @@
+
+This is the <b>WORK-IN-PROGRESS</b> repository for Mark59 - be aware it may NOT always be in a completely consistent state.<br><br>
+
 ## Mark59 Guides, Downloads and More ..
 
 <p>Available at the https://www.mark59.com website
@@ -18,7 +21,7 @@
  	<li>UI Scripting : Additional (User defined) Parameters now displayed at top of parameter list on the JMeter Java Request Panel.</li>
  	<li>Trends Graph : Now displays a controlled error message when disallowed SQL is attempted, rather that the default error page.</li>	  
  	<li>Dependencies Updated: commons-lang3 added to Mark59-core (commons-lang3 has been removed from JMeter)</li> 	
- 	<li>Dependencies Updated: spring-boot to 4.0.7, selenium to 4.45.0 (chrome v149), playwright to 1.61.0</li>
+ 	<li>Dependencies Updated: spring-boot to 4.0.6, selenium to 4.47.0 (chrome v147), playwright to 1.59.0</li>
   </ul>
   <figure>
     <figcaption>Summary of Changes with Potential Incompatibilities</figcaption>

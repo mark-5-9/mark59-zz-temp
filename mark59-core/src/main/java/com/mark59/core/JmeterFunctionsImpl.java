@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.threads.AbstractThreadGroup;
@@ -220,7 +221,6 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 	 * @param logNamesFormat  from the Mark59 property "mark59.logname.format"
 	 * @param context the JMeter JavaSamplerContext
 	 */
-	@SuppressWarnings("deprecation")
 	private String formLeadingPartOfLogNames(String logNamesFormat, JavaSamplerContext context) {
 		// Validate input parameters
 		if (logNamesFormat == null) {
@@ -257,8 +257,7 @@ public class JmeterFunctionsImpl implements JmeterFunctions {
 			}
 
 		}
-		// warning resolved in JMeter 6:  StringUtils.removeEnd -> Strings.CS.removeEnd
-		return StringUtils.removeEnd(leadingPartOfLogNames, "_");
+		return Strings.CS.removeEnd(leadingPartOfLogNames, "_");
 	}
 
 
